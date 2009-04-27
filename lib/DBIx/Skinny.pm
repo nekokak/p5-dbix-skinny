@@ -118,8 +118,8 @@ sub _dbd_type {
 #--------------------------------------------------------------------------------
 # schema trigger call
 sub call_schema_trigger {
-    my ($class, $trigger, $table, $args) = @_;
-    $class->schema->call_trigger($class, $table, $trigger, $args);
+    my ($class, $trigger, $schema, $table, $args) = @_;
+    $schema->call_trigger($class, $table, $trigger, $args);
 }
 
 #--------------------------------------------------------------------------------
@@ -281,17 +281,18 @@ sub _camelize {
 sub insert {
     my ($class, $table, $args) = @_;
 
-    $class->call_schema_trigger('pre_insert', $table, $args);
+    my $schema = $class->schema;
+    $class->call_schema_trigger('pre_insert', $schema, $table, $args);
 
     # deflate
     for my $col (keys %{$args}) {
-        $args->{$col} = $class->schema->call_deflate($col, $args->{$col});
+        $args->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
     my (@cols,@bind);
     for my $col (keys %{ $args }) {
         push @cols, $col;
-        push @bind, $class->schema->utf8_off($col, $args->{$col});
+        push @bind, $schema->utf8_off($col, $args->{$col});
     }
 
     # TODO: INSERT or REPLACE. bind_param_attributes etc...
@@ -303,9 +304,9 @@ sub insert {
     my $sth = $class->_execute($sql, \@bind);
 
     my $id = $class->attribute->{dbd}->last_insert_id($class->dbh, $sth);
-    my $obj = $class->search($table, { $class->schema->schema_info->{$table}->{pk} => $id } )->first;
+    my $obj = $class->search($table, { $schema->schema_info->{$table}->{pk} => $id } )->first;
 
-    $class->call_schema_trigger('post_insert', $table, $obj);
+    $class->call_schema_trigger('post_insert', $schema, $table, $obj);
 
     $obj;
 }
@@ -320,17 +321,18 @@ sub bulk_insert {
 sub update {
     my ($class, $table, $args, $where) = @_;
 
-    $class->call_schema_trigger('pre_update', $table, $args);
+    my $schema = $class->schema;
+    $class->call_schema_trigger('pre_update', $schema, $table, $args);
 
     # deflate
     for my $col (keys %{$args}) {
-        $args->{$col} = $class->schema->call_deflate($col, $args->{$col});
+        $args->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
     my (@set,@bind);
     for my $col (keys %{ $args }) {
         push @set, "$col = ?";
-        push @bind, $class->schema->utf8_off($col, $args->{$col});
+        push @bind, $schema->utf8_off($col, $args->{$col});
     }
 
     my $stmt = $class->resultset;
@@ -343,7 +345,7 @@ sub update {
     my $sth = $class->dbh->prepare($sql);
     my $rows = $sth->execute(@bind);
 
-    $class->call_schema_trigger('post_update', $table, $rows);
+    $class->call_schema_trigger('post_update', $schema, $table, $rows);
 
     return $rows;
 }
@@ -351,7 +353,8 @@ sub update {
 sub delete {
     my ($class, $table, $where) = @_;
 
-    $class->call_schema_trigger('pre_delete', $table, $where);
+    my $schema = $class->schema;
+    $class->call_schema_trigger('pre_delete', $schema, $table, $where);
 
     my $stmt = $class->resultset(
         {
@@ -365,7 +368,7 @@ sub delete {
     $class->profiler($sql, $stmt->bind);
     $class->_execute($sql, $stmt->bind);
 
-    $class->call_schema_trigger('post_delete', $table);
+    $class->call_schema_trigger('post_delete', $schema, $table);
 }
 
 *find_or_insert = \*find_or_create;
