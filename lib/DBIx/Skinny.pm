@@ -10,6 +10,7 @@ use DBIx::Skinny::DBD;
 use DBIx::Skinny::SQL;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
+use Digest::SHA1;
 
 sub import {
     my ($class, %opt) = @_;
@@ -252,11 +253,6 @@ sub data2itr {
 sub _mk_row_class {
     my ($class, $key, $table) = @_;
 
-    my $row_class = 'DBIx::Skinny::Row::C';
-    for my $i (0..(int(length($key) / 8))) {
-        $row_class .= crypt(substr($key,($i*8),8), 'mk');
-    }
-
     my $attr = $class->attribute;
     my $base_row_class = $attr->{row_class_map}->{$table||''};
     if (!$base_row_class && $table) {
@@ -270,6 +266,9 @@ sub _mk_row_class {
     } elsif(!$base_row_class) {
         $base_row_class = 'DBIx::Skinny::Row';
     }
+
+    my $row_class = "${base_row_class}::C";
+    $row_class .= Digest::SHA1::sha1_hex($key);
 
     { no strict 'refs'; @{"$row_class\::ISA"} = ($base_row_class); }
 
