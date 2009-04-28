@@ -63,10 +63,11 @@ sub import {
 sub schema { shift->attribute->{schema} }
 sub profiler {
     my ($class, $sql, $bind) = @_;
-    if ($class->attribute->{profile} && $sql) {
-        $class->attribute->{profiler}->record_query($sql, $bind);
+    my $attr = $class->attribute;
+    if ($attr->{profile} && $sql) {
+        $attr->{profiler}->record_query($sql, $bind);
     }
-    return $class->attribute->{profiler};
+    return $attr->{profiler};
 }
 
 #--------------------------------------------------------------------------------
@@ -74,25 +75,27 @@ sub profiler {
 sub connect_info {
     my ($class, $connect_info) = @_;
 
-    $class->attribute->{dsn} = $connect_info->{dsn};
-    $class->attribute->{username} = $connect_info->{username};
-    $class->attribute->{password} = $connect_info->{password};
-    $class->attribute->{connect_options} = $connect_info->{connect_options};
+    my $attr = $class->attribute;
+    $attr->{dsn} = $connect_info->{dsn};
+    $attr->{username} = $connect_info->{username};
+    $attr->{password} = $connect_info->{password};
+    $attr->{connect_options} = $connect_info->{connect_options};
 
     my $dbd_type = _dbd_type($connect_info);
-    $class->attribute->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
+    $attr->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
 }
 
 sub _connect {
     my $class = shift;
-    $class->attribute->{dbh} = undef if $_[0]->{flush};
-    $class->attribute->{dbh} ||= DBI->connect(
-        $class->attribute->{dsn},
-        $class->attribute->{username},
-        $class->attribute->{password},
-        { RaiseError => 1, PrintError => 0, AutoCommit => 1, %{ $class->attribute->{connect_options} || {} } }
+    my $attr = $class->attribute;
+    $attr->{dbh} = undef if $_[0]->{flush};
+    $attr->{dbh} ||= DBI->connect(
+        $attr->{dsn},
+        $attr->{username},
+        $attr->{password},
+        { RaiseError => 1, PrintError => 0, AutoCommit => 1, %{ $attr->{connect_options} || {} } }
     );
-    $class->attribute->{dbh};
+    $attr->{dbh};
 }
 
 sub reconnect {
@@ -254,14 +257,15 @@ sub _mk_row_class {
         $row_class .= crypt(substr($key,($i*8),8), 'mk');
     }
 
-    my $base_row_class = $class->attribute->{row_class_map}->{$table||''};
+    my $attr = $class->attribute;
+    my $base_row_class = $attr->{row_class_map}->{$table||''};
     if (!$base_row_class && $table) {
-        my $tmp_base_row_class = join '::', $class->attribute->{klass}, 'Row', _camelize($table);
+        my $tmp_base_row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
         eval "use $tmp_base_row_class"; ## no critic
         if ($@) {
-            $base_row_class = $class->attribute->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
+            $base_row_class = $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
         } else {
-            $base_row_class = $class->attribute->{row_class_map}->{$table} = $tmp_base_row_class;
+            $base_row_class = $attr->{row_class_map}->{$table} = $tmp_base_row_class;
         }
     } elsif(!$base_row_class) {
         $base_row_class = 'DBIx::Skinny::Row';
