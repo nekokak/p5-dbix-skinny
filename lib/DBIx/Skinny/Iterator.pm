@@ -26,6 +26,7 @@ sub iterator {
         $row = $self->{sth}->fetchrow_hashref();
         unless ( $row ) {
             $self->{skinny}->_close_sth($self->{sth});
+            $self->{sth} = undef;
             return;
         }
     } elsif ($self->{data} && ref $self->{data} eq 'ARRAY') {
@@ -34,7 +35,7 @@ sub iterator {
             return;
         }
     } else {
-        die 'invalid case.';
+        return;
     }
 
     my $obj = $self->{row_class}->new(
