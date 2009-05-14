@@ -57,7 +57,7 @@ describe 'trigger test' => run {
             id   => 1,
         });
         isa_ok $row, 'DBIx::Skinny::Row';
-        is $row->name, 'pre_insert';
+        is $row->name, 'pre_insert_s';
 
         my $p_row = Mock::Trigger->single('mock_trigger_post',{id => 1});
         isa_ok $p_row, 'DBIx::Skinny::Row';

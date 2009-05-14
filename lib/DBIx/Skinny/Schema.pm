@@ -75,17 +75,18 @@ sub trigger ($$) {
     my ($trigger_name, $code) = @_;
 
     my $class = _get_caller_class;
-    $class->schema_info->{
+    push @{$class->schema_info->{
         $class->schema_info->{_installing_table}
-    }->{trigger}->{$trigger_name} = $code;
+    }->{trigger}->{$trigger_name}}, $code;
 }
 
 sub call_trigger {
     my ($class, $skinny, $table, $trigger_name, $args) = @_;
 
-    my $trigger_code = $class->schema_info->{$table}->{trigger}->{$trigger_name};
-    return unless $trigger_code;
-    $trigger_code->($skinny, $args);
+    my $triggers = $class->schema_info->{$table}->{trigger}->{$trigger_name};
+    for my $code (@$triggers) {
+        $code->($skinny, $args);
+    }
 }
 
 sub install_inflate_rule ($$) {

@@ -12,6 +12,10 @@ install_table mock_trigger_pre => schema {
         my ($class, $args) = @_;
         $args->{name} = 'pre_insert';
     };
+    trigger pre_insert => callback {
+        my ($class, $args) = @_;
+        $args->{name} = $args->{name}.'_s';
+    };
 
     trigger post_insert => callback {
         my ($class, $obj) = @_;
