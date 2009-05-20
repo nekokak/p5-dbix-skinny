@@ -21,7 +21,7 @@ sub setup {
         *{"$class\::$col"} = $self->_lazy_get_data($col);
     }
 
-    $self->{get_column_cached} = {};
+    $self->{_get_column_cached} = {};
     $self->{_dirty_columns} = {};
 }
 
@@ -31,11 +31,11 @@ sub _lazy_get_data {
     return sub {
         my $self = shift;
 
-        unless ( $self->{get_column_cached}->{$col} ) {
+        unless ( $self->{_get_column_cached}->{$col} ) {
           my $data = $self->get_column($col);
-          $self->{get_column_cached}->{$col} = $self->{skinny}->schema->call_inflate($col, $data);
+          $self->{_get_column_cached}->{$col} = $self->{skinny}->schema->call_inflate($col, $data);
         }
-        $self->{get_column_cached}->{$col};
+        $self->{_get_column_cached}->{$col};
     };
 }
 
@@ -64,7 +64,7 @@ sub set {
 
     for my $col (keys %args) {
         $self->{row_data}->{$col} = $args{$col};
-        delete $self->{get_column_cached}->{$col};
+        delete $self->{_get_column_cached}->{$col};
         $self->{_dirty_columns}->{$col} = 1;
     }
 }
