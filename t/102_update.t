@@ -35,6 +35,22 @@ describe 'update test' => run {
         is $new_row->name, 'perl';
     };
 
+    test 'row data setu and update' => run {
+        my $row = Mock::Basic->single('mock_basic',{id => 1});
+        is $row->name, 'perl';
+
+        $row->set(name => 'ruby');
+
+        is $row->name, 'ruby';
+
+        my $row2 = Mock::Basic->single('mock_basic',{id => 1});
+        is $row2->name, 'perl';
+
+        ok $row->update;
+        my $new_row = Mock::Basic->single('mock_basic',{id => 1});
+        is $new_row->name, 'ruby';
+    };
+
     cleanup {
         if ( $ENV{SKINNY_PROFILE} ) {
             warn "query log";

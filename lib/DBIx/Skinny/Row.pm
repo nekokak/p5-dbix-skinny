@@ -22,6 +22,7 @@ sub setup {
     }
 
     $self->{get_column_cached} = {};
+    $self->{_dirty_columns} = {};
 }
 
 sub _lazy_get_data {
@@ -58,6 +59,23 @@ sub get_columns {
     return \%data;
 }
 
+sub set {
+    my ($self, %args) = @_;
+
+    for my $col (keys %args) {
+        $self->{row_data}->{$col} = $args{$col};
+        delete $self->{get_column_cached}->{$col};
+        $self->{_dirty_columns}->{$col} = 1;
+    }
+}
+
+sub get_dirty_columns {
+    my $self = shift;
+    my %rows = map {$_ => $self->get_column($_)}
+               keys %{$self->{_dirty_columns}};
+    return \%rows;
+}
+
 sub insert {
     my $self = shift;
     $self->{skinny}->find_or_create($self->{opt_table_info}, $self->get_columns);
@@ -66,6 +84,7 @@ sub insert {
 sub update {
     my ($self, $args, $table) = @_;
     $table ||= $self->{opt_table_info};
+    $args ||= $self->get_dirty_columns;
     my $where = $self->_update_or_delete_cond($table);
     $self->{skinny}->update($table, $args, $where);
 }
