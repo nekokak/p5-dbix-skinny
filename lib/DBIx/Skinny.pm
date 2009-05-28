@@ -261,10 +261,13 @@ sub _mk_row_class {
         if ($@) {
             $base_row_class = $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
         } else {
-            $base_row_class = $attr->{row_class_map}->{$table} = $tmp_base_row_class;
+            $attr->{row_class_map}->{$table} = $tmp_base_row_class;
+            return $tmp_base_row_class;
         }
     } elsif(!$base_row_class) {
         $base_row_class = 'DBIx::Skinny::Row';
+    } else {
+        return $base_row_class;
     }
 
     my $row_class = "${base_row_class}::C";
