@@ -366,8 +366,12 @@ sub update {
 
     my (@set,@bind);
     for my $col (keys %{ $args }) {
-        push @set, "$col = ?";
-        push @bind, $schema->utf8_off($col, $args->{$col});
+        if (ref($args->{$col}) eq 'SCALAR') {
+            push @set, "$col = " . ${ $args->{$col} };
+        } else {
+            push @set, "$col = ?";
+            push @bind, $schema->utf8_off($col, $args->{$col});
+        }
     }
 
     my $stmt = $class->resultset;

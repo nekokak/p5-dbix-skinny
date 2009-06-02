@@ -35,7 +35,7 @@ describe 'update test' => run {
         is $new_row->name, 'perl';
     };
 
-    test 'row data setu and update' => run {
+    test 'row data set and update' => run {
         my $row = Mock::Basic->single('mock_basic',{id => 1});
         is $row->name, 'perl';
 
@@ -49,6 +49,19 @@ describe 'update test' => run {
         ok $row->update;
         my $new_row = Mock::Basic->single('mock_basic',{id => 1});
         is $new_row->name, 'ruby';
+    };
+
+    test 'scalarref update' => run {
+        my $row = Mock::Basic->single('mock_basic',{id => 1});
+        is $row->name, 'ruby';
+
+        ok $row->update({name => '1'});
+        my $new_row = Mock::Basic->single('mock_basic',{id => 1});
+        is $new_row->name, '1';
+
+        $new_row->update({name => \'name + 1'});
+
+        is +Mock::Basic->single('mock_basic',{id => 1})->name, 2;
     };
 
     cleanup {
