@@ -11,7 +11,7 @@ sub setup_test_db {
         CREATE TABLE $table (
             id   INT,
             name TEXT
-        )
+        ) ENGINE=InnoDB
     });
 }
 

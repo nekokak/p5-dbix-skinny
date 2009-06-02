@@ -11,6 +11,7 @@ use DBIx::Skinny::SQL;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
 use Digest::SHA1;
+use Carp ();
 
 sub import {
     my ($class, %opt) = @_;
@@ -35,6 +36,7 @@ sub import {
         profile         => $ENV{SKINNY_PROFILE}||0,
         klass           => $caller,
         row_class_map   => +{},
+        active_transaction => 0,
     };
 
     {
@@ -51,6 +53,7 @@ sub import {
             insert bulk_insert create update delete find_or_create find_or_insert
                 _add_where
             _execute _close_sth
+            txn_begin txn_rollback txn_commit txn_end
         /;
         for my $func (@functions) {
             *{"$caller\::$func"} = \&$func;
@@ -69,6 +72,32 @@ sub profiler {
         $attr->{profiler}->record_query($sql, $bind);
     }
     return $attr->{profiler};
+}
+
+#--------------------------------------------------------------------------------
+# for transaction
+sub txn_begin {
+    my $class = shift;
+    $class->attribute->{active_transaction} = 1;
+    eval { $class->dbh->begin_work } or Carp::croak $@;
+}
+
+sub txn_rollback {
+    my $class = shift;
+    return unless $class->attribute->{active_transaction};
+    eval { $class->dbh->rollback } or Carp::croak $@;
+    $class->txn_end;
+}
+
+sub txn_commit {
+    my $class = shift;
+    return unless $class->attribute->{active_transaction};
+    eval { $class->dbh->commit } or Carp::croak $@;
+    $class->txn_end;
+}
+
+sub txn_end {
+    $_[0]->attribute->{active_transaction} = 0;
 }
 
 #--------------------------------------------------------------------------------
@@ -114,7 +143,7 @@ sub _dbd_type {
     if ($args->{dbh}) {
         $dbd_type = $args->{dbh}->{Driver}->{Name};
     } elsif ($args->{dsn}) {
-        (undef, $dbd_type,) = DBI->parse_dsn($args->{dsn}) or die "can't parse DSN";
+        (undef, $dbd_type,) = DBI->parse_dsn($args->{dsn}) or Carp::croak "can't parse DSN";
     }
     return $dbd_type;
 }
@@ -203,7 +232,7 @@ sub search_named {
     my %named_bind = %{$args};
     my @bind;
     $sql =~ s{:([A-Za-z_][A-Za-z0-9_]*)}{
-        die "$1 is not exists in hash" if !exists $named_bind{$1};
+        Carp::croak("$1 is not exists in hash") if !exists $named_bind{$1};
         push @bind, $named_bind{$1};
         '?'
     }ge;
@@ -320,7 +349,7 @@ sub insert {
 sub bulk_insert {
     my ($class, $table, $args) = @_;
 
-    my $code = $class->attribute->{dbd}->can('bulk_insert') or die "dbd don't provide bulk_insert method";
+    my $code = $class->attribute->{dbd}->can('bulk_insert') or Carp::croak "dbd don't provide bulk_insert method";
     $code->($class, $table, $args);
 }
 
@@ -397,8 +426,8 @@ sub _execute {
     my ($class, $stmt, $bind) = @_;
 
     my $sth = $class->dbh->prepare($stmt);
-    $sth->execute(@{$bind});
-   return $sth;
+    my @hoge = $sth->execute(@{$bind});
+    return $sth;
 }
 
 sub _close_sth {
