@@ -16,11 +16,10 @@ describe 'transaction test' => run {
 
     test 'do basic transaction' => run {
         Mock::BasicMySQL->txn_begin;
-        Mock::BasicMySQL->insert('mock_basic_mysql',{
-            id   => 1,
+        my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
             name => 'perl',
         });
-        my $row = Mock::BasicMySQL->single('mock_basic_mysql',{id => 1});
+        is $row->id, 1;
         is $row->name, 'perl';
         Mock::BasicMySQL->txn_commit;
         
@@ -29,15 +28,26 @@ describe 'transaction test' => run {
 
     test 'do rollback' => run {
         Mock::BasicMySQL->txn_begin;
-        Mock::BasicMySQL->insert('mock_basic_mysql',{
-            id   => 2,
+        my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
             name => 'perl',
         });
-        my $row = Mock::BasicMySQL->single('mock_basic_mysql',{id => 2});
+        is $row->id, 2;
         is $row->name, 'perl';
         Mock::BasicMySQL->txn_rollback;
         
         ok not +Mock::BasicMySQL->single('mock_basic_mysql',{id => 2});
+    };
+
+    test 'do commit' => run {
+        Mock::BasicMySQL->txn_begin;
+        my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
+            name => 'perl',
+        });
+        is $row->id, 3;
+        is $row->name, 'perl';
+        Mock::BasicMySQL->txn_commit;
+
+        ok +Mock::BasicMySQL->single('mock_basic_mysql',{id => 3});
     };
 
     cleanup {
