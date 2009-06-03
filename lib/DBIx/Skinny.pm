@@ -10,6 +10,7 @@ use DBIx::Skinny::DBD;
 use DBIx::Skinny::SQL;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
+use DBIx::Skinny::Transaction;
 use Digest::SHA1;
 use Carp ();
 
@@ -53,7 +54,7 @@ sub import {
             insert bulk_insert create update delete find_or_create find_or_insert
                 _add_where
             _execute _close_sth
-            txn_begin txn_rollback txn_commit txn_end
+            txn_scope txn_begin txn_rollback txn_commit txn_end
         /;
         for my $func (@functions) {
             *{"$caller\::$func"} = \&$func;
@@ -76,6 +77,11 @@ sub profiler {
 
 #--------------------------------------------------------------------------------
 # for transaction
+sub txn_scope {
+    Carp::croak "The 'txn_scope' method can not be performed during a transaction." if $_[0]->attribute->{active_transaction};
+    DBIx::Skinny::Transaction->new( @_ );
+}
+
 sub txn_begin {
     my $class = shift;
     $class->attribute->{active_transaction} = 1;
