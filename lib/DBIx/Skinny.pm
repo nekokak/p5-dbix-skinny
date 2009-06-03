@@ -149,7 +149,7 @@ sub _dbd_type {
     if ($args->{dbh}) {
         $dbd_type = $args->{dbh}->{Driver}->{Name};
     } elsif ($args->{dsn}) {
-        (undef, $dbd_type,) = DBI->parse_dsn($args->{dsn}) or Carp::croak "can't parse DSN";
+        (undef, $dbd_type,) = DBI->parse_dsn($args->{dsn}) or Carp::croak "can't parse DSN: @{[ $args->{dsn} ]}";
     }
     return $dbd_type;
 }
