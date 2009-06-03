@@ -1,7 +1,7 @@
 package Mock::BasicMySQL;
 use DBIx::Skinny setup => +{
     dsn      => "dbi:mysql:test",
-    username => 'root',
+    username => 'test',
     password => '',
 };
 
