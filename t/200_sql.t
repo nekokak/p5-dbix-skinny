@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use DBIx::Skinny::SQL;
-use Test::More tests => 67;
+use Test::More tests => 72;
 
 my $stmt = ns();
 ok($stmt, 'Created SQL object');
@@ -120,13 +120,20 @@ is(scalar @{ $stmt->bind }, 2);
 is($stmt->bind->[0], 'bar');
 is($stmt->bind->[1], 'baz');
 
-$stmt = ns(); $stmt->add_where(foo => { op => '!=', value => 'bar' });
-is($stmt->as_sql_where, "WHERE (foo != ?)\n");
-is(scalar @{ $stmt->bind }, 1);
+$stmt = ns(); $stmt->add_where(foo => { in => [ 'bar', 'baz' ]});
+is($stmt->as_sql_where, "WHERE (foo IN (?,?))\n");
+is(scalar @{ $stmt->bind }, 2);
 is($stmt->bind->[0], 'bar');
+is($stmt->bind->[1], 'baz');
 
-$stmt = ns(); $stmt->add_where(foo => { column => 'bar', op => '!=', value => 'bar' });
-is($stmt->as_sql_where, "WHERE (bar != ?)\n");
+$stmt = ns(); $stmt->add_where(foo => { 'not in' => [ 'bar', 'baz' ]});
+is($stmt->as_sql_where, "WHERE (foo NOT IN (?,?))\n");
+is(scalar @{ $stmt->bind }, 2);
+is($stmt->bind->[0], 'bar');
+is($stmt->bind->[1], 'baz');
+
+$stmt = ns(); $stmt->add_where(foo => { '!=' => 'bar' });
+is($stmt->as_sql_where, "WHERE (foo != ?)\n");
 is(scalar @{ $stmt->bind }, 1);
 is($stmt->bind->[0], 'bar');
 
@@ -143,16 +150,16 @@ is($stmt->bind->[0], 'bar');
 is($stmt->bind->[1], 'quux');
 
 $stmt = ns();
-$stmt->add_where(foo => [ { op => '>', value => 'bar' },
-                          { op => '<', value => 'baz' } ]);
+$stmt->add_where(foo => [ { '>' => 'bar' },
+                          { '<' => 'baz' } ]);
 is($stmt->as_sql_where, "WHERE ((foo > ?) OR (foo < ?))\n");
 is(scalar @{ $stmt->bind }, 2);
 is($stmt->bind->[0], 'bar');
 is($stmt->bind->[1], 'baz');
 
 $stmt = ns();
-$stmt->add_where(foo => [ -and => { op => '>', value => 'bar' },
-                                  { op => '<', value => 'baz' } ]);
+$stmt->add_where(foo => [ -and => { '>' => 'bar' },
+                                  { '<' => 'baz' } ]);
 is($stmt->as_sql_where, "WHERE ((foo > ?) AND (foo < ?))\n");
 is(scalar @{ $stmt->bind }, 2);
 is($stmt->bind->[0], 'bar');
