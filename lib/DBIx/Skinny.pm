@@ -136,7 +136,7 @@ sub _connect {
 
 sub reconnect {
     my $class = shift;
-    $class->connect_info(@_);
+    $class->connect_info(@_) if scalar @_ >= 1;
     $class->_connect({flush => 1});
 }
 

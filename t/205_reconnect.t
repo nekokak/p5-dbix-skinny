@@ -85,6 +85,20 @@ describe 'reconnect test' => run {
         is $row->name, 'perl';
     };
 
+    init {
+        Mock::Basic->reconnect();
+    };
+    test 'db1.db ok' => run {
+        my $itr = Mock::Basic->search('mock_basic',{id => 1});
+        isa_ok $itr, 'DBIx::Skinny::Iterator';
+
+        my $row = $itr->first;
+        isa_ok $row, 'DBIx::Skinny::Row';
+        is $row->id , 1;
+        is $row->name, 'perl';
+    };
+
+
     cleanup {
         unlink qw{./db1.db db2.db};
     };
