@@ -504,6 +504,25 @@ insert record
         name => 'nekokak',
     });
 
+=head2 bulk_insert
+
+insert many record
+
+    Your::Model->bulk_insert('user',[
+        {
+            id   => 1,
+            name => 'nekokak',
+        },
+        {
+            id   => 2,
+            name => 'yappo',
+        },
+        {
+            id   => 3,
+            name => 'walf443',
+        },
+    ]);
+
 =head2 create
 
 insert method alias.
@@ -575,6 +594,11 @@ get simple count
 
     my $cnt = Your::Model->count('user',{count => 'id'})->count;
 
+=head2 search_named
+
+execute named query
+    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id = :id}, {id => 1});
+
 =head2 search_by_sql
 
 execute your SQL
@@ -588,6 +612,40 @@ execute your SQL
             id = ?
     },1);
 
+=head2 txn_scope
+
+get transaction scope object.
+
+    do {
+        my $txn = Your::Model->txn_scope;
+        # some process
+        $txn->commit;
+    }
+
+=head2 data2itr
+
+    my $itr = Your::Model->data2itr('user',[
+        {
+            id   => 1,
+            name => 'nekokak',
+        },
+        {
+            id   => 2,
+            name => 'yappo',
+        },
+        {
+            id   => 3,
+            name => 'walf43',
+        },
+    ]);
+
+    my $row = $itr->first;
+    $row->insert; # inser data.
+
+=head find_or_new
+
+    my $row = Your::Model->find_or_new('user',{name => 'nekokak'});
+
 =head2 do
 
 execute your query.
@@ -595,6 +653,10 @@ execute your query.
 =head2 dbh
 
 get database handle.
+
+=head2 reconnect
+
+re connect database handle.
 
 =head1 BUGS AND LIMITATIONS
 

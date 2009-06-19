@@ -184,3 +184,63 @@ sub utf8_off {
 
 1;
 
+__END__
+
+=head1 NAME
+
+DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
+
+=head1 SYNOPSIS
+
+    package Your::Model;
+    package Qudo::Driver::Skinny;
+    use DBIx::Skinny setup => +{
+        dsn => 'dbi:SQLite:',
+        username => '',
+        password => '',
+    };
+    1;
+    
+    package Your:Model::Schema:
+    use DBIx::Skinny::Schema;
+    
+    install_utf8_columns qw/name/; # for utf8 columns
+    
+    # set user table schema settings
+    install_table user => schema {
+        pk 'id';
+        columns qw/id name created_at/;
+
+        trigger pre_insert => callback {
+            # hook
+        };
+
+        trigger pre_update => callback {
+            # hook
+        };
+    };
+
+    install_inflate_rule '^name$' => callback {
+        inflate {
+            my $value = shift;
+            # inflate hook
+        };
+        deflate {
+            my $value = shift;
+            # deflate hook
+        };
+    };
+    
+    1;
+
+=head1 AUTHOR
+
+Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+

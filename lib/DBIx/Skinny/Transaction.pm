@@ -36,3 +36,38 @@ sub DESTROY {
 
 1;
 
+__END__
+
+=head1 NAME
+
+DBIx::Skinny::Transaction - transaction manager for DBIx::Skinny
+
+=head1 SYNOPSIS
+
+  sub do_work {
+      my $txn = Your::Model->txn_scope; # start transaction
+
+      my $row = Your::Model->single('user', {id => 1});
+      $row->set(name => 'nekokak');
+      $row->update;
+
+      $txn->commit; # commit
+  }
+
+
+=head1 SEE ALSO
+
+L<Data::Model>
+
+=head1 AUTHOR
+
+Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+
