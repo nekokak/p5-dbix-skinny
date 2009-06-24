@@ -285,25 +285,8 @@ sub data2itr {
     );
 }
 
-sub _mk_row_class {
-    my ($class, $key, $table) = @_;
-
-    my $attr = $class->attribute;
-    my $base_row_class = $attr->{row_class_map}->{$table||''};
-    if (!$base_row_class && $table) {
-        my $tmp_base_row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
-        eval "use $tmp_base_row_class"; ## no critic
-        if ($@) {
-            $base_row_class = $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
-        } else {
-            $attr->{row_class_map}->{$table} = $tmp_base_row_class;
-            return $tmp_base_row_class;
-        }
-    } elsif(!$base_row_class) {
-        $base_row_class = 'DBIx::Skinny::Row';
-    } else {
-        return $base_row_class;
-    }
+sub _mk_anon_row_class {
+    my ($key, $base_row_class) = @_;
 
     my $row_class = "${base_row_class}::C";
     $row_class .= Digest::SHA1::sha1_hex($key);
@@ -311,6 +294,31 @@ sub _mk_row_class {
     { no strict 'refs'; @{"$row_class\::ISA"} = ($base_row_class); }
 
     return $row_class;
+}
+
+sub _mk_row_class {
+    my ($class, $key, $table) = @_;
+
+    my $attr = $class->attribute;
+    my $base_row_class = $attr->{row_class_map}->{$table||''}||'';
+
+    if ( $base_row_class eq 'DBIx::Skinny::Row' ) {
+        return _mk_anon_row_class($key, $base_row_class);
+    } elsif ($base_row_class) {
+        return $base_row_class;
+    } elsif ($table) {
+        my $tmp_base_row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
+        eval "use $tmp_base_row_class"; ## no critic
+        if ($@) {
+            $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
+            return _mk_anon_row_class($key, $attr->{row_class_map}->{$table});
+        } else {
+            $attr->{row_class_map}->{$table} = $tmp_base_row_class;
+            return $tmp_base_row_class;
+        }
+    } else {
+        return _mk_anon_row_class($key, 'DBIx::Skinny::Row');
+    }
 }
 
 sub _camelize {
