@@ -50,10 +50,10 @@ sub import {
             call_schema_trigger
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
-                _get_sth_iterator _mk_row_class _camelize
+                _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class
             insert bulk_insert create update delete find_or_create find_or_insert
                 _add_where
-            _execute _close_sth
+            _execute _close_sth _stack_trace
             txn_scope txn_begin txn_rollback txn_commit txn_end
         /;
         for my $func (@functions) {
@@ -204,8 +204,8 @@ sub search {
         $class->_add_where($rs, $where);
     }
 
-    $rs->limit(   $opt->{limit}   ) if $opt->{limit};
-    $rs->offset(  $opt->{offset}  ) if $opt->{offset};
+    $rs->limit(  $opt->{limit}  ) if $opt->{limit};
+    $rs->offset( $opt->{offset} ) if $opt->{offset};
 
     if (my $terms = $opt->{order_by}) {
         my @orders;
@@ -286,7 +286,7 @@ sub data2itr {
 }
 
 sub _mk_anon_row_class {
-    my ($key, $base_row_class) = @_;
+    my ($class, $key, $base_row_class) = @_;
 
     my $row_class = "${base_row_class}::C";
     $row_class .= Digest::SHA1::sha1_hex($key);
@@ -303,7 +303,7 @@ sub _mk_row_class {
     my $base_row_class = $attr->{row_class_map}->{$table||''}||'';
 
     if ( $base_row_class eq 'DBIx::Skinny::Row' ) {
-        return _mk_anon_row_class($key, $base_row_class);
+        return $class->_mk_anon_row_class($key, $base_row_class);
     } elsif ($base_row_class) {
         return $base_row_class;
     } elsif ($table) {
@@ -311,13 +311,13 @@ sub _mk_row_class {
         eval "use $tmp_base_row_class"; ## no critic
         if ($@) {
             $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
-            return _mk_anon_row_class($key, $attr->{row_class_map}->{$table});
+            return $class->_mk_anon_row_class($key, $attr->{row_class_map}->{$table});
         } else {
             $attr->{row_class_map}->{$table} = $tmp_base_row_class;
             return $tmp_base_row_class;
         }
     } else {
-        return _mk_anon_row_class($key, 'DBIx::Skinny::Row');
+        return $class->_mk_anon_row_class($key, 'DBIx::Skinny::Row');
     }
 }
 
@@ -443,9 +443,35 @@ sub _add_where {
 sub _execute {
     my ($class, $stmt, $bind) = @_;
 
-    my $sth = $class->dbh->prepare($stmt);
-    my @hoge = $sth->execute(@{$bind});
+    my $sth;
+    eval {
+        $sth = $class->dbh->prepare($stmt);
+        $sth->execute(@{$bind});
+    };
+    if ($@) {
+        $class->_stack_trace($sth, $stmt, $bind, $@);
+    }
     return $sth;
+}
+
+# stack trace
+sub _stack_trace {
+    my ($class, $sth, $stmt, $bind, $reason) = @_;
+    require Data::Dumper;
+
+    if ($sth) {
+        $class->_close_sth($sth);
+    }
+
+    $stmt =~ s/\n/\n          /gm;
+    Carp::croak sprintf <<"TRACE", $reason, $stmt, Data::Dumper::Dumper($bind);
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@ DBIx::Skinny 's Exception @@@@@
+Reasone : %s
+SQL     : %s
+BIND    : %s
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+TRACE
 }
 
 sub _close_sth {
