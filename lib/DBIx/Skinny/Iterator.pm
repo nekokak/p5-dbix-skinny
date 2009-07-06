@@ -1,6 +1,7 @@
 package DBIx::Skinny::Iterator;
 use strict;
 use warnings;
+use Scalar::Util qw(blessed);
 
 sub new {
     my ($class, %args) = @_;
@@ -37,6 +38,8 @@ sub iterator {
     } else {
         return;
     }
+
+    return $row if Scalar::Util::blessed($row);
 
     my $obj = $self->{row_class}->new(
         {
