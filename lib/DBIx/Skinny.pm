@@ -700,6 +700,10 @@ No bugs have been reported.
 
 Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
 
+=head1 REPOSITORY
+
+  git clone git://github.com/nekokak/p5-dbix-skinny.git  
+
 =head1 LICENCE AND COPYRIGHT
 
 Copyright (c) 2009, Atsushi Kobayashi C<< <nekokak __at__ gmail.com> >>. All rights reserved.

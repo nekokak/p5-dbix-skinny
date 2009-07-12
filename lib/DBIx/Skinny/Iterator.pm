@@ -92,3 +92,27 @@ sub count {
 
 1;
 
+__END__
+=head1 NAME
+
+DBIx::Skinny::Iterator
+
+=head1 DESCRIPTION
+
+skinny iteration class.
+
+=head1 SYNOPSIS
+
+  my $itr = Your::Model->search('user',{});
+  
+  $itr->count; # show row counts
+  
+  my $row = $itr->first; # get first row
+  
+  $itr->reset; # reset itarator potision
+  
+  my @rows = $itr->all; # get all rows
+  
+  # do iteration
+  while (my $row = $itr->next) { }
+
