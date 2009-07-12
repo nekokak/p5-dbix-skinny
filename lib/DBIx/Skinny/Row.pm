@@ -168,14 +168,3 @@ delete is executed for instance record.
 
 It works by schema in which primary key exists.
 
-=head1 AUTHOR
-
-Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
-

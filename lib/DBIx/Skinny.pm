@@ -626,11 +626,12 @@ result set case:
 
 get simple count
 
-    my $cnt = Your::Model->count('user',{count => 'id'})->count;
+    my $cnt = Your::Model->count('user',{count => 'id'});
 
 =head2 search_named
 
 execute named query
+
     my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id = :id}, {id => 1});
 
 =head2 search_by_sql
