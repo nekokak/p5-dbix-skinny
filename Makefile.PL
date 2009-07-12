@@ -8,7 +8,6 @@ requires 'DBI';
 requires 'Digest::SHA1';
 requires 'Scalar::Util';
 
-tests 't/*.t t/*/*.t';
 author_tests('xt');
 
 build_requires 'Test::More';
