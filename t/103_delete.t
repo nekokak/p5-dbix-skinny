@@ -33,12 +33,5 @@ describe 'delete test' => run {
 
         is +Mock::Basic->count('mock_basic', 'id'), 0;
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 

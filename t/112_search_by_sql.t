@@ -22,12 +22,5 @@ describe 'search_by_sql test' => run {
         is $row->id , 1;
         is $row->name, 'perl';
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 

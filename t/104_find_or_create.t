@@ -40,12 +40,5 @@ describe 'find_or_create test' => run {
 
         is +Mock::Basic->count('mock_basic', 'id',{name => 'ruby'}), 1;
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 

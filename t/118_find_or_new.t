@@ -54,12 +54,5 @@ describe 'find_or_new' => run {
 
         is +Mock::Basic->count('mock_basic', 'id'), 2;
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 

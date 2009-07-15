@@ -58,12 +58,5 @@ describe 'update test' => run {
 
         is +Mock::Basic->single('mock_basic',{id => 1})->name, 2;
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 

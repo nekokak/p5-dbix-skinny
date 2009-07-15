@@ -77,12 +77,5 @@ describe 'trigger test' => run {
         isa_ok $row, 'DBIx::Skinny::Row';
         is $row->name, 'post_delete';
     };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
-    };
 };
 
