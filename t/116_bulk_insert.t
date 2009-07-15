@@ -1,12 +1,7 @@
-use strict;
-use warnings;
-use utf8;
-use Test::Declare;
-use YAML;
-
-use lib './t';
+use t::Utils;
 use Mock::Basic;
 use Mock::BasicMySQL;
+use Test::Declare;
 
 plan tests => blocks;
 

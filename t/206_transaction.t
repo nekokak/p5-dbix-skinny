@@ -2,8 +2,6 @@ use strict;
 use warnings;
 use utf8;
 use Test::Declare;
-use YAML;
-
 use lib './t';
 use Mock::BasicMySQL;
 
@@ -94,10 +92,6 @@ describe 'transaction test' => run {
 
     cleanup {
         Mock::BasicMySQL->cleanup_test_db;
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::BasicMySQL->profiler->query_log);
-        }
     };
 };
 

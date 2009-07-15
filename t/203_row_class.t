@@ -1,11 +1,7 @@
-use strict;
-use warnings;
-use utf8;
-use Test::Declare;
-
-use lib './t';
+use t::Utils;
 use Mock::Basic;
-use Mock::BasicRow
+use Mock::BasicRow;
+use Test::Declare;
 
 plan tests => blocks;
 

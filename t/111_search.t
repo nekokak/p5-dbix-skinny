@@ -1,11 +1,6 @@
-use strict;
-use warnings;
-use utf8;
-use Test::Declare;
-use YAML;
-
-use lib './t';
+use t::Utils;
 use Mock::Basic;
+use Test::Declare;
 
 plan tests => blocks;
 
@@ -48,13 +43,6 @@ describe 'search test' => run {
 
         is $row2->id, 2;
         is $row2->name, 'python';
-    };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
     };
 };
 

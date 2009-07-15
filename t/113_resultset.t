@@ -1,11 +1,6 @@
-use strict;
-use warnings;
-use utf8;
-use Test::Declare;
-use YAML;
-
-use lib './t';
+use t::Utils;
 use Mock::Basic;
+use Test::Declare;
 
 plan tests => blocks;
 
@@ -34,13 +29,6 @@ describe 'resultset test' => run {
         isa_ok $row, 'DBIx::Skinny::Row';
     
         is $row->name, 'perl';
-    };
-
-    cleanup {
-        if ( $ENV{SKINNY_PROFILE} ) {
-            warn "query log";
-            warn YAML::Dump(Mock::Basic->profiler->query_log);
-        }
     };
 };
 
