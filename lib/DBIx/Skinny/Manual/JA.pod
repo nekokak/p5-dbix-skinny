@@ -1,0 +1,227 @@
+=encoding utf8
+
+=head1 NAME 
+
+DBIx::Skinny::Manual::JA - DBIx::Skinnyの日本語ドキュメント
+
+=head1 DESCRIPTION
+
+Skinnyの総合的な使い方を網羅するマニュアルです。
+
+Please translate and read the person in the sphere in English. 
+
+=head1 注意
+
+現在SkinnyはMySQLとSQLiteしかサポートしていません。
+それはAuthorの私が現在そのRDBMSしか使っていないからです。
+
+PostgreSQLやOracleなどが使いたい場合は、
+DBIx::Skinny::DBD::*を作っていただく必要があります。
+
+まだまだα版なので色々変わる事があるかもしれません。
+
+=head2 Skinnyの基本クラスの定義
+
+Skinnyを操作するClassを定義します。
+
+例えばProjというプロジェクトでSkinnyを使う場合
+
+    package Proj::Mode;
+    use DBIx::Skinny setup => +{
+        dsn => 'dbi:SQLite:',
+        username => '',
+        password => '',
+    };
+    1;
+
+このようなClassを用意します。
+ちなみに、DBIx::Skinnyをuseすると
+
+use strict;
+
+use warnings
+
+された事と同じ状態にします。
+
+DBIx::Skinnyをuseする時の引数でdsnなどDBの接続に必要な情報を渡す事ができます。
+
+.pmファイルに直接dsnなどを書きたくない場合は
+
+    package Proj::Mode;
+    use DBIx::Skinny;
+    1;
+
+DBIx::Skinnyをuseする時の引数にdsnなどを書かずにClassを作成しておき、
+DBにクエリを投げる前に
+
+    Proj::Model->connect_info(....); # connect_infoを設定する
+
+もしくは
+
+    Proj::Model->connect(....): # connectメソッドをdsnなどの引数ともに呼び出す
+
+としてやればよいです。
+
+また元々dbのhandlerを別で持っている場合でそれを使い回したい場合は
+
+    Proj::Model->set_dbh($dbh);
+
+このようにset_dbhにhandlerを渡してやれば内部で持っているdatabase handlerを置き換える事ができます。
+
+=head2 スキーマクラスの定義
+
+Skinnyでは他のORマッパーと同じように各tableに対応するschemaの設定を書く必要があります。
+
+例えばuserテーブルがある場合
+
+    package Proj::Model::Schema;
+    use DBIx::Skinny::Schema;
+    
+    install_table 'user' => schema {
+        pk 'id';
+        columns qw/
+            id guid login_id login_pw name mail created_at updated_at
+        /;
+    };
+    1;
+
+DBIx::Skinny::SchemaをuseするとSchemaを構成するために必要なmethodがexportされます。
+
+ちなみに、DBIx::Skinny::Schemaでもuseすると
+
+use strict;
+
+use warnings
+
+された事と同じ状態にします。
+
+この例ではuserテーブルの
+
+プライマリキーはid
+各カラムにはid/guid/login_id/login_pw/name/mail/created_at/updated_at
+
+がある事を定義しています。
+
+Skinnyでは他のORマッパーと異なり、テーブル毎にClassを作る必要はありません。
+
+この例の場合Proj::Model::Schemaに全てのテーブル情報を記載します。
+
+=head3 マルチバイトな値を扱うカラムについて
+
+このuserテーブルの例でnameカラムがマルチバイトな文字列が入る場合でutf8flagの処理を自動で行いたい場合は
+
+    package Proj::Model::Schema;
+    use DBIx::Skinny::Schema;
+    
+    install_utf8_columns qw/name/;
+    install_table 'user' => schema {
+        pk 'id';
+        columns qw/
+            id guid login_id login_pw name mail created_at updated_at
+        /;
+    };
+    1;
+
+このようにinstall_utf8_columnsに対象となるカラム名を設定します。
+
+ここで注意が必要なのですが、Skinnyは色々な割り切りを持って設計しています。
+
+Skinnyの根本思想としてはモジュール利用者が好きに生のSQLを食わせて、
+その結果をちょっといい感じのオブジェクトに纏めて
+ちょっと楽をしようというものです。
+
+この好きに生のSQLを食わせる為に色々な割り切りをしています。
+
+思想については別の項目で書きます。
+
+脱線しましたがinstall_utf8_columnsに対象となるカラム名を設定するのですが
+この設定はSkinnyで取り扱う全テーブルに対しての設定となります。
+
+ですのでuserテーブル以外のテーブルにnameカラムがあった場合、
+install_utf8_columnsにnameを設定しているとuserテーブル以外のテーブルのnameカラムもutf8flag周りの処理が行われます。
+
+=head3 inflate/deflateの処理について
+
+Skinnyにもinflate/deflateの処理を書く事ができます
+
+userテーブルの例の場合でcreated_at/updated_atなカラムをDateTimeでinflate/deflateしたい場合は
+
+    package Proj::Model::Schema;
+    use DBIx::Skinny::Schema;
+    use DateTime;
+    use DateTime::Format::Strptime;
+    use DateTime::Format::MySQL;
+    use DateTime::TimeZone;
+    
+    my $timezone = DateTime::TimeZone->new(name => 'Asia/Tokyo');
+    install_inflate_rule '^.+_at$' => callback {
+        inflate {
+            my $value = shift;
+            my $dt = DateTime::Format::Strptime->new(
+                pattern   => '%Y-%m-%d %H:%M:%S',
+                time_zone => $timezone,
+            )->parse_datetime($value);
+            return DateTime->from_object( object => $dt );
+        };
+        deflate {
+            my $value = shift;
+            return DateTime::Format::MySQL->format_datetime($value);
+        };
+    };
+    
+    install_table 'user' => schema {
+        pk 'id';
+        columns qw/
+            id guid login_id login_pw name mail created_at updated_at
+        /;
+    };
+    1;
+
+例えばこのように書きます。
+
+install_inflate_ruleに対象となるカラムのルールを書きます。
+ここは正規表現で書く事ができます。
+
+install_inflate_ruleもinstall_utf8_columnsと同様Skinnyで扱う全テーブルが対象となります。
+
+=head3 triggerについて
+
+Skinnyにもinsert/update/deleteなどを行った場合にtriggerによるHookをかける事ができます。
+
+例えばinsert時にcreated_atを自動で設定するtriggerをかけたい場合は
+
+    package Proj::Model::Schema;
+    use DBIx::Skinny::Schema;
+    use DateTime;
+    
+    trigger pre_insert => sub {
+        my ( $class, $args ) = @_;
+        $args->{created_at} ||= context()->dt->now;
+    };    
+    install_table 'user' => schema {
+        pk 'id';
+        columns qw/
+            id guid login_id login_pw name mail created_at updated_at
+        /;
+        trigger pre_insert => sub {
+            my ( $class, $args ) = @_;
+            $args->{created_at} ||= DateTime->now;
+        };
+    };
+    1;
+
+例えばこのように書きます
+
+現在トリガーを設定できるポイントは
+
+pre_insert / post_insert / pre_update / post_update / pre_delete / post_delete
+
+があります
+
+トリガーはテーブル単位で設定する事ができます
+
+またトリガーは同じHookポイントに対して複数設定する事もできます。
+同じHookポイントに複数設定した場合は設定した順番に実行されます。
+
+=cut
+
