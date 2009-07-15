@@ -42,7 +42,7 @@ SKIP: {
     describe 'bulk insert test for mysql' => run {
 
         init {
-            Mock::BasicMySQL->reconnect({dsn => $dsn, username => $username, password => $password});
+            Mock::BasicMySQL->connect({dsn => $dsn, username => $username, password => $password});
             Mock::BasicMySQL->setup_test_db;
         };
 

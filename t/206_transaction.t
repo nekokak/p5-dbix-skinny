@@ -14,7 +14,7 @@ plan tests => blocks;
 
 describe 'transaction test' => run {
     init {
-        Mock::BasicMySQL->reconnect({dsn => $dsn, username => $username, password => $password});
+        Mock::BasicMySQL->connect({dsn => $dsn, username => $username, password => $password});
         Mock::BasicMySQL->setup_test_db;
     };
 

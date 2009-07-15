@@ -30,7 +30,7 @@ sub import {
         username        => $args->{username},
         password        => $args->{password},
         connect_options => $args->{connect_options},
-        dbh             => $args->{dbh}||'',
+        dbh             => $args->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
         profiler        => DBIx::Skinny::Profiler->new,
@@ -46,7 +46,7 @@ sub import {
 
         my @functions = qw/
             schema profiler
-            dbh dbd _connect connect_info _dbd_type reconnect
+            dbh dbd connect connect_info _dbd_type reconnect
             call_schema_trigger
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
@@ -121,10 +121,12 @@ sub connect_info {
     $attr->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
 }
 
-sub _connect {
+sub connect {
     my $class = shift;
+
+    $class->connect_info(@_) if scalar @_ >= 1;
+
     my $attr = $class->attribute;
-    $attr->{dbh} = undef if $_[0]->{flush};
     $attr->{dbh} ||= DBI->connect(
         $attr->{dsn},
         $attr->{username},
@@ -136,12 +138,12 @@ sub _connect {
 
 sub reconnect {
     my $class = shift;
-    $class->connect_info(@_) if scalar @_ >= 1;
-    $class->_connect({flush => 1});
+    $class->attribute->{dbh} = undef;
+    $class->connect(@_);
 }
 
 sub dbd { shift->attribute->{dbd} }
-sub dbh { shift->_connect }
+sub dbh { shift->connect }
 
 sub _dbd_type {
     my $args = shift;
@@ -688,6 +690,10 @@ execute your query.
 =head2 dbh
 
 get database handle.
+
+=head2 connect
+
+connect database handle.
 
 =head2 reconnect
 
