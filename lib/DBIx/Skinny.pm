@@ -18,7 +18,7 @@ sub import {
     my ($class, %opt) = @_;
 
     my $caller = caller;
-    my $args   = $opt{setup};
+    my $args   = $opt{setup}||+{};
 
     my $schema = "$caller\::Schema";
     eval "use $schema"; ## no critic
@@ -142,6 +142,10 @@ sub reconnect {
     $class->connect(@_);
 }
 
+sub set_dbh {
+    my ($class, $dbh) = @_;
+    $class->attribute->{dbh} = $dbh;
+}
 sub dbd { shift->attribute->{dbd} }
 sub dbh { shift->connect }
 
