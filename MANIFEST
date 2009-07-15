@@ -1,11 +1,13 @@
 Changes
 inc/Module/Install.pm
+inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
+inc/Module/Install/Repository.pm
 inc/Module/Install/TestBase.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
@@ -78,8 +80,6 @@ t/Mock/Trigger.pm
 t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
 t/Mock/UTF8/Schema.pm
-tools/benchmark.pl
-tools/benchmark_row.pl
-tools/bulk_insert_sqlite_bench.pl
+t/Utils.pm
 xt/perlcritic.t
 xt/perlcriticrc
