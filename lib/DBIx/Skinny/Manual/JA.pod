@@ -402,13 +402,7 @@ userテーブルに指定した条件のレコードが存在すればその行�
         mail => 'nekokak _at_ gmail.com',
     });
 
-=head2 single
-
-userテーブル１行だけ取得したい場合に使用します。
-
-    my $row = Proj::Model->single('user',{name => 'nekokak'});
-
-=head2 single / search / search_named /search_by_sql
+=head2 single / search / search_named /search_by_sql / count
 
 =head3 single
 
@@ -431,27 +425,11 @@ userテーブルに対してselectクエリを発行する場合にsearchメソ�
 三つ目のhashrefにorderやlimitなどのオプションを渡せます。
 
 searchメソッドはメソッドの返り値をスカラーコンテキストで受けるかリストコンテキストでうけるかで
-返り値の情報が変わります。
+返り値の情報が変わりま。
+スカラーコンテキストで受けた場合はDBIx::Skinny::Iteratorが取得でき、
+リストコンテキストで受けた場合は結果Rowの配列を取得することができます。
 
-    my $itr = Proj::Model->search('user',
-        {
-            name => 'nekokak',
-        },
-        { }
-    );
-
-このようにスカラーコンテキストで受けた場合はDBIx::Skinny::Iteratorが取得でき、
-
-    my @rows = Proj::Model->search('user',
-        {
-            name => 'nekokak',
-        },
-        { }
-    );
-
-このようにリストコンテキストで受けた場合は結果Rowの配列を取得することができます。
-
-=head2 count
+=head3 count
 
 userテーブルのcountをとりたい場合はcountメソッドを使用します。
 
