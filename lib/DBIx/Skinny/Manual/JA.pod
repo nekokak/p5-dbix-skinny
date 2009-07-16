@@ -26,7 +26,7 @@ Skinnyを操作するClassを定義します。
 
 例えばProjというプロジェクトでSkinnyを使う場合
 
-    package Proj::Mode;
+    package Proj::Model;
     use DBIx::Skinny setup => +{
         dsn => 'dbi:SQLite:',
         username => '',
@@ -47,7 +47,7 @@ DBIx::Skinnyをuseする時の引数でdsnなどDBの接続に必要な情報を
 
 .pmファイルに直接dsnなどを書きたくない場合は
 
-    package Proj::Mode;
+    package Proj::Model;
     use DBIx::Skinny;
     1;
 
@@ -218,6 +218,247 @@ pre_insert / post_insert / pre_update / post_update / pre_delete / post_delete
 
 またトリガーは同じHookポイントに対して複数設定する事もできます。
 同じHookポイントに複数設定した場合は設定した順番に実行されます。
+
+=head2 connection_info / connect /reconnect / set_dbh
+
+=head3 connection_info
+
+connect_infoメソッドではDB接続情報を設定します
+
+    Proj::Model->connection_info({
+        dsn      => 'dbi:mysql:test',
+        username => 'username',
+        password => 'password'
+        connect_options => +{
+            RaiseError => 1,
+            PrintError => 0,
+            AutoCommit => 1,
+        },
+    });
+
+connection_infoメソッドを呼び出した時点ではDBの接続は確立されません。
+
+また引数で渡しているconnect_optionsは特に指定されなければ、
+内部では
+
+RaiseError: 1
+
+PrintError: 0
+
+AutoCommit: 1
+
+でDBに接続されます。
+
+
+=head3 connect
+
+明示的にDB接続を行いたい場合はconnectメソッドを使用します。
+
+    Proj::Model->connect({
+        dsn      => 'dbi:mysql:test',
+        username => 'username',
+        password => 'password'
+        connect_options => +{
+            RaiseError => 1,
+            PrintError => 0,
+            AutoCommit => 1,
+        },
+    });
+
+
+=head3 reconnect
+
+一度DBに接続された状態で他のDBに接続しなおしたい場合は
+reconnectメソッドを使用します。
+
+    Proj::Model->reconnect({
+        dsn      => 'dbi:mysql:test',
+        username => 'username',
+        password => 'password'
+        connect_options => +{
+            RaiseError => 1,
+            PrintError => 0,
+            AutoCommit => 1,
+        },
+    });
+
+reconnectメソッドを呼び出すと呼び出す前まで保持していたdatabase handlerは破棄されます。
+
+=head3 set_dbh
+
+既にdatabase handlerを別で管理しており、Skinnyでそのhandlerを使いたい場合は
+set_dbhメソッドを使用します。
+
+    Proj::Model->set_dbh($dbh);
+
+set_dbhメソッドを呼び出すと呼び出す前まで保持していたdatabase handlerは破棄されます。
+
+=head2 dbh
+
+dbhメソッドを呼び出すとその時点でのdatabase handlerが取得できます。
+
+    my $dbh = Proj::Model->dbh;
+
+=head2 do
+
+doメソッドは$dbh->doのショートカットになっています。
+
+    Proj::Model->do(q{
+        CREATE TABLE foo (
+            id   INT,
+            name TEXT
+        )
+    });
+
+=head2 insert / create
+
+userテーブルにレコードをinsertするには以下のようにします。
+
+    my $row = Proj::Model->insert('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+
+insertメソッドの返り値はSkinnyのRowクラスになっていますので
+
+    print $row->name; # nekokak
+    print $row->mail; # nekokak _at_ gmail.com
+
+このようにカラム名をメソッドとしてデータにアクセスできます
+
+また、createメソッドはinsertメソッドのエイリアスになっているのでどちらでもOKです
+
+    my $row = Proj::Model->create('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+
+=head2 update
+
+userテーブルのレコードをupdateするには以下のようにします。
+
+    Proj::Model->update('user', {name => 'yappo'}, {id => 1})
+
+一つ目のhashrefが更新する情報で
+二つ目のhashrefが更新対象とするレコードの条件です。
+
+また、Rowクラスから直接updateをかけることもできます。
+
+    my $row = Proj::Model->insert('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+    $row->update({name => 'yappo'});
+
+=head2 delete
+
+userテーブルのレコードをdeleteするには以下のようにします
+
+    Proj::Model->delete('user', {id => 1});
+
+hashrefでdelete対象とするレコードの条件を指定できます。
+
+またdeleteメソッドもupdateメソッドと同じくRowクラスから直接deleteをかけることもできます。
+
+    my $row = Proj::Model->insert('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+    $row->delete;
+
+=head2 bulk_insert
+
+userテーブルに一気に複数行insertをかけたい場合は以下のようにします。
+
+    Proj::Model->bulk_insert('user',
+        [
+            {
+                name => 'nekokak',
+                mail => 'nekokak _at_ gmail.com',
+            },
+            {
+                name => 'yappo',
+                mail => 'yappo _at_ example.com',
+            },
+        ]
+    );
+
+bulk_insertでは現状insertのトリガーは利用できませんのでご注意ください。
+
+=head2 find_or_create / find_or_insert
+
+userテーブルに指定した条件のレコードが存在すればその行をselectし
+レコードが存在しなければinsertを行うことが出来ます。
+
+    my $row = Proj::Model->find_or_create('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+
+また、find_or_insertメソッドはfind_or_createメソッドのエイリアスになっているのでどちらでもOKです
+
+    my $row = Proj::Model->find_or_insert('user',{
+        name => 'nekokak',
+        mail => 'nekokak _at_ gmail.com',
+    });
+
+=head2 single
+
+userテーブル１行だけ取得したい場合に使用します。
+
+    my $row = Proj::Model->single('user',{name => 'nekokak'});
+
+=head2 single / search / search_named /search_by_sql
+
+=head3 single
+
+userテーブル１行だけ取得したい場合に使用します。
+
+    my $row = Proj::Model->single('user',{name => 'nekokak'});
+
+=head3 search
+
+userテーブルに対してselectクエリを発行する場合にsearchメソッドを使用します。
+
+    my $itr = Proj::Model->search('user',
+        {
+            name => 'nekokak',
+        },
+        { }
+    );
+
+二つ目のhashrefに検索条件
+三つ目のhashrefにorderやlimitなどのオプションを渡せます。
+
+searchメソッドはメソッドの返り値をスカラーコンテキストで受けるかリストコンテキストでうけるかで
+返り値の情報が変わります。
+
+    my $itr = Proj::Model->search('user',
+        {
+            name => 'nekokak',
+        },
+        { }
+    );
+
+このようにスカラーコンテキストで受けた場合はDBIx::Skinny::Iteratorが取得でき、
+
+    my @rows = Proj::Model->search('user',
+        {
+            name => 'nekokak',
+        },
+        { }
+    );
+
+このようにリストコンテキストで受けた場合は結果Rowの配列を取得することができます。
+
+=head2 count
+
+userテーブルのcountをとりたい場合はcountメソッドを使用します。
+
+    my $count = Porj::Model->count('user' => 'id', {name => 'nekokak'});
+
+二つ目の引数がcountを取る対象となるカラム情報で
+三つ目の引数がcountを取る条件となります。
 
 =cut
 
