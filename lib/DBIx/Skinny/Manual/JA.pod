@@ -194,10 +194,6 @@ Skinnyにもinsert/update/deleteなどを行った場合にtriggerによるHook�
     use DBIx::Skinny::Schema;
     use DateTime;
     
-    trigger pre_insert => sub {
-        my ( $class, $args ) = @_;
-        $args->{created_at} ||= context()->dt->now;
-    };    
     install_table 'user' => schema {
         pk 'id';
         columns qw/
