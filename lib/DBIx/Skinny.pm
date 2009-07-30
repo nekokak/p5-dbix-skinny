@@ -496,11 +496,11 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
 =head1 SYNOPSIS
 
     package Your::Model;
-    use DBIx::Skinny setup => +{
+    use DBIx::Skinny setup => {
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',
-    }
+    };
     1;
     
     package Your::Model::Schema;
