@@ -473,7 +473,7 @@ sub _stack_trace {
     Carp::croak sprintf <<"TRACE", $reason, $stmt, Data::Dumper::Dumper($bind);
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@ DBIx::Skinny 's Exception @@@@@
-Reasone : %s
+Reason  : %s
 SQL     : %s
 BIND    : %s
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
