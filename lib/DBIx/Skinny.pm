@@ -498,7 +498,7 @@ sub _stack_trace {
     Carp::croak sprintf <<"TRACE", $reason, $stmt, Data::Dumper::Dumper($bind);
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@ DBIx::Skinny 's Exception @@@@@
-Reasone : %s
+Reason  : %s
 SQL     : %s
 BIND    : %s
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -521,11 +521,11 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
 =head1 SYNOPSIS
 
     package Your::Model;
-    use DBIx::Skinny setup => +{
+    use DBIx::Skinny setup => {
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',
-    }
+    };
     1;
     
     package Your::Model::Schema;
