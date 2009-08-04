@@ -21,6 +21,21 @@ describe 'delete test' => run {
         is +Mock::Basic->count('mock_basic', 'id'), 0;
     };
 
+    test 'delete row count' => run {
+        Mock::Basic->insert('mock_basic',{
+            id   => 1,
+            name => 'perl',
+        });
+        Mock::Basic->insert('mock_basic',{
+            id   => 2,
+            name => 'perl',
+        });
+
+        my $deleted_count = Mock::Basic->delete('mock_basic',{name => 'perl'});
+        is $deleted_count, 2;
+        is +Mock::Basic->count('mock_basic', 'id'), 0;
+    };
+
     test 'row object delete' => run {
         Mock::Basic->insert('mock_basic',{
             id   => 1,

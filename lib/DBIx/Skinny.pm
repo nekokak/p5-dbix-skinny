@@ -425,9 +425,11 @@ sub delete {
 
     my $sql = "DELETE " . $stmt->as_sql;
     $class->profiler($sql, $stmt->bind);
-    $class->_execute($sql, $stmt->bind);
+    my $sth = $class->_execute($sql, $stmt->bind);
 
     $class->call_schema_trigger('post_delete', $schema, $table);
+
+    $sth->rows
 }
 
 *find_or_insert = \*find_or_create;
