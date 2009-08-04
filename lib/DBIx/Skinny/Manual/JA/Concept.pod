@@ -1,9 +1,0 @@
-=encoding utf8
-
-=head1 NAME 
-
-DBIx::Skinny::Manual::JA::Concept - DBIx::Skinnyのコンセプト
-
-=head1 DESCRIPTION
-
-
