@@ -736,6 +736,10 @@ No bugs have been reported.
 
 Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
 
+=head1 CONTRIBUTORS
+
+TBONE : Terrence Brannon
+
 =head1 REPOSITORY
 
   git clone git://github.com/nekokak/p5-dbix-skinny.git  
