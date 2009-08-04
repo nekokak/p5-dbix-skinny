@@ -13,6 +13,7 @@ use DBIx::Skinny::Profiler;
 use DBIx::Skinny::Transaction;
 use Digest::SHA1;
 use Carp ();
+use Storable;
 
 sub import {
     my ($class, %opt) = @_;
@@ -42,9 +43,10 @@ sub import {
 
     {
         no strict 'refs';
-        *{"$caller\::attribute"} = sub { $_attribute };
+        *{"$caller\::attribute"} = sub { ref $_[0] ? $_[0] : $_attribute };
 
         my @functions = qw/
+            new
             schema profiler
             dbh dbd connect connect_info _dbd_type reconnect
             call_schema_trigger
@@ -63,6 +65,27 @@ sub import {
 
     strict->import;
     warnings->import;
+}
+
+sub new {
+    my ($class, $connection_info) = @_;
+    my $attr = $class->attribute;
+
+    my $dbd      = delete $attr->{dbd};
+    my $profiler = delete $attr->{profiler};
+    my $dbh      = delete $attr->{dbh};
+
+    my $self = bless Storable::dclone($attr), $class;
+    if ($connection_info) {
+        $self->connect_info($connection_info);
+        $self->reconnect;
+    } else {
+        $self->attribute->{dbd}      = $dbd;
+        $self->attribute->{dbh}      = $dbh;
+    }
+    $self->attribute->{profiler} = $profiler;
+
+    return $self;
 }
 
 sub schema { shift->attribute->{schema} }
