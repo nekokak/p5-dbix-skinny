@@ -170,7 +170,15 @@ sub set_dbh {
     $class->attribute->{dbh} = $dbh;
 }
 sub dbd { shift->attribute->{dbd} }
-sub dbh { shift->connect }
+sub dbh {
+    my $class = shift;
+
+    my $dbh = $class->connect;
+    unless ($dbh && $dbh->FETCH('Active') && $dbh->ping) {
+        $dbh = $class->reconnect;
+    }
+    $dbh;
+}
 
 sub _dbd_type {
     my $args = shift;
