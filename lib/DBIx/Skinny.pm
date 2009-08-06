@@ -746,6 +746,8 @@ Atsushi Kobayashi  C<< <nekokak __at__ gmail.com> >>
 
 =head1 CONTRIBUTORS
 
+walf443 : Keiji Yoshimi
+
 TBONE : Terrence Brannon
 
 =head1 REPOSITORY
