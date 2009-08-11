@@ -390,6 +390,8 @@ sub insert {
     my $sth = $class->_execute($sql, \@bind);
 
     my $id = $class->attribute->{dbd}->last_insert_id($class->dbh, $sth);
+    $class->_close_sth($sth);
+
     my $obj = $class->search($table, { $schema->schema_info->{$table}->{pk} => $id } )->first;
 
     $class->call_schema_trigger('post_insert', $schema, $table, $obj);
@@ -435,6 +437,7 @@ sub update {
     my $sth = $class->dbh->prepare($sql);
     my $rows = $sth->execute(@bind);
 
+    $class->_close_sth($sth);
     $class->call_schema_trigger('post_update', $schema, $table, $rows);
 
     return $rows;
@@ -460,7 +463,9 @@ sub delete {
 
     $class->call_schema_trigger('post_delete', $schema, $table);
 
-    $sth->rows
+    my $ret = $sth->rows;
+    $class->_close_sth($sth);
+    $ret;
 }
 
 *find_or_insert = \*find_or_create;
