@@ -60,10 +60,10 @@ sub get_columns {
 }
 
 sub set {
-    my ($self, %args) = @_;
+    my ($self, $args) = @_;
 
-    for my $col (keys %args) {
-        $self->{row_data}->{$col} = $args{$col};
+    for my $col (keys %$args) {
+        $self->{row_data}->{$col} = $args->{$col};
         delete $self->{_get_column_cached}->{$col};
         $self->{_dirty_columns}->{$col} = 1;
     }

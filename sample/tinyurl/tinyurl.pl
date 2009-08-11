@@ -34,7 +34,7 @@ sub class_method {
 
     $row = Sample->single('tinyurl',{id => 1});
     print $row->get_column('url'), ':', $row->url, "\n";
-    $row->set(url => 'http://d.hatena.ne.jp/nekokak/');
+    $row->set({url => 'http://d.hatena.ne.jp/nekokak/'});
     print $row->get_column('url'), ':', $row->url, "\n";
     $row->update;
     print "---------------------------------\n";
@@ -85,7 +85,7 @@ sub instance_method {
 
     $row = $model->single('tinyurl',{id => 1});
     print $row->get_column('url'), ':', $row->url, "\n";
-    $row->set(url => 'http://d.hatena.ne.jp/nekokak/');
+    $row->set({url => 'http://d.hatena.ne.jp/nekokak/'});
     print $row->get_column('url'), ':', $row->url, "\n";
     $row->update;
     print "---------------------------------\n";

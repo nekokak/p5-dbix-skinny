@@ -34,7 +34,7 @@ describe 'update test' => run {
         my $row = Mock::Basic->single('mock_basic',{id => 1});
         is $row->name, 'perl';
 
-        $row->set(name => 'ruby');
+        $row->set({name => 'ruby'});
 
         is $row->name, 'ruby';
 
