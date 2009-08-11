@@ -219,6 +219,26 @@ pre_insert / post_insert / pre_update / post_update / pre_delete / post_delete
 またトリガーは同じHookポイントに対して複数設定する事もできます。
 同じHookポイントに複数設定した場合は設定した順番に実行されます。
 
+=head2 new
+
+Skinnyはインスタンスを作っても作らなくてもDBを操作する事もできるようになっています。
+
+インスタンスを作ってDB操作を行う場合
+
+    my $model = Proj::Model->new;
+    $model->do();
+
+インスタンスを作らずにDB操作を行う場合
+
+    Proj::Model->do()
+
+インスタンスを作る場合と作らない場合の最大の違いは
+インスタンスを作った場合はそのコネクションはインスタンスに紐付けられ
+インスタンスを作らない場合はコネクションはクラスに紐付けられることです。
+
+WEBでリクエスト毎にDBコネクションを管理したい場合はインスタンスを作り、
+バッチ処理などで特別DBコネクションを管理する必要がない場合はインスタンスを作らずに使えば良いです。
+
 =head2 connection_info / connect /reconnect / set_dbh
 
 =head3 connection_info

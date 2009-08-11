@@ -7,7 +7,7 @@ DBIx::Skinny::Manual::JA - DBIx::Skinnyの設計思想など
 =head1 DESCRIPTION
 
 DBIx::Skinnyをなぜ作る事にしたのか、
-また作るにあたっての設計思想などを書いた。
+また作るにあたっての設計思想など。
 
 Please translate and read the person in the sphere in English. 
 
@@ -40,8 +40,14 @@ inflateもしてくれない、utf8周りの処理もしてくれない。
 また、色々な機能があるため、処理速度も重い方だと私はおもいます。
 HotSpotな部分でパフォーマンスが求められる部分にはDBICを使わずにDBIを直接使う事もしばしばありました。
 
+Skinnyの大きな目的としては
 
-続く
+１：生のSQLを発行した時にinflateとかutf8-flagを処理してくれる
+２：update,insert,deleteはDBICというかよくあるORマッパーみたいにできる
+３：簡単なselectもよくあるORマッパーみたいにできる
+４：小さなオブジェクト群で構成されており、デバッグが行いやすい
 
+です。
 
+貧弱だったりバギーだったりするかもしれませんがどうぞよろしく:)
 
