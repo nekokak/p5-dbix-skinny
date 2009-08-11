@@ -144,9 +144,9 @@ Does C<get_column>, for all column values.
 
 =head2 set
 
-    $row->set($col => $val);
+    $row->set({$col => $val});
 
-set column data.
+set columns data.
 
 =head2 get_dirty_columns
 

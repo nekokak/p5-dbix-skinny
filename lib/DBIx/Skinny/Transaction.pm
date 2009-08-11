@@ -48,7 +48,7 @@ DBIx::Skinny::Transaction - transaction manager for DBIx::Skinny
       my $txn = Your::Model->txn_scope; # start transaction
 
       my $row = Your::Model->single('user', {id => 1});
-      $row->set(name => 'nekokak');
+      $row->set({name => 'nekokak'});
       $row->update;
 
       $txn->commit; # commit

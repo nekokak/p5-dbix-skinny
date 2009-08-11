@@ -505,7 +505,7 @@ Skinnyではトランザクションの仕組みを簡単にサポートして�
     my $txn = Porj::Model->txn_scope;
     
     my $row = Proj::Model->single('user', {id => 1});
-    $row->set(name => 'nekokak');
+    $row->set({name => 'nekokak'});
     $row->update;
     
     $txn->commit;
@@ -521,7 +521,7 @@ txn_scopeメソッドを使わずに
     Proj::Model->txn_begin;
     
     my $row = Proj::Model->single('user', {id => 1});
-    $row->set(name => 'nekokak');
+    $row->set({name => 'nekokak'});
     $row->update;
     
     Proj::Model->txn_commit;
