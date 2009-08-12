@@ -15,6 +15,10 @@ describe 'search test' => run {
             id   => 2,
             name => 'python',
         });
+        Mock::Basic->insert('mock_basic',{
+            id   => 3,
+            name => 'java',
+        });
     };
 
     test 'search' => run {
@@ -43,6 +47,33 @@ describe 'search test' => run {
 
         is $row2->id, 2;
         is $row2->name, 'python';
+    };
+
+    test 'search with order_by (originally)' => run {
+        my $itr = Mock::Basic->search('mock_basic', {}, { order_by => [ { id => 'desc' } ] });
+        isa_ok $itr, 'DBIx::Skinny::Iterator';
+        my $row = $itr->first;
+        isa_ok $row, 'DBIx::Skinny::Row';
+        is $row->id, 3;
+        is $row->name, 'java';
+    };
+
+    test 'search with order_by (as hashref)' => run {
+        my $itr = Mock::Basic->search('mock_basic', {}, { order_by => { id => 'desc' } });
+        isa_ok $itr, 'DBIx::Skinny::Iterator';
+        my $row = $itr->first;
+        isa_ok $row, 'DBIx::Skinny::Row';
+        is $row->id, 3;
+        is $row->name, 'java';
+    };
+
+    test 'search with order_by (as string)' => run {
+        my $itr = Mock::Basic->search('mock_basic', {}, { order_by => 'name' });
+        isa_ok $itr, 'DBIx::Skinny::Iterator';
+        my $row = $itr->first;
+        isa_ok $row, 'DBIx::Skinny::Row';
+        is $row->id, 3;
+        is $row->name, 'java';
     };
 };
 

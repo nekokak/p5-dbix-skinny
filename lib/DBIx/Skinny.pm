@@ -245,9 +245,16 @@ sub search {
     $rs->offset( $opt->{offset} ) if $opt->{offset};
 
     if (my $terms = $opt->{order_by}) {
+        $terms = [$terms] unless ref($terms) eq 'ARRAY';
         my @orders;
         for my $term (@{$terms}) {
-            my ($col, $case) = each %$term;
+            my ($col, $case);
+            if (ref($term) eq 'HASH') {
+                ($col, $case) = each %$term;
+            } else {
+                $col  = $term;
+                $case = 'ASC';
+            }
             push @orders, { column => $col, desc => $case };
         }
         $rs->order(\@orders);
