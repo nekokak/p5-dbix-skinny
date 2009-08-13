@@ -762,6 +762,8 @@ walf443 : Keiji Yoshimi
 
 TBONE : Terrence Brannon
 
+nekoya : Ryo Miyake
+
 =head1 REPOSITORY
 
   git clone git://github.com/nekokak/p5-dbix-skinny.git  
