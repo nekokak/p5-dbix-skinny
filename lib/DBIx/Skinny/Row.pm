@@ -86,6 +86,7 @@ sub update {
     $table ||= $self->{opt_table_info};
     $args ||= $self->get_dirty_columns;
     my $where = $self->_update_or_delete_cond($table);
+    $self->set($args);
     $self->{skinny}->update($table, $args, $where);
 }
 
