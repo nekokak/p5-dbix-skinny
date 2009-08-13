@@ -7,13 +7,12 @@ install_table tinyurl => schema {
     columns qw/
         id
         url
+        tinyurl
     /;
-};
 
-install_inflate_rule 'url' => callback {
-    inflate {
-        my $value = shift;
-        return makeashorterlink($value);
+    trigger pre_insert => sub {
+        my ( $class, $args ) = @_;
+        $args->{tinyurl} = makeashorterlink($args->{url});
     };
 };
 

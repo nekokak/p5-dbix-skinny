@@ -4,6 +4,8 @@ Revision history for Perl extension DBIx::Skinny
    XXXX-XX-XX
         - FIXED: get delete rows count. (RT#48359)
         - FIXED: pod typo (thanks TBONE)
+        - MOD: supported search with order_by as hashref or string (thanks nekoya)
+        - MOD: call set when updated row object (thanks nekoya)
         - MOD: add new method and more.
         - ADD: skinny sample code.
         - ADD: Manual document.

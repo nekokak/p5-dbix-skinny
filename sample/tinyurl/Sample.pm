@@ -7,7 +7,8 @@ sub setup_db {
     shift->do(q{
         CREATE TABLE tinyurl (
             id  INT,
-            url TEXT
+            url TEXT,
+            tinyurl TEXT
         )
     });
 }
