@@ -39,7 +39,7 @@ Skinnyを操作するClassを定義します。
 
 use strict;
 
-use warnings
+use warnings;
 
 された事と同じ状態にします。
 
@@ -59,6 +59,10 @@ DBにクエリを投げる前に
 もしくは
 
     Proj::Model->connect(....): # connectメソッドをdsnなどの引数ともに呼び出す
+
+もしくは
+
+    my $model = Proj::Model->new($connection_info); # インスタンスを作りつつコネクション情報を設定する
 
 としてやればよいです。
 
@@ -91,15 +95,13 @@ DBIx::Skinny::SchemaをuseするとSchemaを構成するために必要なmethod
 
 use strict;
 
-use warnings
+use warnings;
 
 された事と同じ状態にします。
 
 この例ではuserテーブルの
-
 プライマリキーはid
 各カラムにはid/guid/login_id/login_pw/name/mail/created_at/updated_at
-
 がある事を定義しています。
 
 Skinnyでは他のORマッパーと異なり、テーブル毎にClassを作る必要はありません。
@@ -124,15 +126,11 @@ Skinnyでは他のORマッパーと異なり、テーブル毎にClassを作る�
 
 このようにinstall_utf8_columnsに対象となるカラム名を設定します。
 
-ここで注意が必要なのですが、Skinnyは色々な割り切りを持って設計しています。
+ここで注意が必要なのですが、Skinnyはルールベースな設計しています。
 
-Skinnyの根本思想としてはモジュール利用者が好きに生のSQLを食わせて、
+Skinnyの根本思想としてはモジュール利用者が好きに生のSQLを実行して、
 その結果をちょっといい感じのオブジェクトに纏めて
 ちょっと楽をしようというものです。
-
-この好きに生のSQLを食わせる為に色々な割り切りをしています。
-
-思想については別の項目で書きます。
 
 脱線しましたがinstall_utf8_columnsに対象となるカラム名を設定するのですが
 この設定はSkinnyで取り扱う全テーブルに対しての設定となります。
