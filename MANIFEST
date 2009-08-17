@@ -24,6 +24,9 @@ lib/DBIx/Skinny/DBD.pm
 lib/DBIx/Skinny/DBD/mysql.pm
 lib/DBIx/Skinny/DBD/SQLite.pm
 lib/DBIx/Skinny/Iterator.pm
+lib/DBIx/Skinny/Manual/JA.pod
+lib/DBIx/Skinny/Manual/JA/Intro.pod
+lib/DBIx/Skinny/Manual/JA/Resultset.pod
 lib/DBIx/Skinny/Profiler.pm
 lib/DBIx/Skinny/Row.pm
 lib/DBIx/Skinny/Schema.pm
@@ -34,7 +37,11 @@ Makefile.PL
 MANIFEST			This list of files
 META.yml
 README
+sample/tinyurl/Sample.pm
+sample/tinyurl/Sample/Schema.pm
+sample/tinyurl/tinyurl.pl
 t/001_compile.t
+t/002_new.t
 t/100_schema_info.t
 t/101_insert.t
 t/102_update.t
