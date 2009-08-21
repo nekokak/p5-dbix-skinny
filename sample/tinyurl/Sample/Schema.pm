@@ -1,4 +1,5 @@
-package Sample::Schema;
+package # hide from PAUSE
+  Sample::Schema;
 use DBIx::Skinny::Schema;
 use WWW::Shorten::TinyURL;
 
