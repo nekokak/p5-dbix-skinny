@@ -728,7 +728,7 @@ get transaction scope object.
     my $row = $itr->first;
     $row->insert; # inser data.
 
-=head find_or_new
+=head2 find_or_new
 
     my $row = Your::Model->find_or_new('user',{name => 'nekokak'});
 
