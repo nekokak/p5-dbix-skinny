@@ -1,5 +1,11 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.04
+   XXXX-XX-XX
+        - FIXED: avoid warning, in case of binds contains undef by Profiler.pm (thanks nekoya)
+        - FIXED: pod typo (thanks nekoya)
+        - MOD: Hide from pause by sample code.
+
 0.03
    2009-08-17
         - FIXED: get delete rows count. (RT#48359)
