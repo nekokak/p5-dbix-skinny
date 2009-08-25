@@ -51,9 +51,14 @@ describe 'profiler test' => run {
             SELECT id FROM user WHERE (id = ? OR id = ?)
         },[1, 2]);
 
+        $profiler->record_query(q{
+            INSERT INTO user (name) VALUES (?)
+        },[undef]);
+
         is_deeply $profiler->query_log, [
             q{SELECT id FROM user WHERE id = ? :binds 1},
             q{SELECT id FROM user WHERE (id = ? OR id = ?) :binds 1, 2},
+            q{INSERT INTO user (name) VALUES (?) :binds undef},
         ];
     };
 };

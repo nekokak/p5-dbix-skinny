@@ -28,8 +28,10 @@ sub record_query {
     my ($self, $sql, $bind) = @_;
 
     my $log = _normalize($sql);
-    if (my $bind_value = join ', ', @{$bind||[]} ) {
-        $log .= ' :binds ' . $bind_value;
+    if (ref $bind eq 'ARRAY') {
+        my @binds;
+        push @binds, defined $_ ? $_ : 'undef' for @$bind;
+        $log .= ' :binds ' . join ', ', @binds;
     }
 
     push @{ $self->query_log }, $log;
