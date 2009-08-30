@@ -23,7 +23,11 @@ sub import {
 
     my $schema = "$caller\::Schema";
     eval "use $schema"; ## no critic
-    die $@ if $@;
+    if ( $@ ) {
+        # accept schema class declaration within base class.
+        eval "$schema->import";
+        die $@ if $@;
+    }
 
     my $dbd_type = _dbd_type($args);
     my $_attribute = +{
