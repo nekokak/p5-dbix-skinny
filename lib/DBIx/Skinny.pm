@@ -584,6 +584,12 @@ DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
 
 =head1 METHOD
 
+=head2 new
+
+create your skinny instance.
+
+It is possible to use it even by the class method.
+
 =head2 insert
 
 insert record
