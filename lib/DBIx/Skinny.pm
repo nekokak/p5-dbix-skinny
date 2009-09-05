@@ -78,14 +78,16 @@ sub new {
     my $dbd      = delete $attr->{dbd};
     my $profiler = delete $attr->{profiler};
     my $dbh      = delete $attr->{dbh};
+    my $connect_options = delete $attr->{connect_options};
 
     my $self = bless Storable::dclone($attr), $class;
     if ($connection_info) {
         $self->connect_info($connection_info);
         $self->reconnect;
     } else {
-        $self->attribute->{dbd}      = $dbd;
-        $self->attribute->{dbh}      = $dbh;
+        $self->attribute->{dbd} = $dbd;
+        $self->attribute->{dbh} = $dbh;
+        $self->attribute->{connect_options} = $connect_options;
     }
     $self->attribute->{profiler} = $profiler;
 
