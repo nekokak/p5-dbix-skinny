@@ -402,7 +402,7 @@ sub insert {
     $class->profiler($sql, \@bind);
     my $sth = $class->_execute($sql, \@bind);
 
-    my $id = $class->attribute->{dbd}->last_insert_id($class->dbh, $sth);
+    my $id = $class->attribute->{dbd}->last_insert_id($class->dbh, $sth, { table => $table });
     $class->_close_sth($sth);
 
     my $obj = $class->search($table, { $schema->schema_info->{$table}->{pk} => $id } )->first;
