@@ -191,7 +191,7 @@ $stmt = ns();
 $stmt->add_select('f.foo' => 'foo');
 $stmt->add_select('COUNT(*)' => 'count');
 $stmt->from([ qw( baz ) ]);
-is($stmt->as_sql, "SELECT f.foo, COUNT(*) count\nFROM baz\n");
+is($stmt->as_sql, "SELECT f.foo, COUNT(*) AS count\nFROM baz\n");
 my $map = $stmt->select_map;
 is(scalar(keys %$map), 2);
 is($map->{'f.foo'}, 'foo');
@@ -209,7 +209,7 @@ $stmt->limit(2);
 $stmt->add_having(count => 2);
 
 is($stmt->as_sql, <<SQL);
-SELECT foo, COUNT(*) count
+SELECT foo, COUNT(*) AS count
 FROM baz
 WHERE (foo = ?)
 GROUP BY baz
