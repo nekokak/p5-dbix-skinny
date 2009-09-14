@@ -781,6 +781,8 @@ nekoya : Ryo Miyake
 
 oinume: Kazuhiro Oinuma
 
+fujiwara: Shunichiro Fujiwara
+
 =head1 REPOSITORY
 
   git clone git://github.com/nekokak/p5-dbix-skinny.git  
