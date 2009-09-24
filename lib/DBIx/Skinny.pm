@@ -580,7 +580,7 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
     );
     $row->update({name => 'nekokak'});
 
-    $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?},1);
+    $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
     $row->delete('user')
 
 =head1 DESCRIPTION
@@ -713,7 +713,7 @@ execute your SQL
             user
         WHERE
             id = ?
-    },1);
+    },[ 1 ]);
 
 =head2 txn_scope
 
