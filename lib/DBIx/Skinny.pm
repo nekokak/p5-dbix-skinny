@@ -25,7 +25,7 @@ sub import {
     eval "use $schema"; ## no critic
     if ( $@ ) {
         # accept schema class declaration within base class.
-        eval "$schema->import";
+        eval "$schema->import"; ## no critic
         die $@ if $@;
     }
 
