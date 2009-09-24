@@ -676,8 +676,10 @@ get one record
 result set case:
 
     my $rs = Your::Model->resultset(
-        select => [qw/id name/],
-        from   => [qw/user/],
+        {
+            select => [qw/id name/],
+            from   => [qw/user/],
+        }
     );
     $rs->add_where('name' => {op => 'like', value => "%neko%"});
     $rs->limit(10);
