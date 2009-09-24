@@ -694,7 +694,7 @@ result set case:
 
 get simple count
 
-    my $cnt = Your::Model->count('user',{count => 'id'});
+    my $cnt = Your::Model->count('user', 'id');
 
 =head2 search_named
 
