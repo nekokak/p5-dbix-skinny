@@ -66,7 +66,7 @@ sub as_sql {
         $sql .= join(', ',  map {
             my $alias = $self->select_map->{$_};
             !$alias                         ? $_ :
-            $alias && /(?:^|\.)\Q$alias\E$/ ? $_ : "$_ $alias";
+            $alias && /(?:^|\.)\Q$alias\E$/ ? $_ : "$_ AS $alias";
         } @{ $self->select }) . "\n";
     }
 

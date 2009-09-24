@@ -1,6 +1,7 @@
 use t::Utils;
 use Mock::Basic;
 use Mock::BasicMySQL;
+use Mock::BasicPg;
 use Test::Declare;
 
 plan tests => blocks;
@@ -60,6 +61,40 @@ SKIP: {
         };
         cleanup {
             Mock::BasicMySQL->cleanup_test_db;
+        };
+    };
+}
+
+SKIP: {
+    my ($dsn, $username, $password) = @ENV{map { "SKINNY_PG_${_}" } qw/DSN USER PASS/};
+
+    skip 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test', 1 unless ($dsn && $username);
+
+    describe 'bulk insert test for pg' => run {
+
+        init {
+            Mock::BasicPg->connect({dsn => $dsn, username => $username, password => $password});
+            Mock::BasicPg->setup_test_db;
+        };
+        test 'bulk_insert method' => run {
+            Mock::BasicPg->bulk_insert('mock_basic_pg',[
+                {
+                    id   => 1,
+                    name => 'perl',
+                },
+                {
+                    id   => 2,
+                    name => 'ruby',
+                },
+                {
+                    id   => 3,
+                    name => 'python',
+                },
+            ]);
+            is +Mock::BasicPg->count('mock_basic_pg', 'id'), 3;
+        };
+        cleanup {
+            Mock::BasicPg->cleanup_test_db;
         };
     };
 }
