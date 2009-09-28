@@ -157,7 +157,7 @@ returns those that have been changed.
 
 insert row data. call find_or_create method.
 
-=head2 updat
+=head2 update
 
 update is executed for instance record.
 
