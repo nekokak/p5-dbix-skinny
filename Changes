@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.04
-   XXXX-XX-XX
+   2009-10-01
         - FIXED: avoid warning, in case of binds contains undef by Profiler.pm (thanks nekoya)
         - FIXED: pod typo (thanks nekoya/yusukebe/fujiwara)
         - MOD: Hide from pause by sample code.
