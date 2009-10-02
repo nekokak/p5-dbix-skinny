@@ -12,10 +12,9 @@ Please translate and read the person in the sphere in English.
 
 =head1 注意
 
-現在SkinnyはMySQLとSQLiteしかサポートしていません。
-それはAuthorの私が現在そのRDBMSしか使っていないからです。
+現在SkinnyはMySQLとSQLiteとPostgreSQLをサポートしています。
 
-PostgreSQLやOracleなどが使いたい場合は、
+Oracleなどが他のDBDを使いたい場合は、
 DBIx::Skinny::DBD::*を作っていただく必要があります。
 
 まだまだα版なので色々変わる事があるかもしれません。
@@ -530,4 +529,77 @@ txn_scopeメソッドを使わずに
 当然ですがトランザクション機能をつかうにはRDBMSがトランザクションの機能をサポートしている必要があります。
 MySQLをお使いの場合はInnoDBを使ってください。
 
+=head2 メソッドの追加(Mixin)
+
+DBIx::Skinny::Mixinモジュールを利用すれば、
+Proj::Modelにメソッドを追加できるようになります。
+
+例えば
+
+    package Proj::Model;
+    use DBIx::Skinny;
+    use DBIx::Skinny::Mixin modules => ['+Mixin::Foo'];
+    1;
+    
+    package Mixin::Foo;
+    sub register_method {
+        +{
+            foo => sub { 'foo' },
+        };
+    }
+
+このようにMixin::Fooで定義されたregister_methodの内容に従って
+Proj::Modelにメソッドがexportされます。
+
+この例の場合fooというメソッドがexportされるので
+
+
+    Proj::Model->foo;
+
+とアクセスする事ができます。
+
+
+=head2 Rowオブジェクトへのメソッド追加
+
+Proj::Model::Row::{Table}のようなファイルを用意すること、
+SkinnyはIteratorから返されるRowオブエクト
+のベースとなるクラスでProj::Model::Row::{Table}を使う事ができます。
+
+Tableクラスが見つからない場合や、発行したクエリからどのテーブルクラスを使うべきか判断できない場合は
+発行するSQLをDigest::SHA1でハッシュした値をつかったANONクラスを作成し使用します。
+
+Tableクラスを用意することで、そのクラスにメソッドを定義できます。
+
+    package Proj::Model::Row::User;
+    use strict;
+    use warnings;
+    use utf8;
+    use base 'DBIx::Skinny::Row';
+    sub foo {
+        say 'foo';
+    }
+    1;
+
+fooメソッドを定義しておく事で
+
+    $row->foo;
+
+と呼び出す事が可能です。
+
+またこの仕組みを利用すれば、リレーションを独自に実装する事も可能です。
+
+例えば、User has_many Blogの場合
+
+    package Proj::Model::Row::User;
+    use base 'DBIx::Skinny::Row';
+    sub blogs {
+        my $self = shift;
+        $self->{skinny}->search('blog',{user_id => $self->id});
+    }
+
+このように書く事ができ、
+
+    $user->blogs;
+
+このようにアクセスさせる事が可能です。
 

@@ -45,11 +45,18 @@ HotSpotな部分でパフォーマンスが求められる部分にはDBICを使
 Skinnyの大きな目的としては
 
 １：生のSQLを発行した時にinflateとかutf8-flagを処理してくれる
+
 ２：update,insert,deleteはDBICというかよくあるORマッパーみたいにできる
+
 ３：簡単なselectもよくあるORマッパーみたいにできる
+
 ４：小さなオブジェクト群で構成されており、デバッグが行いやすい
 
 です。
 
 貧弱だったりバギーだったりするかもしれませんがどうぞよろしく:)
 
+=head2 feedback
+
+DBIx::Skinnyのfeedbackをしたいと思う人は
+#perl-casual@irc.freenode.netもしくは#dbix-skinny@irc.perl.orgまたはメールでお願いします。
