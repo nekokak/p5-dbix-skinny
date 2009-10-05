@@ -11,6 +11,9 @@ sub sql_for_unixtime {
     "TRUNC(EXTRACT('epoch' from NOW()))";
 }
 
+sub quote    { '"' }
+sub name_sep { '.' }
+
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 

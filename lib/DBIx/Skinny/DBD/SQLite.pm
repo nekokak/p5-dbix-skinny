@@ -6,6 +6,9 @@ sub last_insert_id { $_[1]->func('last_insert_rowid') }
 
 sub sql_for_unixtime { return time() }
 
+sub quote    { '`' }
+sub name_sep { '.' }
+
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 

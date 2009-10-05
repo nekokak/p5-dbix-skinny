@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.05
+   XXXX-XX-XX
+        - FIXNED: quote col (thanks noblejasper/fujiwara).
+                  (table etc no not yet.)
 0.04
    2009-10-01
         - FIXED: avoid warning, in case of binds contains undef by Profiler.pm (thanks nekoya)

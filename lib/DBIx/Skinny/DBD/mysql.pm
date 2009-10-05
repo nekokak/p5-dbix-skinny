@@ -10,6 +10,9 @@ sub sql_for_unixtime {
     return "UNIX_TIMESTAMP()";
 }
 
+sub quote    { '`' }
+sub name_sep { '.' }
+
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 

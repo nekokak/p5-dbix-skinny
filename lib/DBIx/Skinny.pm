@@ -376,6 +376,14 @@ sub _camelize {
     join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
 }
 
+sub _quote {
+    my ($label, $quote, $name_sep) = @_;
+
+    return $label if $label eq '*';
+    return $quote . $label . $quote if !defined $name_sep;
+    return join $name_sep, map { $quote . $_ . $quote } split /\Q$name_sep\E/, $label;
+}
+
 *create = \*insert;
 sub insert {
     my ($class, $table, $args) = @_;
@@ -395,9 +403,11 @@ sub insert {
     }
 
     # TODO: INSERT or REPLACE. bind_param_attributes etc...
+    my $quote = $class->dbd->quote;
+    my $name_sep = $class->dbd->name_sep;
     my $sql = "INSERT INTO $table\n";
-    $sql .= '(' . join(', ', @cols) . ')' . "\n" .
-            'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
+    $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
+            'VALUES (' . join(', ', ('?') x map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n";
 
     $class->profiler($sql, \@bind);
     my $sth = $class->_execute($sql, \@bind);
@@ -405,7 +415,7 @@ sub insert {
     my $pk = $class->schema->schema_info->{$table}->{pk};
     my $id = defined $args->{$pk}
         ? $args->{$pk}
-        : $class->attribute->{dbd}->last_insert_id($class->dbh, $sth, { table => $table });
+        : $class->dbd->last_insert_id($class->dbh, $sth, { table => $table });
     $class->_close_sth($sth);
 
     my $obj = $class->search($table, { $schema->schema_info->{$table}->{pk} => $id } )->first;
@@ -433,8 +443,11 @@ sub update {
         $args->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
+    my $quote = $class->dbd->quote;
+    my $name_sep = $class->dbd->name_sep;
     my (@set,@bind);
     for my $col (keys %{ $args }) {
+        $col = _quote($col, $quote, $name_sep);
         if (ref($args->{$col}) eq 'SCALAR') {
             push @set, "$col = " . ${ $args->{$col} };
         } else {
