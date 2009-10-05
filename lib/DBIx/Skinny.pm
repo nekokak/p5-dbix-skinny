@@ -407,7 +407,7 @@ sub insert {
     my $name_sep = $class->dbd->name_sep;
     my $sql = "INSERT INTO $table\n";
     $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
-            'VALUES (' . join(', ', ('?') x map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n";
+            'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
 
     $class->profiler($sql, \@bind);
     my $sth = $class->_execute($sql, \@bind);
