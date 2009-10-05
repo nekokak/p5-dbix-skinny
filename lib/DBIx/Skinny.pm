@@ -22,12 +22,6 @@ sub import {
     my $args   = $opt{setup}||+{};
 
     my $schema = "$caller\::Schema";
-    eval "use $schema"; ## no critic
-    if ( $@ ) {
-        # accept schema class declaration within base class.
-        eval "$schema->import"; ## no critic
-        die $@ if $@;
-    }
 
     my $dbd_type = _dbd_type($args);
     my $_attribute = +{
@@ -65,6 +59,13 @@ sub import {
         for my $func (@functions) {
             *{"$caller\::$func"} = \&$func;
         }
+    }
+
+    eval "use $schema"; ## no critic
+    if ( $@ ) {
+        # accept schema class declaration within base class.
+        (my $schema_file = $schema) =~ s|::|/|g;
+        die $@ if $@ && $@ !~ /Can't locate $schema_file\.pm in \@INC/;
     }
 
     strict->import;
