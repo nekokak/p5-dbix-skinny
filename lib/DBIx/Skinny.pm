@@ -447,11 +447,11 @@ sub update {
     my $name_sep = $class->dbd->name_sep;
     my (@set,@bind);
     for my $col (keys %{ $args }) {
-        $col = _quote($col, $quote, $name_sep);
+        my $quoted_col = _quote($col, $quote, $name_sep);
         if (ref($args->{$col}) eq 'SCALAR') {
-            push @set, "$col = " . ${ $args->{$col} };
+            push @set, "$quoted_col = " . ${ $args->{$col} };
         } else {
-            push @set, "$col = ?";
+            push @set, "$quoted_col = ?";
             push @bind, $schema->utf8_off($col, $args->{$col});
         }
     }
