@@ -50,7 +50,7 @@ sub import {
             call_schema_trigger
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
-                _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class
+                _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
             insert bulk_insert create update delete find_or_create find_or_insert
             update_by_sql delete_by_sql
                 _add_where
@@ -348,11 +348,21 @@ sub _mk_anon_row_class {
     return $row_class;
 }
 
+sub _guess_table_name {
+    my ($class, $sql) = @_;
+
+    if ($sql =~ /^.+from\s+([\w]+)\s/i) {
+        return $1;
+    }
+    return;
+}
+
 sub _mk_row_class {
     my ($class, $key, $table) = @_;
 
+    $table ||= $class->_guess_table_name($key)||'';
     my $attr = $class->attribute;
-    my $base_row_class = $attr->{row_class_map}->{$table||''}||'';
+    my $base_row_class = $attr->{row_class_map}->{$table}||'';
 
     if ( $base_row_class eq 'DBIx::Skinny::Row' ) {
         return $class->_mk_anon_row_class($key, $base_row_class);
