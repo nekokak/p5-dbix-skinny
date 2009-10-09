@@ -52,6 +52,7 @@ sub import {
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class
             insert bulk_insert create update delete find_or_create find_or_insert
+            update_by_sql delete_by_sql
                 _add_where
             _execute _close_sth _stack_trace
             txn_scope txn_begin txn_rollback txn_commit txn_end
@@ -473,6 +474,17 @@ sub update {
     return $rows;
 }
 
+sub update_by_sql {
+    my ($class, $sql, $bind) = @_;
+
+    $class->profiler($sql, $bind);
+    my $sth = $class->dbh->prepare($sql);
+    my $rows = $sth->execute(@$bind);
+    $class->_close_sth($sth);
+
+    $rows;
+}
+
 sub delete {
     my ($class, $table, $where) = @_;
 
@@ -495,6 +507,17 @@ sub delete {
 
     my $ret = $sth->rows;
     $class->_close_sth($sth);
+    $ret;
+}
+
+sub delete_by_sql {
+    my ($class, $sql, $bind) = @_;
+
+    $class->profiler($sql, $bind);
+    my $sth = $class->dbh->prepare($sql);
+    my $ret = $sth->execute(@$bind);
+    $class->_close_sth($sth);
+
     $ret;
 }
 
