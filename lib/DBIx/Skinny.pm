@@ -92,6 +92,9 @@ sub new {
         $self->attribute->{connect_options} = $connect_options;
     }
     $self->attribute->{profiler} = $profiler;
+    $attr->{dbd}      = $dbd;
+    $attr->{dbh}      = $dbh;
+    $attr->{profiler} = $profiler;
 
     return $self;
 }
