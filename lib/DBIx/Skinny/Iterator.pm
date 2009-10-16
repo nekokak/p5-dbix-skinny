@@ -24,7 +24,7 @@ sub iterator {
 
     my $row;
     if ($self->{sth}) {
-        $row = $self->{sth}->fetchrow_hashref();
+        $row = $self->{sth}->fetchrow_hashref('NAME_lc');
         unless ( $row ) {
             $self->{skinny}->_close_sth($self->{sth});
             $self->{sth} = undef;
