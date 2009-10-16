@@ -5,6 +5,7 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED: quote col (thanks noblejasper/fujiwara).
                   (table etc no not yet.)
         - FIXED: fetchrow_hashref('NAME_lc') for Oracle. (thanks Tomoyuki Misonou)
+        - ADD: Oracle support (thanks Tomoyuki Misonou)
 0.04
    2009-10-01
         - FIXED: avoid warning, in case of binds contains undef by Profiler.pm (thanks nekoya)

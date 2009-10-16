@@ -1,15 +1,14 @@
-package DBIx::Skinny::DBD::Pg;
+package DBIx::Skinny::DBD::Oracle;
 use strict;
 use warnings;
-use DBIx::Skinny::SQL;
+use DBIx::Skinny::SQL::Oracle;
 
 sub last_insert_id {
-    my ($self, $dbh, $sth, $args) = @_;
-    $dbh->last_insert_id(undef, undef, $args->{table}, undef);
+    return;
 }
 
 sub sql_for_unixtime {
-    "TRUNC(EXTRACT('epoch' from NOW()))";
+    "(cast(SYS_EXTRACT_UTC(current_timestamp) as date) - date '1900-01-01') * 24 * 60 * 60";
 }
 
 sub quote    { '"' }
@@ -29,6 +28,6 @@ sub bulk_insert {
     return 1;
 }
 
-sub query_builder_class { 'DBIx::Skinny::SQL' }
+sub query_builder_class { 'DBIx::Skinny::SQL::Oracle' }
 
 1;

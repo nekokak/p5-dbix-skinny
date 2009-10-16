@@ -7,7 +7,6 @@ our $VERSION = '0.04';
 use DBI;
 use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
-use DBIx::Skinny::SQL;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
 use DBIx::Skinny::Transaction;
@@ -234,7 +233,9 @@ sub count {
 sub resultset {
     my ($class, $args) = @_;
     $args->{skinny} = $class;
-    DBIx::Skinny::SQL->new($args);
+
+    my $query_builder_class = $class->dbd->query_builder_class;
+    $query_builder_class->new($args);
 }
 
 sub search {
