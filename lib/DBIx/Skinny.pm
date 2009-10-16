@@ -835,6 +835,8 @@ oinume: Kazuhiro Oinuma
 
 fujiwara: Shunichiro Fujiwara
 
+pjam: Tomoyuki Misonou
+
 =head1 REPOSITORY
 
   git clone git://github.com/nekokak/p5-dbix-skinny.git  
