@@ -19,7 +19,7 @@ sub import {
         install_inflate_rule
           inflate deflate call_inflate call_deflate
           callback _do_inflate
-        trigger call_trigger
+        install_common_trigger trigger call_trigger
         install_utf8_columns
           is_utf8_column utf8_on utf8_off
     /;
@@ -32,6 +32,8 @@ sub import {
     *{"$caller\::schema_info"} = sub { $_schema_info };
     my $_schema_inflate_rule = {};
     *{"$caller\::inflate_rules"} = sub { $_schema_inflate_rule };
+    my $_schema_common_triggers = {};
+    *{"$caller\::common_triggers"} = sub { $_schema_common_triggers };
     my $_utf8_columns = {};
     *{"$caller\::utf8_columns"} = sub { $_utf8_columns };
 
@@ -82,6 +84,11 @@ sub trigger ($$) {
 
 sub call_trigger {
     my ($class, $skinny, $table, $trigger_name, $args) = @_;
+
+    my $common_triggers = $class->common_triggers->{$trigger_name};
+    for my $code (@$common_triggers) {
+        $code->($skinny,$args);
+    }
 
     my $triggers = $class->schema_info->{$table}->{trigger}->{$trigger_name};
     for my $code (@$triggers) {
@@ -141,6 +148,13 @@ sub _do_inflate {
 }
 
 sub callback (&) { shift }
+
+sub install_common_trigger ($$) {
+    my ($trigger_name, $code) = @_;
+
+    my $class = _get_caller_class;
+    push @{$class->common_triggers->{$trigger_name}}, $code;
+}
 
 sub install_utf8_columns (@) {
     my @columns = @_;
