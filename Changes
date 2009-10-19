@@ -8,6 +8,7 @@ Revision history for Perl extension DBIx::Skinny
         - ADD: Oracle support (thanks Tomoyuki Misonou)
         - FIXED: set_dbh method bug. (report thanks walf443)
         - FIXED: Row::set method using deflate data. (thanks nekoya)
+        - ADD: install_common_trigger method for DBIx::Skinny::Schema (thanks nekoya)
 
 0.04
    2009-10-01
