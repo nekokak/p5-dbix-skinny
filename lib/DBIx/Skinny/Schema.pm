@@ -87,12 +87,12 @@ sub call_trigger {
 
     my $common_triggers = $class->common_triggers->{$trigger_name};
     for my $code (@$common_triggers) {
-        $code->($skinny,$args);
+        $code->($skinny, $args, $table);
     }
 
     my $triggers = $class->schema_info->{$table}->{trigger}->{$trigger_name};
     for my $code (@$triggers) {
-        $code->($skinny, $args);
+        $code->($skinny, $args, $table);
     }
 }
 
