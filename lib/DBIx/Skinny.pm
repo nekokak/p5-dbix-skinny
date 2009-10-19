@@ -45,7 +45,7 @@ sub import {
         my @functions = qw/
             new
             schema profiler
-            dbh dbd connect connect_info _dbd_type reconnect
+            dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd
             call_schema_trigger
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
@@ -150,8 +150,7 @@ sub connect_info {
     $attr->{password} = $connect_info->{password};
     $attr->{connect_options} = $connect_info->{connect_options};
 
-    my $dbd_type = _dbd_type($connect_info);
-    $attr->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
+    $class->setup_dbd($connect_info);
 }
 
 sub connect {
@@ -178,7 +177,15 @@ sub reconnect {
 sub set_dbh {
     my ($class, $dbh) = @_;
     $class->attribute->{dbh} = $dbh;
+    $class->setup_dbd({dbh => $dbh});
 }
+
+sub setup_dbd {
+    my ($class, $args) = @_;
+    my $dbd_type = _dbd_type($args);
+    $class->attribute->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
+}
+
 sub dbd { shift->attribute->{dbd} }
 sub dbh {
     my $class = shift;
