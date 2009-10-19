@@ -63,8 +63,8 @@ sub set {
     my ($self, $args) = @_;
 
     for my $col (keys %$args) {
-        $self->{row_data}->{$col} = $args->{$col};
-        delete $self->{_get_column_cached}->{$col};
+        $self->{row_data}->{$col} = $self->{skinny}->schema->call_deflate($col, $args->{$col});
+        $self->{_get_column_cached}->{$col} = $args->{$col};
         $self->{_dirty_columns}->{$col} = 1;
     }
 }

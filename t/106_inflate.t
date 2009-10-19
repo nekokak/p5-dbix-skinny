@@ -20,7 +20,7 @@ describe 'inflate/deflate test' => run {
 
         isa_ok $row, 'DBIx::Skinny::Row';
         isa_ok $row->name, 'Mock::Inflate::Name';
-        is $row->name, 'perl';
+        is $row->name->name, 'perl';
     };
 
     test 'update mock_inflate data' => run {
@@ -31,7 +31,20 @@ describe 'inflate/deflate test' => run {
 
         isa_ok $row, 'DBIx::Skinny::Row';
         isa_ok $row->name, 'Mock::Inflate::Name';
-        is $row->name, 'ruby';
+        is $row->name->name, 'ruby';
+    };
+
+    test 'update row' => run {
+        my $row = Mock::Inflate->single('mock_inflate',{id => 1});
+        my $name = $row->name;
+        $name->name('perl');
+        $row->update({ name => $name });
+        isa_ok $row->name, 'Mock::Inflate::Name';
+        is $row->name->name, 'perl';
+
+        my $updated = Mock::Inflate->single('mock_inflate',{id => 1});
+        isa_ok $updated->name, 'Mock::Inflate::Name';
+        is $updated->name->name, 'perl';
     };
 };
 
