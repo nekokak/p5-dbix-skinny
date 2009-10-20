@@ -462,8 +462,9 @@ sub update {
     $class->call_schema_trigger('pre_update', $schema, $table, $args);
 
     # deflate
+    my $values = {};
     for my $col (keys %{$args}) {
-        $args->{$col} = $schema->call_deflate($col, $args->{$col});
+        $values->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
     my $quote = $class->dbd->quote;
@@ -471,11 +472,11 @@ sub update {
     my (@set,@bind);
     for my $col (keys %{ $args }) {
         my $quoted_col = _quote($col, $quote, $name_sep);
-        if (ref($args->{$col}) eq 'SCALAR') {
-            push @set, "$quoted_col = " . ${ $args->{$col} };
+        if (ref($values->{$col}) eq 'SCALAR') {
+            push @set, "$quoted_col = " . ${ $values->{$col} };
         } else {
             push @set, "$quoted_col = ?";
-            push @bind, $schema->utf8_off($col, $args->{$col});
+            push @bind, $schema->utf8_off($col, $values->{$col});
         }
     }
 

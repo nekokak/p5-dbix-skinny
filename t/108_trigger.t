@@ -68,6 +68,16 @@ describe 'trigger test' => run {
 
     };
 
+    test "pre_update affects row object's own column" => run {
+        my $row = Mock::Trigger->insert('mock_trigger_pre',{
+                id   => 2,
+                name => 'pre',
+            });
+        ok $row->update({ id => 2 });
+        isa_ok $row, 'DBIx::Skinny::Row';
+        is $row->name, 'pre_update';
+    };
+
     test 'pre_delete/post_delete' => run {
         Mock::Trigger->delete('mock_trigger_pre',{});
 
