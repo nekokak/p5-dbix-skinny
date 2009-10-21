@@ -59,5 +59,15 @@ describe 'update test' => run {
 
         is +Mock::Basic->single('mock_basic',{id => 1})->name, 2;
     };
+
+    test 'update row count' => run {
+        Mock::Basic->insert('mock_basic',{
+            id   => 2,
+            name => 'c++',
+        });
+
+        my $cnt = Mock::Basic->update('mock_basic',{name => 'java'});
+        is $cnt, 2;
+    }
 };
 
