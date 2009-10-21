@@ -654,18 +654,60 @@ create your skinny instance.
 
 It is possible to use it even by the class method.
 
+my $db = Your::Model->new($connection_info);
+
+$connection_info is optional argment.
+
+When $connection_info is specified,
+new method connect new DB connection from $connection_info.
+
+When $connection_info is not specified,
+it becomes use already setup connection or it doesn't do at all.
+
+example:
+
+    my $db = Your::Model->new;
+
+or
+
+    # connect new database connection.
+    my $db = Your::Model->new(+{
+        dsn      => $dsn,
+        username => $username,
+        password => $password,
+        connect_options => $connect_options,
+    });
+
 =head2 insert
 
-insert record
+insert new record and get inserted row object.
+
+my $row = Your::Model->insert($table, \%row_data);
+
+return object is a DBIx::Skinny::Row's object.
+
+example:
 
     my $row = Your::Model->insert('user',{
         id   => 1,
         name => 'nekokak',
     });
 
+or
+
+    my $db = Your::Model->new;
+    my $row = $db->insert('user',{
+        id   => 1,
+        name => 'nekokak',
+    });
+
 =head2 bulk_insert
 
-insert many record
+insert many record.
+
+Your::Model->bulk_insert($table, \@rows);
+
+example:
 
     Your::Model->bulk_insert('user',[
         {
@@ -688,23 +730,36 @@ insert method alias.
 
 =head2 update
 
-update record
+update record. return update row count.
 
-    Your::Model->update('user',{
+my $cnt = Your::Model->update($table, \%update_column);
+
+example:
+
+    my $update_row_count = Your::Model->update('user',{
         name => 'nomaneko',
     },{ id => 1 });
 
 =head2 delete
 
-delete record
+delete record. return delete row count.
 
-    Your::Model->delete('user',{
+my $cnt = Your::Model->delete($table, \%delete_where_condition);
+
+example:
+    my $delete_row_count = Your::Model->delete('user',{
         id => 1,
     });
 
 =head2 find_or_create
 
-create record if not exsists record
+create record if not exsists record.
+
+my $row = Your::Model->find_or_create($table, \%row);
+
+return object is a DBIx::Skinny::Row's object.
+
+example:
 
     my $row = Your::Model->find_or_create('usr',{
         id   => 1,
