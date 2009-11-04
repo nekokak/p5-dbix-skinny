@@ -7,6 +7,7 @@ sub new {
     my ($class, %args) = @_;
 
     my $self = bless \%args, $class;
+    $self->{_use_cache} = 1 unless defined $self->{_use_cache};
 
     $self->reset;
 
@@ -17,7 +18,8 @@ sub iterator {
     my $self = shift;
 
     my $potition = $self->{_potition} + 1;
-    if ( my $row_cache = $self->{_rows_cache}->[$potition] ) {
+    if ( $self->{_use_cache}
+      && ( my $row_cache = $self->{_rows_cache}->[$potition] ) ) {
         $self->{_potition} = $potition;
         return $row_cache;
     }
@@ -54,7 +56,7 @@ sub iterator {
         $self->{_setup}=1;
     }
 
-    $self->{_rows_cache}->[$potition] = $obj;
+    $self->{_rows_cache}->[$potition] = $obj if $self->{_use_cache};
     $self->{_potition} = $potition;
 
     return $obj;
@@ -90,6 +92,11 @@ sub count {
     scalar @rows;
 }
 
+sub no_cache {
+    my $self = shift;
+    $self->{_use_cache} = 0;
+}
+
 1;
 
 __END__
@@ -115,4 +122,9 @@ skinny iteration class.
   
   # do iteration
   while (my $row = $itr->next) { }
+
+  # no cache row object (save memories)
+  $itr->no_cache;
+  while (my $row = $itr->next) { }
+  $itr->reset->first;  # Can't fetch row!
 
