@@ -7,7 +7,7 @@ sub new {
     my ($class, %args) = @_;
 
     my $self = bless \%args, $class;
-    $self->{_use_cache} = 1 unless defined $self->{_use_cache};
+    $self->{_use_cache} = 1;
 
     $self->reset;
 
