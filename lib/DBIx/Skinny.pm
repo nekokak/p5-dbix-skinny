@@ -442,7 +442,6 @@ sub insert {
         : $dbd->last_insert_id($class->dbh, $sth, { table => $table });
     $class->_close_sth($sth);
 
-    # FIXME: tableに対応するcolumnsでrow用のデータをつくりなおすべきか
     $args->{$pk} = $id;
     my $row_class = $class->_mk_row_class($sql, $table);
     my $obj = $row_class->new(
