@@ -750,6 +750,16 @@ example:
         name => 'nomaneko',
     },{ id => 1 });
 
+=head2 update_by_sql
+
+update record by specific sql. return update row count.
+
+example:
+    my $update_row_count = Your::Model->update_by_sql(
+        q{UPDATE user SET name = ?},
+        'nomaneko'
+    );
+
 =head2 delete
 
 delete record. return delete row count.
@@ -759,6 +769,17 @@ my $cnt = Your::Model->delete($table, \%delete_where_condition);
 example:
     my $delete_row_count = Your::Model->delete('user',{
         id => 1,
+    });
+
+=head2 delete_by_sql
+
+delete record by specific sql. return delete row count.
+
+example:
+
+    my $delete_row_count = Your::Model->delete_by_sql(
+        q{DELETE FROM user WHERE id = ?},
+        [1]
     });
 
 =head2 find_or_create
