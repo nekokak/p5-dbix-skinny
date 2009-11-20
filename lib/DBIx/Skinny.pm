@@ -425,9 +425,10 @@ sub insert {
         push @bind, $schema->utf8_off($col, $args->{$col});
     }
 
+    my $dbd = $class->dbd;
     # TODO: INSERT or REPLACE. bind_param_attributes etc...
-    my $quote = $class->dbd->quote;
-    my $name_sep = $class->dbd->name_sep;
+    my $quote = $dbd->quote;
+    my $name_sep = $dbd->name_sep;
     my $sql = "INSERT INTO $table\n";
     $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
             'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
@@ -438,10 +439,20 @@ sub insert {
     my $pk = $class->schema->schema_info->{$table}->{pk};
     my $id = defined $args->{$pk}
         ? $args->{$pk}
-        : $class->dbd->last_insert_id($class->dbh, $sth, { table => $table });
+        : $dbd->last_insert_id($class->dbh, $sth, { table => $table });
     $class->_close_sth($sth);
 
-    my $obj = $class->search($table, { $schema->schema_info->{$table}->{pk} => $id } )->first;
+    # FIXME: tableに対応するcolumnsでrow用のデータをつくりなおすべきか
+    $args->{$pk} = $id;
+    my $row_class = $class->_mk_row_class($sql, $table);
+    my $obj = $row_class->new(
+        {
+            row_data       => $args,
+            skinny         => $class,
+            opt_table_info => $table,
+        }
+    );
+    $obj->setup;
 
     $class->call_schema_trigger('post_insert', $schema, $table, $obj);
 

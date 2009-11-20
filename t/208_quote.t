@@ -18,7 +18,7 @@ describe 'insert test' => run {
         });
         is +Mock::Basic->profiler->query_log->[0] , 'INSERT INTO mock_basic (`name`, `id`) VALUES (?, ?) :binds perl, 1';
         $row->update({name => 'ruby'});
-        is +Mock::Basic->profiler->query_log->[2], 'UPDATE mock_basic SET `name` = ? WHERE (id = ?) :binds ruby, 1';
+        is +Mock::Basic->profiler->query_log->[1], 'UPDATE mock_basic SET `name` = ? WHERE (id = ?) :binds ruby, 1';
     };
 };
 

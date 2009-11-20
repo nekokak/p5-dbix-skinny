@@ -30,7 +30,7 @@ describe 'common trigger test' => run {
             id   => 1,
         });
         isa_ok $row, 'DBIx::Skinny::Row';
-        is_deeply [qw/id updated_at/], [sort keys %{$row->{row_data}}];
+        is_deeply [qw/id/], [sort keys %{$row->{row_data}}];
     };
 };
 
