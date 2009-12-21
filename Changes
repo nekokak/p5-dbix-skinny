@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.05
-   XXXX-XX-XX
+   2009-12-21
         - FIXED: quote col (thanks noblejasper/fujiwara).
                   (table etc no not yet.)
         - FIXED: fetchrow_hashref('NAME_lc') for Oracle. (thanks Tomoyuki Misonou)
