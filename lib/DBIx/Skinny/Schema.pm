@@ -5,8 +5,30 @@ use warnings;
 BEGIN {
     if ($] <= 5.008000) {
         require Encode;
+        no strict 'refs';
+        *utf8_on = sub {
+            my ($class, $col, $data) = @_;
+            Encode::_utf8_on($data) unless Encode::is_utf8($data);
+            $data;
+        };
+        *utf8_off = sub {
+            my ($class, $col, $data) = @_;
+            Encode::_utf8_off($data) if Encode::is_utf8($data);
+            $data;
+        };
     } else {
         require utf8;
+        no strict 'refs';
+        *utf8_on = sub {
+            my ($class, $col, $data) = @_;
+            utf8::decode($data) unless utf8::is_utf8($data);
+            $data;
+        };
+        *utf8_off = sub {
+            my ($class, $col, $data) = @_;
+            utf8::encode($data) if utf8::is_utf8($data);
+            $data;
+        };
     }
 }
 
@@ -163,32 +185,6 @@ sub install_utf8_columns (@) {
 sub is_utf8_column {
     my ($class, $col) = @_;
     return $class->utf8_columns->{$col} ? 1 : 0;
-}
-
-sub utf8_on {
-    my ($class, $col, $data) = @_;
-
-    if ( $class->is_utf8_column($col) ) {
-        if ($] <= 5.008000) {
-            Encode::_utf8_on($data) unless Encode::is_utf8($data);
-        } else {
-            utf8::decode($data) unless utf8::is_utf8($data);
-        }
-    }
-    return $data;
-}
-
-sub utf8_off {
-    my ($class, $col, $data) = @_;
-
-    if ( $class->is_utf8_column($col) ) {
-        if ($] <= 5.008000) {
-            Encode::_utf8_off($data) if Encode::is_utf8($data);
-        } else {
-            utf8::encode($data) if utf8::is_utf8($data);
-        }
-    }
-    return $data;
 }
 
 1;
