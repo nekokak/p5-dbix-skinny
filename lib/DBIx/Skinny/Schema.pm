@@ -41,15 +41,10 @@ sub import {
     warnings->import;
 }
 
-sub _get_caller_class {
-    my $caller = caller(1);
-    return $caller;
-}
-
 sub install_table ($$) {
     my ($table, $install_code) = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->schema_info->{_installing_table} = $table;
         $install_code->();
     delete $class->schema_info->{_installing_table};
@@ -59,7 +54,7 @@ sub schema (&) { shift }
 sub pk ($) {
     my $column = shift;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->schema_info->{
         $class->schema_info->{_installing_table}
     }->{pk} = $column;
@@ -67,7 +62,7 @@ sub pk ($) {
 sub columns (@) {
     my @columns = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->schema_info->{
         $class->schema_info->{_installing_table}
     }->{columns} = \@columns;
@@ -76,7 +71,7 @@ sub columns (@) {
 sub trigger ($$) {
     my ($trigger_name, $code) = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     push @{$class->schema_info->{
         $class->schema_info->{_installing_table}
     }->{trigger}->{$trigger_name}}, $code;
@@ -99,7 +94,7 @@ sub call_trigger {
 sub install_inflate_rule ($$) {
     my ($rule, $install_inflate_code) = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->inflate_rules->{_installing_rule} = $rule;
         $install_inflate_code->();
     delete $class->inflate_rules->{_installing_rule};
@@ -108,7 +103,7 @@ sub install_inflate_rule ($$) {
 sub inflate (&) {
     my $code = shift;    
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->inflate_rules->{
         $class->inflate_rules->{_installing_rule}
     }->{inflate} = $code;
@@ -117,7 +112,7 @@ sub inflate (&) {
 sub deflate (&) {
     my $code = shift;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     $class->inflate_rules->{
         $class->inflate_rules->{_installing_rule}
     }->{deflate} = $code;
@@ -152,14 +147,14 @@ sub callback (&) { shift }
 sub install_common_trigger ($$) {
     my ($trigger_name, $code) = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     push @{$class->common_triggers->{$trigger_name}}, $code;
 }
 
 sub install_utf8_columns (@) {
     my @columns = @_;
 
-    my $class = _get_caller_class;
+    my $class = caller;
     for my $col (@columns) {
         $class->utf8_columns->{$col} = 1;
     }
