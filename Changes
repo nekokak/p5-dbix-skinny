@@ -1,5 +1,11 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.06
+   XXXX-XX-XX
+        - FIXED: _guess_table_name bug.
+        - MOD: utf8_on/utf8_off speed up. (thanks tokuhirom)
+        - MOD: direct call caller. (thanks yappo)
+
 0.05
    2009-12-21
         - FIXED: quote col (thanks noblejasper/fujiwara).

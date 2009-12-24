@@ -362,7 +362,7 @@ sub _mk_anon_row_class {
 sub _guess_table_name {
     my ($class, $sql) = @_;
 
-    if ($sql =~ /^.+from\s+([\w]+)\s/i) {
+    if ($sql =~ /^.+from\s+([\w]+)\s*/i) {
         return $1;
     }
     return;
@@ -618,6 +618,8 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
 
 =head1 SYNOPSIS
 
+create your db model base class.
+
     package Your::Model;
     use DBIx::Skinny setup => {
         dsn => 'dbi:SQLite:',
@@ -626,6 +628,9 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
     };
     1;
     
+create your db schema class.
+See DBIx::Skinny::Schema for docs on defining schema class.
+
     package Your::Model::Schema;
     use DBIx::Skinny::Schema;
     
@@ -638,10 +643,11 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
     };
     1;
     
-    # in your script:
+in your execute script.
+
     use Your::Model;
     
-    # insert    
+    # insert new record.
     my $row = Your::Model->insert('user',
         {
             id   => 1,
@@ -931,6 +937,10 @@ oinume: Kazuhiro Oinuma
 fujiwara: Shunichiro Fujiwara
 
 pjam: Tomoyuki Misonou
+
+=head1 SUPPORT
+
+  irc: #dbix-skinny@irc.perl.org
 
 =head1 REPOSITORY
 
