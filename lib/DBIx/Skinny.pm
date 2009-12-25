@@ -661,16 +661,18 @@ in your execute script.
 =head1 DESCRIPTION
 
 DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
+Lightweight and Little dependence ORM.
+The Row objects is generated based on arbitrarily SQL. 
 
 =head1 METHOD
 
 =head2 new
 
+Arguments: $connection_info
+Return: DBIx::Skinny's instance object.
+
 create your skinny instance.
-
 It is possible to use it even by the class method.
-
-my $db = Your::Model->new($connection_info);
 
 $connection_info is optional argment.
 
@@ -696,11 +698,10 @@ or
 
 =head2 insert
 
+Arguments: $table_name, \%row_data
+Return: DBIx::Skinny::Row's instance object.
+
 insert new record and get inserted row object.
-
-my $row = Your::Model->insert($table, \%row_data);
-
-return object is a DBIx::Skinny::Row's object.
 
 example:
 
@@ -717,11 +718,20 @@ or
         name => 'nekokak',
     });
 
+=head2 create
+
+insert method alias.
+
 =head2 bulk_insert
 
-insert many record.
+Arguments: $table_name, \@row_datas
+Return: true
 
-Your::Model->bulk_insert($table, \@rows);
+Accepts either an arrayref of hashrefs.
+each hashref should be a structure suitable
+forsubmitting to a Your::Model->insert(...) method.
+
+insert many record by bulk.
 
 example:
 
@@ -740,15 +750,14 @@ example:
         },
     ]);
 
-=head2 create
-
-insert method alias.
-
 =head2 update
 
-update record. return update row count.
+Arguments: $table_name, \%update_row_data, \%update_condition
+Return: updated row count
 
-my $cnt = Your::Model->update($table, \%update_column);
+$update_condition is optional argment.
+
+update record.
 
 example:
 
@@ -756,30 +765,50 @@ example:
         name => 'nomaneko',
     },{ id => 1 });
 
+or 
+
+    # see) DBIx::Skinny::Row's POD
+    my $row = Your::Model->single('user',{id => 1});
+    $row->update({name => 'nomaneko'});
+
 =head2 update_by_sql
 
-update record by specific sql. return update row count.
+Arguments: $sql, \@bind_values
+Return: updated row count
+
+update record by specific sql.
 
 example:
     my $update_row_count = Your::Model->update_by_sql(
         q{UPDATE user SET name = ?},
-        'nomaneko'
+        ['nomaneko']
     );
 
 =head2 delete
 
-delete record. return delete row count.
+Arguments: $table, \%delete_where_condition
+Return: updated row count
 
-my $cnt = Your::Model->delete($table, \%delete_where_condition);
+delete record.
 
 example:
+
     my $delete_row_count = Your::Model->delete('user',{
         id => 1,
     });
 
+or
+
+    # see) DBIx::Skinny::Row's POD
+    my $row = Your::Model->single('user', {id => 1});
+    $row->delete
+
 =head2 delete_by_sql
 
-delete record by specific sql. return delete row count.
+Arguments: $sql, \@bind_values
+Return: updated row count
+
+delete record by specific sql.
 
 example:
 
@@ -790,11 +819,10 @@ example:
 
 =head2 find_or_create
 
+Arguments: $table, \%values_and_search_condition
+Return: DBIx::Skinny::Row's instance object.
+
 create record if not exsists record.
-
-my $row = Your::Model->find_or_create($table, \%row);
-
-return object is a DBIx::Skinny::Row's object.
 
 example:
 
@@ -809,7 +837,13 @@ find_or_create method alias.
 
 =head2 search
 
+Arguments: $table, \%search_condition, \%search_attr
+Return: DBIx::Skinny::Iterator's instance object.
+
 simple search method.
+search method get DBIx::Skinny::Iterator's instance object.
+
+see L<DBIx::Skinny::Iterator>
 
 get iterator:
 
@@ -819,13 +853,22 @@ get rows:
 
     my @rows = Your::Model->search('user',{id => 1},{order_by => 'id'});
 
+Please refer to L<DBIx::Skinny::Manual> for the details of search method.
+
 =head2 single
 
-get one record
+Arguments: $table, \%search_condition
+Return: DBIx::Skinny::Row's instance object.
+
+get one record.
+give back one case of the beginning when it is acquired plural records by single method.
 
     my $row = Your::Model->single('user',{id =>1});
 
 =head2 resultset
+
+Arguments: \%options
+Return: DBIx::Skinny::SQL's instance object.
 
 result set case:
 
@@ -840,6 +883,8 @@ result set case:
     $rs->offset(10);
     $rs->order({ column => 'id', desc => 'DESC' });
     my $itr = $rs->retrieve;
+
+Please refer to L<DBIx::Skinny::Manual> for the details of resultset method.
 
 =head2 count
 
