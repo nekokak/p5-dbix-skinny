@@ -987,6 +987,8 @@ pjam: Tomoyuki Misonou
 
   irc: #dbix-skinny@irc.perl.org
 
+  ML: http://groups.google.com/group/dbix-skinny
+
 =head1 REPOSITORY
 
   git clone git://github.com/nekokak/p5-dbix-skinny.git  
