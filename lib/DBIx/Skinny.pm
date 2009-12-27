@@ -159,12 +159,17 @@ sub connect {
     $class->connect_info(@_) if scalar @_ >= 1;
 
     my $attr = $class->attribute;
-    $attr->{dbh} ||= DBI->connect(
-        $attr->{dsn},
-        $attr->{username},
-        $attr->{password},
-        { RaiseError => 1, PrintError => 0, AutoCommit => 1, %{ $attr->{connect_options} || {} } }
-    );
+    if ( !$attr->{dbh} ) {
+        eval {
+            $attr->{dbh} = DBI->connect(
+                $attr->{dsn},
+                $attr->{username},
+                $attr->{password},
+                { RaiseError => 1, PrintError => 0, AutoCommit => 1, %{ $attr->{connect_options} || {} } }
+            );
+        };
+        Carp::croak $@ if $@;
+    }
     $attr->{dbh};
 }
 

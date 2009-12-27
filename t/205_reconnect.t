@@ -94,6 +94,18 @@ describe 'reconnect test' => run {
         is $row->name, 'perl';
     };
 
+    test 'reconnect fail' => run {
+        throws_ok {
+            Mock::Basic->reconnect(
+                {
+                    dsn => 'dbi:mysql:must_not_exist_db',
+                    username => 'must_not_exist_user',
+                    password => 'arienai_password',
+                }
+            );
+            my $itr = Mock::Basic->search('mock_basic', {id => 1});
+        } qr/at $0/, 'should show error trace';
+    };
 
     cleanup {
         unlink qw{./db1.db db2.db};
