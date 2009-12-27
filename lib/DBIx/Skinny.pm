@@ -53,7 +53,7 @@ sub import {
             insert bulk_insert create update delete find_or_create find_or_insert
             update_by_sql delete_by_sql
                 _add_where
-            _execute _close_sth _stack_trace
+            _execute _close_sth _stack_trace _connection_exception
             txn_scope txn_begin txn_rollback txn_commit txn_end
         /;
         for my $func (@functions) {
@@ -246,8 +246,18 @@ sub resultset {
     my ($class, $args) = @_;
     $args->{skinny} = $class;
 
-    my $query_builder_class = $class->dbd->query_builder_class;
+    my $dbd = $class->dbd;
+    unless ( $dbd ) {
+        $class->_connection_exception;
+    }
+    my $query_builder_class = $dbd->query_builder_class;
     $query_builder_class->new($args);
+}
+
+sub _connection_exception {
+    my ($class, ) = @_;
+    require Data::Dumper;
+    Carp::croak("attribute dbd is not exist. does it connected? attribute: @{[ Data::Dumper::Dumper($class->attribute) ]}");
 }
 
 sub search {

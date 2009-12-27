@@ -1,5 +1,6 @@
 use t::Utils;
 use Mock::Basic;
+use Mock::DB;
 use Test::Declare;
 
 plan tests => blocks;
@@ -29,6 +30,10 @@ describe 'resultset test' => run {
         isa_ok $row, 'DBIx::Skinny::Row';
     
         is $row->name, 'perl';
+    };
+
+    test 'no connection test' => run {
+        throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd is not exist/);
     };
 };
 
