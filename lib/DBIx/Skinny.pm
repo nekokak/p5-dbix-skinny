@@ -224,7 +224,10 @@ sub call_schema_trigger {
 sub do {
     my ($class, $sql) = @_;
     $class->profiler($sql);
-    eval { $class->dbh->do($sql) } or Carp::croak $@;
+    eval { $class->dbh->do($sql) };
+    if ($@) {
+        $class->_stack_trace('', $sql, '', $@);
+    }
 }
 
 sub count {
