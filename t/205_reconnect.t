@@ -94,8 +94,8 @@ describe 'reconnect test' => run {
         is $row->name, 'perl';
     };
 
-    test 'reconnect fail' => run {
-        throws_ok {
+    test '(re)connect fail' => run {
+        dies_ok {
             Mock::Basic->reconnect(
                 {
                     dsn => 'dbi:mysql:must_not_exist_db',
@@ -103,8 +103,7 @@ describe 'reconnect test' => run {
                     password => 'arienai_password',
                 }
             );
-            my $itr = Mock::Basic->search('mock_basic', {id => 1});
-        } qr/at $0/, 'should show error trace';
+        };
     };
 
     cleanup {
