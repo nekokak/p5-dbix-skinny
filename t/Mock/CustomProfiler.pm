@@ -10,7 +10,7 @@ use DBIx::Skinny setup => +{
 
 sub setup_test_db {
     shift->do(q{
-        CREATE TABLE mock_basic (
+        CREATE TABLE mock_custom_profiler (
             id   INT,
             name TEXT
         )
