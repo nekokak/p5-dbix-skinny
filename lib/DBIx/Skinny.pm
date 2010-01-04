@@ -31,7 +31,7 @@ sub import {
         dbh             => $args->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
-        profiler        => DBIx::Skinny::Profiler->new,
+        profiler        => ( $args->{profiler} || DBIx::Skinny::Profiler->new ),
         profile         => $ENV{SKINNY_PROFILE}||0,
         klass           => $caller,
         row_class_map   => +{},
