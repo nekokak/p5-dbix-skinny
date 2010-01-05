@@ -8,6 +8,7 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED: dbd exception (thanks tokuhirom/walf443)
         - FIXED: (connecton|do) error handling (thanks walf443)
         - ADD: some documents
+        - MOD: specific your query profiler (thanks walf443)
 
 0.05
    2009-12-21
