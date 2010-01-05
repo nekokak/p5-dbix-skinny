@@ -5,6 +5,9 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED: _guess_table_name bug.
         - MOD: utf8_on/utf8_off speed up. (thanks tokuhirom)
         - MOD: direct call caller. (thanks yappo)
+        - FIXED: dbd exception (thanks tokuhirom/walf443)
+        - FIXED: (connecton|do) error handling (thanks walf443)
+        - ADD: some documents
 
 0.05
    2009-12-21
