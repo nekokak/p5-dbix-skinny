@@ -98,7 +98,23 @@ sub new {
     return $self;
 }
 
-sub schema { shift->attribute->{schema} }
+# accept schema class declaration within base class.
+# の関係でSchemaが正しくロードされていないことがあることがあるので
+# 初回だけSymbolテーブルにxxx::Schemaが存在しているかチェックしてやる
+my $schema_checked = 0;
+sub schema { 
+    my $schema = shift->attribute->{schema};
+    unless ( $schema_checked ) {
+        {
+            no strict 'refs';
+            unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
+                die "$schema is something wrong( is it realy loaded? )";
+            }
+        }
+        $schema_checked++;
+    }
+    return $schema;
+}
 sub profiler {
     my ($class, $sql, $bind) = @_;
     my $attr = $class->attribute;
@@ -250,7 +266,6 @@ sub count {
 sub resultset {
     my ($class, $args) = @_;
     $args->{skinny} = $class;
-
     my $query_builder_class = $class->dbd->query_builder_class;
     $query_builder_class->new($args);
 }
