@@ -98,19 +98,16 @@ sub new {
     return $self;
 }
 
-# accept schema class declaration within base class.
-# の関係でSchemaが正しくロードされていないことがあることがあるので
-# 初回だけSymbolテーブルにxxx::Schemaが存在しているかチェックしてやる
 my $schema_checked = 0;
 sub schema { 
-    my $schema = shift->attribute->{schema};
+    my $schema = $_[0]->attribute->{schema};
     unless ( $schema_checked ) {
-        {
+        do {
             no strict 'refs';
             unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
                 die "$schema is something wrong( is it realy loaded? )";
             }
-        }
+        };
         $schema_checked++;
     }
     return $schema;
