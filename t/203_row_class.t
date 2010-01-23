@@ -1,6 +1,7 @@
 use t::Utils;
 use Mock::Basic;
 use Mock::BasicRow;
+use Mock::ExRow;
 use Test::Declare;
 
 plan tests => blocks;
@@ -17,6 +18,11 @@ describe 'search test' => run {
             id   => 1,
             name => 'perl',
         });
+        Mock::ExRow->setup_test_db;
+        Mock::ExRow->insert('mock_ex_row',{
+            id   => 1,
+            name => 'perl',
+        });
     };
 
     test 'no your row class' => run {
@@ -30,6 +36,12 @@ describe 'search test' => run {
         is $row->foo, 'foo';
         is $row->id, 1;
         is $row->name, 'perl';
+    };
+
+    test 'ex row class' => run {
+        my $row = Mock::ExRow->single('mock_ex_row',{id => 1});
+        isa_ok $row, 'Mock::ExRow::Row';
+        is $row->foo, 'foo';
     };
 };
 
