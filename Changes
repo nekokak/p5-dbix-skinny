@@ -9,6 +9,8 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED: (connecton|do) error handling (thanks walf443)
         - ADD: some documents
         - MOD: specific your query profiler (thanks walf443)
+        - FIXED: error processing when Schema.pm doesn't exist (thanks walf443)
+        - MOD: it came to be able to define original Row.pm
 
 0.05
    2009-12-21
