@@ -81,6 +81,8 @@ t/210_delete_by_sql.t
 t/211_set_dbh.t
 t/212_common_trigger.t
 t/213_iterator.t
+t/214_do.t
+t/215_custom_profiler.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
@@ -92,10 +94,16 @@ t/Mock/BasicRow.pm
 t/Mock/BasicRow/Row/MockBasicRow.pm
 t/Mock/BasicRow/Schema.pm
 t/Mock/CommonTrigger.pm
+t/Mock/CustomProfiler.pm
+t/Mock/CustomProfiler/Profiler.pm
+t/Mock/CustomProfiler/Schema.pm
 t/Mock/DB.pm
 t/Mock/DB/Schema.pm
 t/Mock/DBH.pm
 t/Mock/DBH/Schema.pm
+t/Mock/ExRow.pm
+t/Mock/ExRow/Row.pm
+t/Mock/ExRow/Schema.pm
 t/Mock/Inclusion.pm
 t/Mock/Inflate.pm
 t/Mock/Inflate/Name.pm
@@ -105,7 +113,9 @@ t/Mock/Trigger.pm
 t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
 t/Mock/UTF8/Schema.pm
+t/regression/guess_table_name.t
 t/regression/new_attr.t
+t/regression/no_schema.t
 t/Utils.pm
 xt/perlcritic.t
 xt/perlcriticrc
