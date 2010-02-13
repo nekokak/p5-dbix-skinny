@@ -270,7 +270,14 @@ sub resultset {
 sub search {
     my ($class, $table, $where, $opt) = @_;
 
-    my $cols = $opt->{select} || $class->schema->schema_info->{$table}->{columns};
+    my $cols = $opt->{select};
+    unless ($cols) {
+        my $column_info = $class->schema->schema_info->{$table};
+        unless ( $column_info ) {
+            Carp::croak("schema_info is not exist for table $table");
+        }
+        $cols = $column_info->{columns};
+    }
     my $rs = $class->resultset(
         {
             select => $cols,

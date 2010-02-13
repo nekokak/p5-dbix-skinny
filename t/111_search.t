@@ -75,5 +75,11 @@ describe 'search test' => run {
         is $row->id, 3;
         is $row->name, 'java';
     };
+
+    test 'search with non-exist table' => run {
+        throws_ok(sub {
+            my $itr = Mock::Basic->search('must_not_exist', {}, { order_by => 'name' });
+        }, qr/schema_info is not exist for table/, 'throw reasonable error for easy debugging');
+    };
 };
 
