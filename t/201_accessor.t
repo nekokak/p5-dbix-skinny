@@ -7,7 +7,7 @@ sub init {
     my $self = shift;
     $self->baz('bazbaz');
 }
-use Test::More tests => 9;
+use Test::More;
 
 use_ok('DBIx::Skinny::Accessor');
 
@@ -24,3 +24,4 @@ is_deeply($k->foo(2, 3), [ 2, 3 ]);
 is_deeply($k->foo, [ 2, 3 ]);
 is($k->bar, 2);
 
+done_testing;

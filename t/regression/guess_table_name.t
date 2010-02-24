@@ -1,12 +1,11 @@
 use t::Utils;
 use Mock::Basic;
-use Test::Declare;
+use Test::More;
 
-plan tests => blocks;
-
-describe '_guess_table_name method bug' => run {
-    test 'do _guess_table_name' => run {
-        is +Mock::Basic->_guess_table_name(q{SELECT * FROM hoo, bar  WHERE name = 'nekokak'}), 'hoo';
-    };
+subtest 'do _guess_table_name' => sub {
+    is +Mock::Basic->_guess_table_name(q{SELECT * FROM hoo, bar  WHERE name = 'nekokak'}), 'hoo';
+    done_testing;
 };
+
+done_testing;
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use DBIx::Skinny::SQL;
-use Test::More tests => 72;
+use Test::More;
 
 my $stmt = ns();
 ok($stmt, 'Created SQL object');
@@ -263,3 +263,5 @@ $stmt->comment("G\\G");
 is($stmt->as_sql, "SELECT foo\nFROM baz\n-- G", "correctly untainted");
 
 sub ns { DBIx::Skinny::SQL->new }
+
+done_testing;

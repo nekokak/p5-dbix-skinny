@@ -1,7 +1,6 @@
 use t::Utils;
-use Test::Declare;
-
-plan tests => blocks;
+use Test::More;
+use Test::Exception;
 
 {
     package Mock::NoSchema;
@@ -9,9 +8,9 @@ plan tests => blocks;
     1;
 }
 
-describe 'no load schema case' => run {
-    test 'do test' => run {
-        dies_ok( sub {Mock::NoSchema->schema} );
-    };
+subtest 'do test' => sub {
+    dies_ok( sub {Mock::NoSchema->schema} );
+    done_testing;
 };
 
+done_testing;

@@ -1,39 +1,38 @@
 use t::Utils;
 use Mock::Basic;
 use Mock::DB;
-use Test::Declare;
+use Test::More;
+use Test::Exception;
 
-plan tests => blocks;
+Mock::Basic->setup_test_db;
+Mock::Basic->insert('mock_basic',{
+    id   => 1,
+    name => 'perl',
+});
 
-describe 'resultset test' => run {
-    init {
-        Mock::Basic->setup_test_db;
-        Mock::Basic->insert('mock_basic',{
-            id   => 1,
-            name => 'perl',
-        });
-    };
+subtest 'resultset' => sub {
+    my $rs = Mock::Basic->resultset;
+    isa_ok $rs, 'DBIx::Skinny::SQL';
 
-    test 'resultset' => run {
-        my $rs = Mock::Basic->resultset;
-        isa_ok $rs, 'DBIx::Skinny::SQL';
+    $rs->add_select('name');
+    $rs->from(['mock_basic']);
+    $rs->add_where(id => 1);
 
-        $rs->add_select('name');
-        $rs->from(['mock_basic']);
-        $rs->add_where(id => 1);
-
-        my $itr = $rs->retrieve;
-        
-        isa_ok $itr, 'DBIx::Skinny::Iterator';
+    my $itr = $rs->retrieve;
     
-        my $row = $itr->first;
-        isa_ok $row, 'DBIx::Skinny::Row';
-    
-        is $row->name, 'perl';
-    };
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
 
-    test 'no connection test' => run {
-        throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd is not exist/);
-    };
+    my $row = $itr->first;
+    isa_ok $row, 'DBIx::Skinny::Row';
+
+    is $row->name, 'perl';
+
+    done_testing;
 };
 
+subtest 'no connection test' => sub {
+    throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd is not exist/);
+    done_testing;
+};
+
+done_testing;

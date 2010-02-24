@@ -11,7 +11,7 @@ requires 'Scalar::Util';
 author_tests('xt');
 
 build_requires 'Test::More';
-build_requires 'Test::Declare';
+build_requiers 'Test::Exception';
 
 use_test_base;
 auto_include;

@@ -1,33 +1,30 @@
 use t::Utils;
 use Mock::Basic;
-use Test::Declare;
+use Test::More;
 
-plan tests => blocks;
+Mock::Basic->setup_test_db;
 
-describe 'count test' => run {
-    init {
-        Mock::Basic->setup_test_db;
-    };
+subtest 'count' => sub {
+    Mock::Basic->insert('mock_basic',{
+        id   => 1,
+        name => 'perl',
+    });
 
-    test 'count' => run {
-        Mock::Basic->insert('mock_basic',{
-            id   => 1,
-            name => 'perl',
-        });
+    is +Mock::Basic->count('mock_basic' => 'id'), 1;
 
-        is +Mock::Basic->count('mock_basic' => 'id'), 1;
+    Mock::Basic->insert('mock_basic',{
+        id   => 2,
+        name => 'ruby',
+    });
 
-        Mock::Basic->insert('mock_basic',{
-            id   => 2,
-            name => 'ruby',
-        });
-
-        is +Mock::Basic->count('mock_basic' => 'id'), 2;
-        is +Mock::Basic->count('mock_basic' => 'id',{name => 'perl'}), 1;
-    };
-
-    test 'iterator count' => run {
-        is +Mock::Basic->search('mock_basic',{  })->count, 2;
-    };
+    is +Mock::Basic->count('mock_basic' => 'id'), 2;
+    is +Mock::Basic->count('mock_basic' => 'id',{name => 'perl'}), 1;
+    done_testing;
 };
 
+subtest 'iterator count' => sub {
+    is +Mock::Basic->search('mock_basic',{  })->count, 2;
+    done_testing;
+};
+
+done_testing;

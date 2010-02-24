@@ -1,14 +1,12 @@
 use t::Utils;
-use Test::Declare;
+use Test::More;
 use Mock::Mixin;
 
-plan tests => blocks;
-
-describe 'mixin test' => run {
-
-    test 'mixin Mixin::Foo module' => run {
-        can_ok 'Mock::Mixin', 'foo';
-        is +Mock::Mixin->foo, 'foo';
-    };
+subtest 'mixin Mixin::Foo module' => sub {
+    can_ok 'Mock::Mixin', 'foo';
+    is +Mock::Mixin->foo, 'foo';
+    done_testing;
 };
+
+done_testing;
 
