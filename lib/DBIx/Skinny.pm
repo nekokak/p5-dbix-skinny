@@ -425,6 +425,9 @@ sub _mk_row_class {
     } elsif ($table) {
         my $tmp_base_row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
         eval "use $tmp_base_row_class"; ## no critic
+        (my $rc = $tmp_base_row_class) =~ s|::|/|g;
+        die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
+
         if ($@) {
             $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
             return $class->_mk_anon_row_class($key);
