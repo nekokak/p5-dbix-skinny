@@ -388,6 +388,9 @@ sub _mk_anon_row_class {
     $attr->{base_row_class} ||= do {
         my $tmp_base_row_class = join '::', $attr->{klass}, 'Row';
         eval "use $tmp_base_row_class"; ## no critic
+        (my $rc = $tmp_base_row_class) =~ s|::|/|g;
+        die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
+
         if ($@) {
             'DBIx::Skinny::Row';
         } else {
