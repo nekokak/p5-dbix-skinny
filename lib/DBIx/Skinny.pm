@@ -543,8 +543,8 @@ sub update {
     my $sql = "UPDATE $table SET " . join(', ', @set) . ' ' . $stmt->as_sql_where;
 
     $class->profiler($sql, \@bind);
-    my $sth = $class->dbh->prepare($sql);
-    my $rows = $sth->execute(@bind);
+    my $sth = $class->_execute($sql, \@bind);
+    my $rows = $sth->rows;
 
     $class->_close_sth($sth);
     $class->call_schema_trigger('post_update', $schema, $table, $rows);
@@ -556,8 +556,8 @@ sub update_by_sql {
     my ($class, $sql, $bind) = @_;
 
     $class->profiler($sql, $bind);
-    my $sth = $class->dbh->prepare($sql);
-    my $rows = $sth->execute(@$bind);
+    my $sth = $class->_execute($sql, $bind);
+    my $rows = $sth->rows;
     $class->_close_sth($sth);
 
     $rows;
@@ -578,25 +578,25 @@ sub delete {
     $class->_add_where($stmt, $where);
 
     my $sql = "DELETE " . $stmt->as_sql;
-    $class->profiler($sql, $stmt->bind);
     my $sth = $class->_execute($sql, $stmt->bind);
+    my $rows = $sth->rows;
 
-    $class->call_schema_trigger('post_delete', $schema, $table);
+    $class->call_schema_trigger('post_delete', $schema, $table, $rows);
 
-    my $ret = $sth->rows;
     $class->_close_sth($sth);
-    $ret;
+    $rows;
 }
 
 sub delete_by_sql {
     my ($class, $sql, $bind) = @_;
 
     $class->profiler($sql, $bind);
-    my $sth = $class->dbh->prepare($sql);
-    my $ret = $sth->execute(@$bind);
+    my $sth = $class->_execute($sql, $bind);
+    my $rows = $sth->rows;
+
     $class->_close_sth($sth);
 
-    $ret;
+    $rows;
 }
 
 *find_or_insert = \*find_or_create;
