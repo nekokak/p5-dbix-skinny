@@ -16,7 +16,7 @@ inc/Test/Base.pm
 inc/Test/Base/Filter.pm
 inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
-inc/Test/Declare.pm
+inc/Test/Exception.pm
 inc/Test/More.pm
 lib/DBIx/Skinny.pm
 lib/DBIx/Skinny/Accessor.pm
@@ -101,6 +101,12 @@ t/Mock/DB.pm
 t/Mock/DB/Schema.pm
 t/Mock/DBH.pm
 t/Mock/DBH/Schema.pm
+t/Mock/ErrRow.pm
+t/Mock/ErrRow/Row.pm
+t/Mock/ErrRow/Schema.pm
+t/Mock/ErrRowChild.pm
+t/Mock/ErrRowChild/Row/MockErrChildRow.pm
+t/Mock/ErrRowChild/Schema.pm
 t/Mock/ExRow.pm
 t/Mock/ExRow/Row.pm
 t/Mock/ExRow/Schema.pm
@@ -116,6 +122,7 @@ t/Mock/UTF8/Schema.pm
 t/regression/guess_table_name.t
 t/regression/new_attr.t
 t/regression/no_schema.t
+t/regression/row_class_syntax_error.t
 t/Utils.pm
 xt/perlcritic.t
 xt/perlcriticrc
