@@ -341,7 +341,6 @@ sub search_named {
 sub search_by_sql {
     my ($class, $sql, $bind, $opt_table_info) = @_;
 
-    $class->profiler($sql, $bind);
     my $sth = $class->_execute($sql, $bind);
     return $class->_get_sth_iterator($sql, $sth, $opt_table_info);
 }
@@ -479,7 +478,6 @@ sub insert {
     $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
             'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
 
-    $class->profiler($sql, \@bind);
     my $sth = $class->_execute($sql, \@bind);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
@@ -542,7 +540,6 @@ sub update {
 
     my $sql = "UPDATE $table SET " . join(', ', @set) . ' ' . $stmt->as_sql_where;
 
-    $class->profiler($sql, \@bind);
     my $sth = $class->_execute($sql, \@bind);
     my $rows = $sth->rows;
 
@@ -555,7 +552,6 @@ sub update {
 sub update_by_sql {
     my ($class, $sql, $bind) = @_;
 
-    $class->profiler($sql, $bind);
     my $sth = $class->_execute($sql, $bind);
     my $rows = $sth->rows;
     $class->_close_sth($sth);
@@ -590,7 +586,6 @@ sub delete {
 sub delete_by_sql {
     my ($class, $sql, $bind) = @_;
 
-    $class->profiler($sql, $bind);
     my $sth = $class->_execute($sql, $bind);
     my $rows = $sth->rows;
 
@@ -617,6 +612,8 @@ sub _add_where {
 
 sub _execute {
     my ($class, $stmt, $bind) = @_;
+
+    $class->profiler($stmt, $bind);
 
     my $sth;
     eval {

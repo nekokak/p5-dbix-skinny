@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.08
+   2010-XX-XX
+        - MOD: _execute call profiler (thanks Makamaka Hannyaharamitu)
+
 0.07
    2010-03-05
         - FIXED: schema_info is not exist case. (thanks walf443)
