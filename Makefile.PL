@@ -10,7 +10,7 @@ requires 'Scalar::Util';
 
 author_tests('xt');
 
-build_requires 'Test::More';
+build_requires 'Test::More' => '0.94';
 build_requires 'Test::Exception';
 
 use_test_base;
