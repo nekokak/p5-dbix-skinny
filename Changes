@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
-0.08
-   2010-XX-XX
+0.0701
+   2010-03-05
         - MOD: _execute call profiler (thanks Makamaka Hannyaharamitu)
 
 0.07

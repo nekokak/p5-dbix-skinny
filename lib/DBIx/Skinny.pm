@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.07';
+our $VERSION = '0.0701';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -1025,6 +1025,10 @@ oinume: Kazuhiro Oinuma
 fujiwara: Shunichiro Fujiwara
 
 pjam: Tomoyuki Misonou
+
+magicalhat
+
+Makamaka Hannyaharamitu
 
 =head1 SUPPORT
 
