@@ -274,7 +274,7 @@ sub search {
     unless ($cols) {
         my $column_info = $class->schema->schema_info->{$table};
         unless ( $column_info ) {
-            Carp::croak("schema_info is not exist for table $table");
+            Carp::croak("schema_info is not exist for table '$table'");
         }
         $cols = $column_info->{columns};
     }
