@@ -3,6 +3,7 @@ Revision history for Perl extension DBIx::Skinny
 0.0701
    2010-03-05
         - MOD: _execute call profiler (thanks Makamaka Hannyaharamitu)
+        - FIXED: Makefile.PL require Test::More 0.94 (thanks metaperl)
 
 0.07
    2010-03-05
