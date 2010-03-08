@@ -481,12 +481,14 @@ sub insert {
     my $sth = $class->_execute($sql, \@bind);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
-    my $id = defined $args->{$pk}
-        ? $args->{$pk}
-        : $dbd->last_insert_id($class->dbh, $sth, { table => $table });
+    my $id = defined $args->{$pk} ? $args->{$pk} :
+             (ref $pk) eq 'ARRAY' ? undef        : $dbd->last_insert_id($class->dbh, $sth, { table => $table });
     $class->_close_sth($sth);
 
-    $args->{$pk} = $id;
+    if ($id) {
+        $args->{$pk} = $id;
+    }
+
     my $row_class = $class->_mk_row_class($sql, $table);
     my $obj = $row_class->new(
         {

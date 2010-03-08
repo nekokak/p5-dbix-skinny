@@ -116,11 +116,22 @@ sub _update_or_delete_cond {
         croak "$table have no pk.";
     }
 
-    unless (grep { $pk eq $_ } @{$self->{select_columns}}) {
-        croak "can't get primary column in your query.";
-    }
+    # multi primary keys
+    if ( ref $pk eq 'ARRAY' ) {
+        my %pks = map { $_ => 1 } @$pk;
 
-    return +{ $pk => $self->$pk };
+        unless ( ( grep { exists $pks{ $_ } } @{$self->{select_columns}} ) == @$pk ) {
+            Carp::croak "can't get primary columns in your query.";
+        }
+
+        return +{ map { $_ => $self->$_() } @$pk };
+    } else {
+        unless (grep { $pk eq $_ } @{$self->{select_columns}}) {
+            Carp::croak "can't get primary column in your query.";
+        }
+
+        return +{ $pk => $self->$pk };
+    }
 }
 
 1;
