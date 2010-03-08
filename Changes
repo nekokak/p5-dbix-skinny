@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0703
+   2010-03-XX
+        - FIXED: DBD::* bulk_insert txn (report Makamaka Hannyaharamitu)
+
 0.0702
    2010-03-08
         - FIXED: DBD::mysql bulk_insert profiler bug. (thanks Makamaka Hannyaharamitu)
