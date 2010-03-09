@@ -21,6 +21,7 @@ inc/Test/More.pm
 lib/DBIx/Skinny.pm
 lib/DBIx/Skinny/Accessor.pm
 lib/DBIx/Skinny/DBD.pm
+lib/DBIx/Skinny/DBD/Base.pm
 lib/DBIx/Skinny/DBD/mysql.pm
 lib/DBIx/Skinny/DBD/Oracle.pm
 lib/DBIx/Skinny/DBD/Pg.pm
@@ -73,7 +74,6 @@ t/202_profiler.t
 t/203_row_class.t
 t/204_search_named.t
 t/205_reconnect.t
-t/206_transaction.t
 t/207_mixin.t
 t/208_quote.t
 t/209_update_by_sql.t
@@ -83,6 +83,10 @@ t/212_common_trigger.t
 t/213_iterator.t
 t/214_do.t
 t/215_custom_profiler.t
+t/216_multi_pk.t
+t/217_transaction_sqlite.t
+t/218_transaction_mysql.t
+t/219_transaction_pg.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
@@ -115,6 +119,8 @@ t/Mock/Inflate.pm
 t/Mock/Inflate/Name.pm
 t/Mock/Inflate/Schema.pm
 t/Mock/Mixin.pm
+t/Mock/MultiPK.pm
+t/Mock/MultiPK/Schema.pm
 t/Mock/Trigger.pm
 t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
