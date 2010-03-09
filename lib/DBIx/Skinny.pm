@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0702';
+our $VERSION = '0.0703';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -124,35 +124,52 @@ sub profiler {
 #--------------------------------------------------------------------------------
 # for transaction
 sub txn_scope {
-    Carp::croak "The 'txn_scope' method can not be performed during a transaction." if $_[0]->attribute->{active_transaction};
     DBIx::Skinny::Transaction->new( @_ );
 }
 
 sub txn_begin {
     my $class = shift;
-    $class->attribute->{active_transaction} = 1;
-    $class->profiler('BEGIN WORK');
+    return if ( ++$class->attribute->{active_transaction} > 1 );
+    $class->profiler("BEGIN WORK");
     eval { $class->dbh->begin_work } or Carp::croak $@;
 }
 
 sub txn_rollback {
     my $class = shift;
     return unless $class->attribute->{active_transaction};
-    $class->profiler('ROLLBACK WORK');
-    eval { $class->dbh->rollback } or Carp::croak $@;
-    $class->txn_end;
+
+    if ( $class->attribute->{active_transaction} == 1 ) {
+        $class->profiler("ROLLBACK WORK");
+        eval { $class->dbh->rollback } or Carp::croak $@;
+        $class->txn_end;
+    }
+    elsif ( $class->attribute->{active_transaction} > 1 ) {
+        $class->attribute->{active_transaction}--;
+        $class->attribute->{rollbacked_in_nested_transaction}++;
+    }
+
 }
 
 sub txn_commit {
     my $class = shift;
     return unless $class->attribute->{active_transaction};
-    $class->profiler('COMMIT WORK');
+
+    if ( $class->attribute->{rollbacked_in_nested_transaction} ) {
+        Carp::croak "tried to commit but alreay rollbacked in nested transaction.";
+    }
+    elsif ( $class->attribute->{active_transaction} > 1 ) {
+        $class->attribute->{active_transaction}--;
+        return;
+    }
+
+    $class->profiler("COMMIT WORK");
     eval { $class->dbh->commit } or Carp::croak $@;
     $class->txn_end;
 }
 
 sub txn_end {
     $_[0]->attribute->{active_transaction} = 0;
+    $_[0]->attribute->{rollbacked_in_nested_transaction} = 0;
 }
 
 #--------------------------------------------------------------------------------

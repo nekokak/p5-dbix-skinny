@@ -1,10 +1,11 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0703
-   2010-03-XX
+   2010-03-09
         - FIXED: DBD::* bulk_insert txn (report Makamaka Hannyaharamitu)
         - MOD: support multi pk (thanks Makamaka Hannyaharamitu)
         - MOD: logging txn_(begin|rollback|commit) (thanks Makamaka Hannyaharamitu)
+        - MOD: support nested transaction (thanks Makamaka Hannyaharamitu)
 
 0.0702
    2010-03-08
