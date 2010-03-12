@@ -24,6 +24,7 @@ sub import {
 
     my $dbd_type = _dbd_type($args);
     my $_attribute = +{
+        check_schema    => defined $args->{check_schema} ? $args->{check_schema} : 1,
         dsn             => $args->{dsn},
         username        => $args->{username},
         password        => $args->{password},
@@ -100,8 +101,9 @@ sub new {
 
 my $schema_checked = 0;
 sub schema { 
-    my $schema = $_[0]->attribute->{schema};
-    unless ( $schema_checked ) {
+    my $attribute = $_[0]->attribute;
+    my $schema = $attribute->{schema};
+    if ( $attribute->{check_schema} && !$schema_checked ) {
         do {
             no strict 'refs';
             unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
