@@ -52,7 +52,7 @@ subtest 'search_named' => sub {
     done_testing;
 };
 
-subtest 'searc_named with arrayref' => sub {
+subtest 'search_named with arrayref' => sub {
     Mock::Basic->attribute->{profile} = 1;
     Mock::Basic->profiler->reset;
     my $itr = Mock::Basic->search_named(q{
