@@ -971,6 +971,11 @@ execute named query
 
     my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id = :id}, {id => 1});
 
+If you give ArrayRef to value, that is expanded to "(?,?,?,?)" in SQL.
+It's useful in case use IN statement.
+
+    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids}, {id => [1, 2, 3]});
+
 =head2 search_by_sql
 
 execute your SQL
