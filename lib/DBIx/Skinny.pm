@@ -353,8 +353,14 @@ sub search_named {
     my @bind;
     $sql =~ s{:([A-Za-z_][A-Za-z0-9_]*)}{
         Carp::croak("$1 is not exists in hash") if !exists $named_bind{$1};
-        push @bind, $named_bind{$1};
-        '?'
+        if ( ref $named_bind{$1} && ref $named_bind{$1} eq "ARRAY" ) {
+            push @bind, @{ $named_bind{$1} };
+            my $tmp = join ',', map { '?' } @{ $named_bind{$1} };
+            "( $tmp )";
+        } else {
+            push @bind, $named_bind{$1};
+            '?'
+        }
     }ge;
 
     $class->search_by_sql($sql, \@bind, $opt_table_info);

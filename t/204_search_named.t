@@ -39,6 +39,7 @@ subtest 'search_named' => sub {
 
 subtest 'search_named' => sub {
     Mock::Basic->attribute->{profile} = 1;
+    Mock::Basic->profiler->reset;
     my $itr = Mock::Basic->search_named(q{SELECT * FROM mock_basic WHERE id = :id limit %d}, {id => 1},[100]);
     isa_ok $itr, 'DBIx::Skinny::Iterator';
 
@@ -50,5 +51,28 @@ subtest 'search_named' => sub {
     is_deeply +Mock::Basic->profiler->query_log, ['SELECT * FROM mock_basic WHERE id = ? limit 100 :binds 1'];
     done_testing;
 };
+
+subtest 'searc_named with arrayref' => sub {
+    Mock::Basic->attribute->{profile} = 1;
+    Mock::Basic->profiler->reset;
+    my $itr = Mock::Basic->search_named(q{
+        SELECT * FROM mock_basic
+        WHERE (
+            id IN :ids
+        )
+        limit 100
+    }, +{ ids => [1, 2, 3] });
+
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+
+    my $row = $itr->first;
+    isa_ok $row, 'DBIx::Skinny::Row';
+    is $row->id , 1;
+    is $row->name, 'perl';
+
+    is_deeply +Mock::Basic->profiler->query_log, ['SELECT * FROM mock_basic WHERE ( id IN ( ?,?,? ) ) limit 100 :binds 1, 2, 3'];
+    done_testing;
+};
+
 
 done_testing;
