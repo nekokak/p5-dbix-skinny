@@ -5,6 +5,11 @@ use Test::More;
 use lib './t';
 use Mock::Basic;
 
+BEGIN {
+    eval "use DBD::SQLite";
+    plan skip_all => "DBD::SQLite is not installed. skip testing" if $@;
+}
+
 Mock::Basic->setup_test_db;
 
 subtest 'do basic transaction' => sub {
