@@ -1,5 +1,11 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0704
+   2010-03-16
+        - MOD: allow ArrayRef for search_named argument (thanks walf443)
+        - MOD: add check schema attribute (thanks nekoya) 
+        - FIXED: t/217_transaction_sqlite.t requires DBD::SQLite (thanks tokuhirom)
+
 0.0703
    2010-03-09
         - FIXED: DBD::* bulk_insert txn (report Makamaka Hannyaharamitu)
