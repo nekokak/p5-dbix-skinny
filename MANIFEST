@@ -7,7 +7,6 @@ inc/Module/Install/Fetch.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
-inc/Module/Install/Repository.pm
 inc/Module/Install/TestBase.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
@@ -87,6 +86,7 @@ t/216_multi_pk.t
 t/217_transaction_sqlite.t
 t/218_transaction_mysql.t
 t/219_transaction_pg.t
+t/220_no_check_schema.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
@@ -121,6 +121,7 @@ t/Mock/Inflate/Schema.pm
 t/Mock/Mixin.pm
 t/Mock/MultiPK.pm
 t/Mock/MultiPK/Schema.pm
+t/Mock/NoCheckSchema.pm
 t/Mock/Trigger.pm
 t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
