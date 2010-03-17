@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0705
+   2010-03-XX
+        - MOD: add Profiler::Trace (thanks Makamaka Hannyaharamitu and tokuhirom)
+
 0.0704
    2010-03-16
         - MOD: allow ArrayRef for search_named argument (thanks walf443)

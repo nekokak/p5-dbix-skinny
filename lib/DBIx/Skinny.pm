@@ -9,6 +9,7 @@ use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
+use DBIx::Skinny::Profiler::Trace;
 use DBIx::Skinny::Transaction;
 use Digest::SHA1;
 use Carp ();
@@ -32,8 +33,8 @@ sub import {
         dbh             => $args->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
-        profiler        => ( $args->{profiler} || DBIx::Skinny::Profiler->new ),
-        profile         => $ENV{SKINNY_PROFILE}||0,
+        profiler        => ( $args->{profiler} || ( $ENV{SKINNY_TRACE} ? DBIx::Skinny::Profiler::Trace->new : DBIx::Skinny::Profiler->new ) ),
+        profile         => $ENV{SKINNY_PROFILE}||$ENV{SKINNY_TRACE}||0,
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
