@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0705
-   2010-03-XX
+   2010-03-18
         - MOD: add Profiler::Trace (thanks Makamaka Hannyaharamitu and tokuhirom)
 
 0.0704

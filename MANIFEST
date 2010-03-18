@@ -7,6 +7,7 @@ inc/Module/Install/Fetch.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
+inc/Module/Install/Repository.pm
 inc/Module/Install/TestBase.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
@@ -17,6 +18,7 @@ inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
 inc/Test/Exception.pm
 inc/Test/More.pm
+inc/Test/Output.pm
 lib/DBIx/Skinny.pm
 lib/DBIx/Skinny/Accessor.pm
 lib/DBIx/Skinny/DBD.pm
@@ -31,6 +33,7 @@ lib/DBIx/Skinny/Manual/JA/Intro.pod
 lib/DBIx/Skinny/Manual/JA/Resultset.pod
 lib/DBIx/Skinny/Mixin.pm
 lib/DBIx/Skinny/Profiler.pm
+lib/DBIx/Skinny/Profiler/Trace.pm
 lib/DBIx/Skinny/Row.pm
 lib/DBIx/Skinny/Schema.pm
 lib/DBIx/Skinny/SQL.pm
@@ -87,6 +90,7 @@ t/217_transaction_sqlite.t
 t/218_transaction_mysql.t
 t/219_transaction_pg.t
 t/220_no_check_schema.t
+t/221_profiler_trace.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
