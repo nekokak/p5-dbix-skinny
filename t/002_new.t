@@ -2,6 +2,10 @@ use t::Utils;
 use Mock::Basic;
 use Test::More;
 
+for (qw/other main/) {
+    unlink "./t/$_.db" if -f "./t/$_.db";
+}
+
 Mock::Basic->reconnect(
     {
         dsn => 'dbi:SQLite:./t/main.db',
@@ -71,6 +75,30 @@ subtest 'do new other connection' => sub {
     is $model->count('mock_basic', 'id'), 1;
     done_testing;
 };
+
+subtest 'do new with dbh' => sub {
+    my $dbh = DBI->connect('dbi:SQLite:', '', '')
+        or die "cannot connect to t/main.db";
+    my $model = Mock::Basic->new({
+        dbh => $dbh,
+    });
+    $model->setup_test_db();
+    $model->insert('mock_basic',{
+        id   => 1,
+        name => 'perl',
+    });
+
+    my $itr = $model->search('mock_basic');
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+
+    my $row = $itr->first;
+    isa_ok $row, 'DBIx::Skinny::Row';
+
+    is $row->id, 1;
+    is $row->name, 'perl';
+    done_testing;
+};
+
 
 unlink './t/other.db', './t/main.db';
 

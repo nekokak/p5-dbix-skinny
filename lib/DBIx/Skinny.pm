@@ -85,8 +85,13 @@ sub new {
 
     my $self = bless Storable::dclone($attr), $class;
     if ($connection_info) {
-        $self->connect_info($connection_info);
-        $self->reconnect;
+        if ($connection_info->{dbh}) {
+            $self->connect_info($connection_info);
+            $self->set_dbh($connection_info->{dbh});
+        } else {
+            $self->connect_info($connection_info);
+            $self->reconnect;
+        }
     } else {
         $self->attribute->{dbd} = $dbd;
         $self->attribute->{dbh} = $dbh;
