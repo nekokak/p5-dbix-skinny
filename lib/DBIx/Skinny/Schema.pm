@@ -5,7 +5,6 @@ use warnings;
 BEGIN {
     if ($] <= 5.008000) {
         require Encode;
-        no strict 'refs';
         *utf8_on = sub {
             my ($class, $col, $data) = @_;
             Encode::_utf8_on($data) unless Encode::is_utf8($data);
@@ -18,7 +17,6 @@ BEGIN {
         };
     } else {
         require utf8;
-        no strict 'refs';
         *utf8_on = sub {
             my ($class, $col, $data) = @_;
             utf8::decode($data) unless utf8::is_utf8($data);
