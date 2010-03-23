@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0706
-   2010-03-XX
+   2010-03-23
         - MOD: accept $dbh for DBIx::Skinny->new() (tokuhirom)
         - FIXED: utf8_(on|off) should mention is_utf8_column (tokuhirom)
 
