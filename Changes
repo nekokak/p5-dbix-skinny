@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0706
+   2010-03-23
+        - MOD: accept $dbh for DBIx::Skinny->new() (tokuhirom)
+        - FIXED: utf8_(on|off) should mention is_utf8_column (tokuhirom)
+
 0.0705
    2010-03-18
         - MOD: add Profiler::Trace (thanks Makamaka Hannyaharamitu and tokuhirom)

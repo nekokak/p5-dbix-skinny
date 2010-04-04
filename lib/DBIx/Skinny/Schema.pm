@@ -5,34 +5,32 @@ use warnings;
 BEGIN {
     if ($] <= 5.008000) {
         require Encode;
-        no strict 'refs';
         *utf8_on = sub {
             my ($class, $col, $data) = @_;
-            if ( $class->is_utf8_column($col) ) {
+            if ($class->is_utf8_column($col)) {
                 Encode::_utf8_on($data) unless Encode::is_utf8($data);
             }
             $data;
         };
         *utf8_off = sub {
             my ($class, $col, $data) = @_;
-            if ( $class->is_utf8_column($col) ) {
+            if ($class->is_utf8_column($col)) {
                 Encode::_utf8_off($data) if Encode::is_utf8($data);
             }
             $data;
         };
     } else {
         require utf8;
-        no strict 'refs';
         *utf8_on = sub {
             my ($class, $col, $data) = @_;
-            if ( $class->is_utf8_column($col) ) {
+            if ($class->is_utf8_column($col)) {
                 utf8::decode($data) unless utf8::is_utf8($data);
             }
             $data;
         };
         *utf8_off = sub {
             my ($class, $col, $data) = @_;
-            if ( $class->is_utf8_column($col) ) {
+            if ($class->is_utf8_column($col)) {
                 utf8::encode($data) if utf8::is_utf8($data);
             }
             $data;
