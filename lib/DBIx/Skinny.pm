@@ -29,7 +29,8 @@ sub import {
         dsn             => $args->{dsn},
         username        => $args->{username},
         password        => $args->{password},
-        connect_options => $args->{connect_options},
+        coddnnect_options => $args->{connect_options},
+        on_connect_do   => $args->{on_connect_do},
         dbh             => $args->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
@@ -82,9 +83,23 @@ sub new {
     my $profiler = delete $attr->{profiler};
     my $dbh      = delete $attr->{dbh};
     my $connect_options = delete $attr->{connect_options};
+    my $on_connect_do = delete $attr->{on_connect_do};
 
     my $self = bless Storable::dclone($attr), $class;
+
+    $self->attribute->{profiler} = $profiler;
+    $attr->{dbd}      = $dbd;
+    $attr->{dbh}      = $dbh;
+    $attr->{profiler} = $profiler;
+    $attr->{on_connect_do} = $on_connect_do;
+
     if ($connection_info) {
+        if ( $connection_info->{on_connect_do} ) {
+            $self->attribute->{on_connect_do} = $connection_info->{on_connect_do};
+        } else {
+            $self->attribute->{on_connect_do} = $on_connect_do;
+        }
+
         if ($connection_info->{dbh}) {
             $self->connect_info($connection_info);
             $self->set_dbh($connection_info->{dbh});
@@ -96,11 +111,8 @@ sub new {
         $self->attribute->{dbd} = $dbd;
         $self->attribute->{dbh} = $dbh;
         $self->attribute->{connect_options} = $connect_options;
+        $self->attribute->{on_connect_do} = $on_connect_do;
     }
-    $self->attribute->{profiler} = $profiler;
-    $attr->{dbd}      = $dbd;
-    $attr->{dbh}      = $dbh;
-    $attr->{profiler} = $profiler;
 
     return $self;
 }
@@ -200,12 +212,20 @@ sub connect {
     $class->connect_info(@_) if scalar @_ >= 1;
 
     my $attr = $class->attribute;
+    my $do_connected;
+    if ( !$attr->{dbh} ) {
+        $do_connected++;
+    }
     $attr->{dbh} ||= DBI->connect(
         $attr->{dsn},
         $attr->{username},
         $attr->{password},
         { RaiseError => 1, PrintError => 0, AutoCommit => 1, %{ $attr->{connect_options} || {} } }
     ) or Carp::croak("Connection error: " . $DBI::errstr);
+
+    if ( $do_connected && $attr->{on_connect_do} ) {
+        $attr->{on_connect_do}->($class);
+    }
 
     $attr->{dbh};
 }
