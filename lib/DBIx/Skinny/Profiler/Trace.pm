@@ -1,6 +1,7 @@
 package DBIx::Skinny::Profiler::Trace;
 use strict;
 use warnings;
+use IO::Handle;
  
 sub new {
     my $class = shift;
@@ -17,7 +18,7 @@ sub new {
         $fh = *STDERR;
     }
  
-    $fh->autoflush();
+    autoflush $fh;
 
     $self->{fh} = $fh;
 

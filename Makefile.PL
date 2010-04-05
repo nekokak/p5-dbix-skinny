@@ -7,6 +7,7 @@ requires 'Carp';
 requires 'DBI';
 requires 'Digest::SHA1';
 requires 'Scalar::Util';
+requires 'IO::Handle';
 
 author_tests('xt');
 
