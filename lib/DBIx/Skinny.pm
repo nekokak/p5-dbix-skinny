@@ -48,7 +48,7 @@ sub import {
         my @functions = qw/
             new
             schema profiler
-            dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd
+            dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd do_on_connect
             call_schema_trigger
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
@@ -224,7 +224,7 @@ sub connect {
     ) or Carp::croak("Connection error: " . $DBI::errstr);
 
     if ( $do_connected && $attr->{on_connect_do} ) {
-        $attr->{on_connect_do}->($class);
+        $class->do_on_connect;
     }
 
     $attr->{dbh};
@@ -234,6 +234,21 @@ sub reconnect {
     my $class = shift;
     $class->attribute->{dbh} = undef;
     $class->connect(@_);
+}
+
+sub do_on_connect {
+    my $class = shift;
+
+    my $on_connect_do = $class->attribute->{on_connect_do};
+    if (not ref($on_connect_do)) {
+        $class->do($on_connect_do);
+    } elsif (ref($on_connect_do) eq 'CODE') {
+        $on_connect_do->($class);
+    } elsif (ref($on_connect_do) eq 'ARRAY') {
+        $class->do($_) for @$on_connect_do;
+    } else {
+        Carp::croak('Invalid on_connect_do: '.ref($on_connect_do));
+    }
 }
 
 sub set_dbh {

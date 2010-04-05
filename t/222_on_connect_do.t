@@ -5,7 +5,7 @@ use Test::More;
 use lib './t';
 use Mock::BasicOnConnectDo;
 
-subtest 'global level on_connect_do' => sub {
+subtest 'global level on_connect_do / coderef' => sub {
     local $Mock::BasicOnConnectDo::CONNECTION_COUNTER = 0;
 
     my $db = Mock::BasicOnConnectDo->new(
@@ -26,7 +26,7 @@ subtest 'global level on_connect_do' => sub {
     done_testing();
 };
 
-subtest 'instance level on_connect_do' => sub {
+subtest 'instance level on_connect_do / coderef' => sub {
     my $counter = 0;
     my $db = Mock::BasicOnConnectDo->new(
         {
@@ -46,6 +46,53 @@ subtest 'instance level on_connect_do' => sub {
 
     done_testing();
 };
+
+subtest 'instance level on_connect_do / scalar' => sub {
+    my $db = Mock::BasicOnConnectDo->new;
+
+    $db->attribute->{on_connect_do} = 'select * from sqlite_master';
+    $db->attribute->{profile} = 1;
+
+    $db->connect;
+    is_deeply $db->profiler->query_log, [
+        q{select * from sqlite_master},
+    ];
+
+    $db->reconnect;
+    is_deeply $db->profiler->query_log, [
+        q{select * from sqlite_master},
+        q{select * from sqlite_master},
+    ];
+
+    $db->profiler->reset;
+    done_testing();
+};
+
+subtest 'instance level on_connect_do / array' => sub {
+    my $db = Mock::BasicOnConnectDo->new;
+
+    $db->attribute->{on_connect_do} = ['select * from sqlite_master', 'select * from sqlite_master'];
+    $db->attribute->{profile} = 1;
+
+    $db->connect; 
+    is_deeply $db->profiler->query_log, [
+        q{select * from sqlite_master},
+        q{select * from sqlite_master},
+    ];
+
+    $db->reconnect;
+    is_deeply $db->profiler->query_log, [
+        q{select * from sqlite_master},
+        q{select * from sqlite_master},
+        q{select * from sqlite_master},
+        q{select * from sqlite_master},
+    ];
+
+    $db->profiler->reset;
+    done_testing();
+};
+
+unlink './t/main.db';
 
 done_testing();
 
