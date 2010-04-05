@@ -91,11 +91,14 @@ t/218_transaction_mysql.t
 t/219_transaction_pg.t
 t/220_no_check_schema.t
 t/221_profiler_trace.t
+t/222_on_connect_do.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
 t/Mock/BasicMySQL.pm
 t/Mock/BasicMySQL/Schema.pm
+t/Mock/BasicOnConnectDo.pm
+t/Mock/BasicOnConnectDo/Schema.pm
 t/Mock/BasicPg.pm
 t/Mock/BasicPg/Schema.pm
 t/Mock/BasicRow.pm

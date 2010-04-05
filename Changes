@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0707
+   2010-04-XX
+        - ADD: added on_connect_do option. It's useful for hooking when connected (walf443)
+        - FIXED: IO::Handle->autoflush is not exist on some IO::Handle version (walf443)
+
 0.0706
    2010-03-23
         - MOD: accept $dbh for DBIx::Skinny->new() (tokuhirom)
