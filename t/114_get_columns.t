@@ -30,10 +30,12 @@ subtest 'get_columns multi line' => sub {
         {
             name => 'perl',
             id   => 1,
+            delete_fg => 0,
         },
         {
             name => 'ruby',
             id   => 2,
+            delete_fg => 0,
         }
     ];
     done_testing;

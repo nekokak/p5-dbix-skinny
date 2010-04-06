@@ -14,6 +14,7 @@ subtest 'schema info' => sub {
             columns => [
                 'id',
                 'name',
+                'delete_fg',
             ],
         }
     };

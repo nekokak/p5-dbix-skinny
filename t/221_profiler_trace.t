@@ -10,7 +10,7 @@ use Mock::Basic;
 
 stderr_is(
     sub { Mock::Basic->setup_test_db },
-    qq{CREATE TABLE mock_basic ( id integer, name text, primary key ( id ) )\n}
+    qq{CREATE TABLE mock_basic ( id integer, name text, delete_fg int(1) default 0, primary key ( id ) )\n}
 );
 
 stderr_is(
