@@ -31,7 +31,7 @@ subtest 'resultset' => sub {
 };
 
 subtest 'no connection test' => sub {
-    throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd is not exist/);
+    throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd does not exist/);
     done_testing;
 };
 

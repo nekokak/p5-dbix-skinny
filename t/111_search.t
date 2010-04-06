@@ -80,7 +80,7 @@ subtest 'search with order_by (as string)' => sub {
 subtest 'search with non-exist table' => sub {
     throws_ok(sub {
         my $itr = Mock::Basic->search('must_not_exist', {}, { order_by => 'name' });
-    }, qr/schema_info is not exist for table/, 'throw reasonable error for easy debugging');
+    }, qr/schema_info does not exist for table/, 'throw reasonable error for easy debugging');
     done_testing;
 };
 
