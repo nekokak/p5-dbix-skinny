@@ -7,6 +7,7 @@ install_table mock_basic => schema {
     columns qw/
         id
         name
+        delete_fg
     /;
 };
 

@@ -11,6 +11,7 @@ sub setup_test_db {
         CREATE TABLE mock_basic (
             id   integer,
             name text,
+            delete_fg int(1) default 0,
             primary key ( id )
         )
     });
