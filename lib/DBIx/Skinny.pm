@@ -671,7 +671,8 @@ sub find_or_create {
     my $row = $class->single($table, $args);
     return $row if $row;
     $row = $class->insert($table, $args);
-    return $row;
+    my $pk = $class->schema->schema_info->{$table}->{pk};
+    $class->single($table, { $pk => $row->get_column($pk) });
 }
 
 sub _add_where {
