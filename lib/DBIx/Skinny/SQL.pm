@@ -152,7 +152,8 @@ sub add_where {
     my $self = shift;
     ## xxx Need to support old range and transform behaviors.
     my($col, $val) = @_;
-    Carp::croak("Invalid/unsafe column name $col") unless $col =~ /^[\w\.]+$/;
+    # XXX; DATE_FORMAT(member.created_at,'%Y-%m') 
+#    Carp::croak("Invalid/unsafe column name $col") unless $col =~ /^[\w\.]+$/;
     my($term, $bind, $tcol) = $self->_mk_term($col, $val);
     push @{ $self->{where} }, "($term)";
     push @{ $self->{bind} }, @$bind;
