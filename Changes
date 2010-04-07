@@ -1,8 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0708
-   2010-04-XX
+   2010-04-07
         - FIXED: s/is not exist/dose not exist/g (thanks azumakuniyuki and mizzy)
+        - FIXED: fetch data for find_or_create. (walf443) 
+        - FIXED: SQL function was able to be used by add_where method. 
 
 0.0707
    2010-04-05
