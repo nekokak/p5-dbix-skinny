@@ -42,6 +42,9 @@ sub _lazy_get_data {
 sub get_column {
     my ($self, $col) = @_;
 
+    unless ( $col ) {
+        Carp::croak('please specify $col for first argument');
+    }
     my $data = $self->{row_data}->{$col};
 
     $data = $self->{skinny}->schema->utf8_on($col, $data);
