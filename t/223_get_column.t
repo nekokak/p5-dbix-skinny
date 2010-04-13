@@ -20,5 +20,16 @@ subtest 'get_column' => sub {
     done_testing;
 };
 
+subtest 'get_column' => sub {
+    my $row = Mock::Basic->search_by_sql(
+        q{SELECT id FROM mock_basic LIMIT 1}
+    )->first;
+    isa_ok $row, 'DBIx::Skinny::Row';
+
+    throws_ok(sub { $row->get_column('name') }, qr/name no selected column./);
+
+    done_testing;
+};
+
 done_testing;
 
