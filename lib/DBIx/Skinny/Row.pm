@@ -45,7 +45,8 @@ sub get_column {
     unless ( $col ) {
         Carp::croak('please specify $col for first argument');
     }
-    my $data = $self->{row_data}->{$col};
+
+    my $data = exists $self->{row_data}->{$col} ? $self->{row_data}->{$col} : Carp::croak("$col no selected column.");
 
     $data = $self->{skinny}->schema->utf8_on($col, $data);
 

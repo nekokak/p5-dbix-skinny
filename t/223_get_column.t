@@ -15,6 +15,8 @@ subtest 'get_column' => sub {
     is($row->get_column('name') => 'perl', 'get_column ok');
     throws_ok(sub { $row->get_column }, qr/please specify \$col for first argument/, 'no argument get_column should raise error');
 
+    throws_ok(sub { $row->get_column('bazbaz') }, qr/bazbaz no selected column./);
+
     done_testing;
 };
 
