@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0709
+   2010-04-XX
+        - FIXED: check get_column argument and check no select column case (walf443)
+
 0.0708
    2010-04-07
         - FIXED: s/is not exist/dose not exist/g (thanks azumakuniyuki and mizzy)
