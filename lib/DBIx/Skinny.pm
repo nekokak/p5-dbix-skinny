@@ -11,7 +11,7 @@ use DBIx::Skinny::Row;
 use DBIx::Skinny::Profiler;
 use DBIx::Skinny::Profiler::Trace;
 use DBIx::Skinny::Transaction;
-use Digest::SHA1;
+use Digest::SHA1 ();
 use Carp ();
 use Storable;
 
