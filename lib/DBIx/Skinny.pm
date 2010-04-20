@@ -29,7 +29,7 @@ sub import {
         dsn             => $args->{dsn},
         username        => $args->{username},
         password        => $args->{password},
-        coddnnect_options => $args->{connect_options},
+        connect_options => $args->{connect_options},
         on_connect_do   => $args->{on_connect_do},
         dbh             => $args->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
