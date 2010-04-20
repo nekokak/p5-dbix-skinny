@@ -92,6 +92,7 @@ t/219_transaction_pg.t
 t/220_no_check_schema.t
 t/221_profiler_trace.t
 t/222_on_connect_do.t
+t/223_get_column.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
