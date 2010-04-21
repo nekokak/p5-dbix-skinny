@@ -53,7 +53,7 @@ sub import {
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
-            insert bulk_insert create update delete find_or_create find_or_insert
+            insert insert_without_trigger bulk_insert create update delete find_or_create find_or_insert
             update_by_sql delete_by_sql
                 _add_where
             _execute _close_sth _stack_trace
@@ -521,12 +521,10 @@ sub _quote {
     return join $name_sep, map { $quote . $_ . $quote } split /\Q$name_sep\E/, $label;
 }
 
-*create = \*insert;
-sub insert {
+sub insert_without_trigger {
     my ($class, $table, $args) = @_;
 
     my $schema = $class->schema;
-    $class->call_schema_trigger('pre_insert', $schema, $table, $args);
 
     # deflate
     for my $col (keys %{$args}) {
@@ -567,6 +565,18 @@ sub insert {
         }
     );
     $obj->setup;
+
+    $obj;
+}
+
+*create = \*insert;
+sub insert {
+    my ($class, $table, $args) = @_;
+
+    my $schema = $class->schema;
+    $class->call_schema_trigger('pre_insert', $schema, $table, $args);
+
+    my $obj = $class->insert_without_trigger($table, $args);
 
     $class->call_schema_trigger('post_insert', $schema, $table, $obj);
 
