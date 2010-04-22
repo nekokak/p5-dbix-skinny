@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0710
+   2010-04-22
+        - INCOMPATIBLE MOD: pre_insert and post_insert trigger should not work in bulk_insert. mysql driver does not effect this change. (walf443)
+
 0.0709
    2010-04-20
         - FIXED: check get_column argument and check no select column case (walf443)
