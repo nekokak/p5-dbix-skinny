@@ -49,7 +49,7 @@ sub import {
             new
             schema profiler
             dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd do_on_connect
-            call_schema_trigger
+            call_schema_trigger bind_params
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
@@ -522,6 +522,20 @@ sub _quote {
     return join $name_sep, map { $quote . $_ . $quote } split /\Q$name_sep\E/, $label;
 }
 
+sub bind_params {
+    my($class, $table, $columns, $sth) = @_;
+
+    my $schema = $class->schema;
+    my $dbd    = $class->dbd;
+    my $i = 1;
+    for my $column (@{ $columns }) {
+        my($col, $val) = @{ $column };
+        my $type = $schema->column_type($table, $col);
+        my $attr = $type ? $dbd->bind_param_attributes($type) : undef;
+        $sth->bind_param($i++, $val, $attr);
+    }
+}
+
 sub _insert_or_replace {
     my ($class, $is_replace, $table, $args) = @_;
 
@@ -532,14 +546,13 @@ sub _insert_or_replace {
         $args->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
-    my (@cols,@bind);
+    my (@cols, @column_list);
     for my $col (keys %{ $args }) {
         push @cols, $col;
-        push @bind, $schema->utf8_off($col, $args->{$col});
+        push @column_list, [$col, $schema->utf8_off($col, $args->{$col})];
     }
 
     my $dbd = $class->dbd;
-    # TODO: bind_param_attributes etc...
     my $quote = $dbd->quote;
     my $name_sep = $dbd->name_sep;
     my $sql = $is_replace ? 'REPLACE' : 'INSERT';
@@ -547,7 +560,7 @@ sub _insert_or_replace {
     $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
             'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
 
-    my $sth = $class->_execute($sql, \@bind);
+    my $sth = $class->_execute($sql, \@column_list, $table);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
     my $id = defined $args->{$pk} ? $args->{$pk} :
@@ -619,24 +632,25 @@ sub update {
 
     my $quote = $class->dbd->quote;
     my $name_sep = $class->dbd->name_sep;
-    my (@set,@bind);
+    my (@set, @column_list);
     for my $col (keys %{ $args }) {
         my $quoted_col = _quote($col, $quote, $name_sep);
         if (ref($values->{$col}) eq 'SCALAR') {
             push @set, "$quoted_col = " . ${ $values->{$col} };
         } else {
             push @set, "$quoted_col = ?";
-            push @bind, $schema->utf8_off($col, $values->{$col});
+            push @column_list, [$col, $schema->utf8_off($col, $values->{$col})];
         }
     }
 
     my $stmt = $class->resultset;
     $class->_add_where($stmt, $where);
-    push @bind, @{ $stmt->bind };
+    my @where_values = map {[$_ => $stmt->where_values->{$_}]} keys %{$stmt->where_values};
+    push @column_list, @where_values;
 
     my $sql = "UPDATE $table SET " . join(', ', @set) . ' ' . $stmt->as_sql_where;
 
-    my $sth = $class->_execute($sql, \@bind);
+    my $sth = $class->_execute($sql, \@column_list, $table);
     my $rows = $sth->rows;
 
     $class->_close_sth($sth);
@@ -663,14 +677,15 @@ sub delete {
 
     my $stmt = $class->resultset(
         {
-            from   => [$table],
+            from => [$table],
         }
     );
 
     $class->_add_where($stmt, $where);
 
     my $sql = "DELETE " . $stmt->as_sql;
-    my $sth = $class->_execute($sql, $stmt->bind);
+    my @where_values = map {[$_ => $stmt->where_values->{$_}]} keys %{$stmt->where_values};
+    my $sth = $class->_execute($sql, \@where_values, $table);
     my $rows = $sth->rows;
 
     $class->call_schema_trigger('post_delete', $schema, $table, $rows);
@@ -708,15 +723,28 @@ sub _add_where {
 }
 
 sub _execute {
-    my ($class, $stmt, $bind) = @_;
+    my ($class, $stmt, $args, $table) = @_;
 
-    $class->profiler($stmt, $bind);
+use Data::Dumper;
 
-    my $sth;
-    eval {
-        $sth = $class->dbh->prepare($stmt);
-        $sth->execute(@{$bind});
-    };
+    my ($sth, $bind);
+    if ($table) {
+        $bind = [map {$_->[1]} @$args];
+        $class->profiler($stmt, $bind);
+        eval {
+            $sth = $class->dbh->prepare($stmt);
+            $class->bind_params($table, $args, $sth);
+            $sth->execute;
+        };
+    } else {
+        $bind = $args;
+        $class->profiler($stmt, $bind);
+        eval {
+            $sth = $class->dbh->prepare($stmt);
+            $sth->execute(@{$args});
+        };
+    }
+
     if ($@) {
         $class->_stack_trace($sth, $stmt, $bind, $@);
     }

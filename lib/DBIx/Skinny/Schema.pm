@@ -43,7 +43,7 @@ sub import {
 
     my @functions = qw/
         install_table
-          schema pk columns schema_info
+          schema pk columns schema_info column_type
         install_inflate_rule
           inflate deflate call_inflate call_deflate
           callback _do_inflate
@@ -79,6 +79,7 @@ sub install_table ($$) {
 }
 
 sub schema (&) { shift }
+
 sub pk ($) {
     my $column = shift;
 
@@ -87,13 +88,36 @@ sub pk ($) {
         $class->schema_info->{_installing_table}
     }->{pk} = $column;
 }
+
 sub columns (@) {
     my @columns = @_;
+
+    my (@_columns, %_column_types);
+    for my $item (@columns) {
+        if (not ref $item) {
+            push @_columns, $item;
+        } elsif (ref $item eq 'HASH') {
+            push @_columns, $item->{name};
+            $_column_types{$item->{name}} = $item->{type};
+        } else {
+            die "columns must be 'SCALAR' or 'HASHREF'";    
+        }
+    }
 
     my $class = caller;
     $class->schema_info->{
         $class->schema_info->{_installing_table}
-    }->{columns} = \@columns;
+    }->{columns} = \@_columns;
+
+    $class->schema_info->{
+        $class->schema_info->{_installing_table}
+    }->{column_types} = \%_column_types;
+}
+
+sub column_type {
+    my ($class, $table, $column) = @_;
+    exists $class->schema_info->{$table}->{column_types}->{$column} ? $class->schema_info->{$table}->{column_types}->{$column}
+                                                                    : undef;
 }
 
 sub trigger ($$) {

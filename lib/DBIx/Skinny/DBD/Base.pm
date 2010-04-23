@@ -25,6 +25,7 @@ sub bulk_insert {
 }
 
 sub query_builder_class { 'DBIx::Skinny::SQL' }
+sub bind_param_attributes {}
 
 1;
 

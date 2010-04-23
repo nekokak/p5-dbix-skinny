@@ -15,6 +15,7 @@ subtest 'schema info' => sub {
                 'id',
                 'name',
             ],
+            column_types => +{},
         }
     };
 

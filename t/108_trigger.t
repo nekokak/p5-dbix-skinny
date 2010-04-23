@@ -15,6 +15,7 @@ subtest 'schema info' => sub {
                 'id',
                 'name',
             ],
+            column_types => +{},
             trigger => {
                 pre_insert  => $info->{mock_trigger_pre}->{trigger}->{pre_insert},
                 post_insert => $info->{mock_trigger_pre}->{trigger}->{post_insert},
@@ -30,6 +31,7 @@ subtest 'schema info' => sub {
                 'id',
                 'name',
             ],
+            column_types => +{},
         },
         mock_trigger_post_delete => {
             pk      => 'id',
@@ -37,6 +39,7 @@ subtest 'schema info' => sub {
                 'id',
                 'name',
             ],
+            column_types => +{},
         },
     };
     isa_ok +Mock::Trigger->dbh, 'DBI::db';
