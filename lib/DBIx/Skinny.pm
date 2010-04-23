@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0709';
+our $VERSION = '0.0710';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -53,7 +53,7 @@ sub import {
             do resultset search single search_by_sql search_named count
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
-            insert insert_without_trigger bulk_insert create update delete find_or_create find_or_insert
+            insert replace _insert_or_replace bulk_insert create update delete find_or_create find_or_insert
             update_by_sql delete_by_sql
                 _add_where
             _execute _close_sth _stack_trace
@@ -132,6 +132,7 @@ sub schema {
     }
     return $schema;
 }
+
 sub profiler {
     my ($class, $sql, $bind) = @_;
     my $attr = $class->attribute;
@@ -521,8 +522,8 @@ sub _quote {
     return join $name_sep, map { $quote . $_ . $quote } split /\Q$name_sep\E/, $label;
 }
 
-sub insert_without_trigger {
-    my ($class, $table, $args) = @_;
+sub _insert_or_replace {
+    my ($class, $is_replace, $table, $args) = @_;
 
     my $schema = $class->schema;
 
@@ -538,10 +539,11 @@ sub insert_without_trigger {
     }
 
     my $dbd = $class->dbd;
-    # TODO: INSERT or REPLACE. bind_param_attributes etc...
+    # TODO: bind_param_attributes etc...
     my $quote = $dbd->quote;
     my $name_sep = $dbd->name_sep;
-    my $sql = "INSERT INTO $table\n";
+    my $sql = $is_replace ? 'REPLACE' : 'INSERT';
+    $sql .= " INTO $table\n";
     $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
             'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
 
@@ -576,7 +578,20 @@ sub insert {
     my $schema = $class->schema;
     $class->call_schema_trigger('pre_insert', $schema, $table, $args);
 
-    my $obj = $class->insert_without_trigger($table, $args);
+    my $obj = $class->_insert_or_replace(0, $table, $args);
+
+    $class->call_schema_trigger('post_insert', $schema, $table, $obj);
+
+    $obj;
+}
+
+sub replace {
+    my ($class, $table, $args) = @_;
+
+    my $schema = $class->schema;
+    $class->call_schema_trigger('pre_insert', $schema, $table, $args);
+
+    my $obj = $class->_insert_or_replace(1, $table, $args);
 
     $class->call_schema_trigger('post_insert', $schema, $table, $obj);
 
