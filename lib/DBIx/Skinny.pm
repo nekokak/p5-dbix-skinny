@@ -176,7 +176,7 @@ sub txn_commit {
     return unless $class->attribute->{active_transaction};
 
     if ( $class->attribute->{rollbacked_in_nested_transaction} ) {
-        Carp::croak "tried to commit but alreay rollbacked in nested transaction.";
+        Carp::croak "tried to commit but already rollbacked in nested transaction.";
     }
     elsif ( $class->attribute->{active_transaction} > 1 ) {
         $class->attribute->{active_transaction}--;
