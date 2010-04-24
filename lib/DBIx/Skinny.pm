@@ -92,6 +92,7 @@ sub new {
     $attr->{dbh}      = $dbh;
     $attr->{profiler} = $profiler;
     $attr->{on_connect_do} = $on_connect_do;
+    $attr->{connect_options} = $connect_options;
 
     if ($connection_info) {
         if ( $connection_info->{on_connect_do} ) {
