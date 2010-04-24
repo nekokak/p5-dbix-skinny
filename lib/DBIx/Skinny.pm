@@ -93,6 +93,9 @@ sub new {
 
 
     if ($connection_info) {
+
+        $self->attribute->{profiler} = $unstorable_attribute{profiler};
+
         if ( $connection_info->{on_connect_do} ) {
             $self->attribute->{on_connect_do} = $connection_info->{on_connect_do};
         } else {
@@ -106,8 +109,6 @@ sub new {
             $self->connect_info($connection_info);
             $self->reconnect;
         }
-
-        $self->attribute->{profiler} = $unstorable_attribute{profiler};
 
     } else {
         for my $key ( keys %unstorable_attribute ) {
