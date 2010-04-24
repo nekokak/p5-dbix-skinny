@@ -108,10 +108,9 @@ sub new {
             $self->reconnect;
         }
     } else {
-        $self->attribute->{dbd} = $unstorable_attribute{dbd};
-        $self->attribute->{dbh} = $unstorable_attribute{dbh};
-        $self->attribute->{connect_options} = $unstorable_attribute{connect_options};
-        $self->attribute->{on_connect_do} = $unstorable_attribute{on_connect_do};
+        for my $key ( keys %unstorable_attribute ) {
+            $self->attribute->{$key} = $unstorable_attribute{$key};
+        }
     }
 
     return $self;
