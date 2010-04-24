@@ -79,26 +79,25 @@ sub new {
     my ($class, $connection_info) = @_;
     my $attr = $class->attribute;
 
-    my $dbd      = delete $attr->{dbd};
-    my $profiler = delete $attr->{profiler};
-    my $dbh      = delete $attr->{dbh};
-    my $connect_options = delete $attr->{connect_options};
-    my $on_connect_do = delete $attr->{on_connect_do};
+    my %unstorable_attribute;
+    for my $key ( qw/dbd profiler dbh connect_options on_connect_do / ) {
+        $unstorable_attribute{$key} = delete $attr->{$key};
+    }
 
     my $self = bless Storable::dclone($attr), $class;
 
-    $self->attribute->{profiler} = $profiler;
-    $attr->{dbd}      = $dbd;
-    $attr->{dbh}      = $dbh;
-    $attr->{profiler} = $profiler;
-    $attr->{on_connect_do} = $on_connect_do;
-    $attr->{connect_options} = $connect_options;
+    # restore.
+    for my $key ( keys %unstorable_attribute ) {
+        $attr->{$key} = $unstorable_attribute{$key};
+    }
+
+    $self->attribute->{profiler} = $unstorable_attribute{profiler};
 
     if ($connection_info) {
         if ( $connection_info->{on_connect_do} ) {
             $self->attribute->{on_connect_do} = $connection_info->{on_connect_do};
         } else {
-            $self->attribute->{on_connect_do} = $on_connect_do;
+            $self->attribute->{on_connect_do} = $unstorable_attribute{on_connect_do};
         }
 
         if ($connection_info->{dbh}) {
@@ -109,10 +108,10 @@ sub new {
             $self->reconnect;
         }
     } else {
-        $self->attribute->{dbd} = $dbd;
-        $self->attribute->{dbh} = $dbh;
-        $self->attribute->{connect_options} = $connect_options;
-        $self->attribute->{on_connect_do} = $on_connect_do;
+        $self->attribute->{dbd} = $unstorable_attribute{dbd};
+        $self->attribute->{dbh} = $unstorable_attribute{dbh};
+        $self->attribute->{connect_options} = $unstorable_attribute{connect_options};
+        $self->attribute->{on_connect_do} = $unstorable_attribute{on_connect_do};
     }
 
     return $self;
