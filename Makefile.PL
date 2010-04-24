@@ -15,6 +15,8 @@ build_requires 'Test::More' => '0.94';
 build_requires 'Test::Exception';
 build_requires 'Test::Output';
 
+tests 't/*.t t/*/*.t';
+
 use_test_base;
 auto_include;
 auto_set_repository;
