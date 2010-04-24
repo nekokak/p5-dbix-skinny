@@ -6,12 +6,12 @@ Revision history for Perl extension DBIx::Skinny
         - MOD : add replace method.
         - INCOMPATIBLE MOD: pre_insert and post_insert trigger should not work in bulk_insert. mysql driver does not effect this change. (walf443)
         - fix typo s/alreay/already/ ( magicalhat++ )
+        - FIXED: loose connect_options after new (thanks yibe)
 
 0.0709
    2010-04-20
         - FIXED: check get_column argument and check no select column case (walf443)
         - FIXED: typo fixed. s/coddnnect_options/connect_options/. (thanks yibe)
-        - FIXED: loose connect_options after new (thanks yibe)
 
 0.0708
    2010-04-07
