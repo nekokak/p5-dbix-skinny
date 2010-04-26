@@ -93,9 +93,12 @@ t/220_no_check_schema.t
 t/221_profiler_trace.t
 t/222_on_connect_do.t
 t/223_get_column.t
+t/224_replace.t
+t/225_bind_column.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
+t/Mock/BasicBindColumn.pm
 t/Mock/BasicMySQL.pm
 t/Mock/BasicMySQL/Schema.pm
 t/Mock/BasicOnConnectDo.pm
@@ -135,6 +138,7 @@ t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
 t/Mock/UTF8/Schema.pm
 t/regression/guess_table_name.t
+t/regression/loose_connect_options_after_new.t
 t/regression/new_attr.t
 t/regression/no_schema.t
 t/regression/row_class_syntax_error.t
