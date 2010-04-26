@@ -13,7 +13,7 @@ use DBIx::Skinny::Profiler::Trace;
 use DBIx::Skinny::Transaction;
 use Digest::SHA1 ();
 use Carp ();
-use Storable;
+use Storable ();
 
 sub import {
     my ($class, %opt) = @_;
