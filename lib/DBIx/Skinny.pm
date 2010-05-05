@@ -127,7 +127,7 @@ sub schema {
         do {
             no strict 'refs';
             unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
-                die "$schema is something wrong( is it realy loaded? )";
+                die "$schema is something wrong( is it really loaded? )";
             }
         };
         $schema_checked++;

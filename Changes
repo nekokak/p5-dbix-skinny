@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0711
+   2010-XX-XX
+        - FIXED : typo s/realy/really/ (thanks azumakuniyuki)
+
 0.0710
    2010-04-22
         - MOD : support bind_param.
