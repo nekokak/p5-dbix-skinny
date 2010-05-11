@@ -17,10 +17,10 @@ sub new {
 sub iterator {
     my $self = shift;
 
-    my $potition = $self->{_potition} + 1;
+    my $position = $self->{_position} + 1;
     if ( $self->{_use_cache}
-      && ( my $row_cache = $self->{_rows_cache}->[$potition] ) ) {
-        $self->{_potition} = $potition;
+      && ( my $row_cache = $self->{_rows_cache}->[$position] ) ) {
+        $self->{_position} = $position;
         return $row_cache;
     }
 
@@ -56,8 +56,8 @@ sub iterator {
         $self->{_setup}=1;
     }
 
-    $self->{_rows_cache}->[$potition] = $obj if $self->{_use_cache};
-    $self->{_potition} = $potition;
+    $self->{_rows_cache}->[$position] = $obj if $self->{_use_cache};
+    $self->{_position} = $position;
 
     return $obj;
 }
@@ -81,7 +81,7 @@ sub all {
 
 sub reset {
     my $self = shift;
-    $self->{_potition} = 0;
+    $self->{_position} = 0;
     return $self;
 }
 
