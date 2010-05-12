@@ -10,3 +10,4 @@ Makefile.old
 old/
 *.swp
 test.*
+*~
