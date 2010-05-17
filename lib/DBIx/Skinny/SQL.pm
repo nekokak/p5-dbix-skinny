@@ -6,7 +6,7 @@ use DBIx::Skinny::Accessor;
 mk_accessors(
     qw/
         select distinct select_map select_map_reverse
-        from joins where bind limit offset group order
+        from joins where bind bind_col limit offset group order
         having where_values column_mutator index_hint
         comment
         skinny
@@ -16,7 +16,7 @@ mk_accessors(
 sub init {
     my $self = shift;
 
-    for my $name (qw/ select from joins bind group order where having /) {
+    for my $name (qw/ select from joins bind bind_col group order where having /) {
         unless ($self->$name && ref $self->$name eq 'ARRAY') {
             $self->$name ? $self->$name([ $self->$name ]) : $self->$name([]);
         }
@@ -157,6 +157,7 @@ sub add_where {
     my($term, $bind, $tcol) = $self->_mk_term($col, $val);
     push @{ $self->{where} }, "($term)";
     push @{ $self->{bind} }, @$bind;
+    push @{ $self->{bind_col} }, $tcol;
     $self->where_values->{$tcol} = $val;
 }
 
@@ -187,6 +188,7 @@ sub _parse_array_terms {
             my @out;
             foreach my $t2 ( keys %$t ) {
                 my ($term, $bind, $col) = $self->_mk_term($t2, $t->{$t2});
+                push @{ $self->{bind_col} }, $col;
                 $self->where_values->{$col} = $t->{$t2};
                 push @out, $term;
                 push @bind, @$bind;

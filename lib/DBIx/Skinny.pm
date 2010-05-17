@@ -647,7 +647,7 @@ sub update {
 
     my $stmt = $class->resultset;
     $class->_add_where($stmt, $where);
-    my @where_values = map {[$_ => $stmt->where_values->{$_}]} keys %{$stmt->where_values};
+    my @where_values = map {[$_ => $stmt->where_values->{$_}]} @{$stmt->bind_col};
     push @column_list, @where_values;
 
     my $sql = "UPDATE $table SET " . join(', ', @set) . ' ' . $stmt->as_sql_where;
@@ -686,7 +686,7 @@ sub delete {
     $class->_add_where($stmt, $where);
 
     my $sql = "DELETE " . $stmt->as_sql;
-    my @where_values = map {[$_ => $stmt->where_values->{$_}]} keys %{$stmt->where_values};
+    my @where_values = map {[$_ => $stmt->where_values->{$_}]} @{$stmt->bind_col};
     my $sth = $class->_execute($sql, \@where_values, $table);
     my $rows = $sth->rows;
 
