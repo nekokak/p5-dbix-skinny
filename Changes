@@ -4,6 +4,7 @@ Revision history for Perl extension DBIx::Skinny
    2010-XX-XX
         - FIXED : typo s/realy/really/ (thanks azumakuniyuki)
         - FIXED : typo s/potition/position/g (thanks azumakuniyuki)
+        - FIXED : bind_param bug fixed.
 
 0.0710
    2010-04-22
