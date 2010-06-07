@@ -5,6 +5,7 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED : typo s/realy/really/ (thanks azumakuniyuki)
         - FIXED : typo s/potition/position/g (thanks azumakuniyuki)
         - FIXED : bind_param bug fixed.
+        - MOD : added method search_rs. It's useful for debuging search's SQL without executing SQL.
 
 0.0710
    2010-04-22

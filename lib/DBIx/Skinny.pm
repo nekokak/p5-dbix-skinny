@@ -50,7 +50,7 @@ sub import {
             schema profiler
             dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd do_on_connect
             call_schema_trigger bind_params
-            do resultset search single search_by_sql search_named count
+            do resultset search search_rs single search_by_sql search_named count
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
             insert replace _insert_or_replace bulk_insert create update delete find_or_create find_or_insert
@@ -336,6 +336,13 @@ sub resultset {
 sub search {
     my ($class, $table, $where, $opt) = @_;
 
+    my $rs = $class->search_rs($table, $where, $opt);
+    $rs->retrieve;
+}
+
+sub search_rs {
+    my ($class, $table, $where, $opt) = @_;
+
     my $cols = $opt->{select};
     unless ($cols) {
         my $column_info = $class->schema->schema_info->{$table};
@@ -380,7 +387,7 @@ sub search {
         }
     }
 
-    $rs->retrieve;
+    return $rs;
 }
 
 sub single {
