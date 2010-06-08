@@ -2,7 +2,7 @@ Revision history for Perl extension DBIx::Skinny
 
 0.0712
    2010-06-08
-        - MOD : added method search_rs. It's useful for debuging search's SQL without executing SQL.
+        - MOD : added method search_rs. Return DBIx::Skinny::SQL's object.
 
 0.0711
    2010-05-16
