@@ -455,7 +455,6 @@ sub data2itr {
     );
 }
 
-my $base_row_class;
 sub _mk_anon_row_class {
     my ($class, $key) = @_;
 
@@ -733,8 +732,6 @@ sub _add_where {
 
 sub _execute {
     my ($class, $stmt, $args, $table) = @_;
-
-use Data::Dumper;
 
     my ($sth, $bind);
     if ($table) {
