@@ -263,14 +263,32 @@ $stmt->comment("G\\G");
 is($stmt->as_sql, "SELECT foo\nFROM baz\n-- G", "correctly untainted");
 
 subtest 'add_complex_where' => sub {
-    my $sql = ns();
-    $sql->from(['baz']);
-    $sql->add_select('foo' => 'foo');
-    $sql->add_complex_where([-or => { 'foo' => "hoge" }, { 'foo' => "fuga" }]);
-    is($sql->as_sql, "SELECT foo\nFROM baz\nWHERE (foo = ?) OR (foo = ?)\n", "SQL OK");
-    is(@{ $sql->bind }, 2, "bind variable num ok");
-    is($sql->bind->[0], "hoge");
-    is($sql->bind->[1], "fuga");
+    subtest 'OR' => sub {
+        my $sql = ns();
+        $sql->from(['baz']);
+        $sql->add_select('foo' => 'foo');
+        $sql->add_complex_where([-or => { 'foo' => "hoge" }, { 'foo' => "fuga" }]);
+        is($sql->as_sql, "SELECT foo\nFROM baz\nWHERE (foo = ?) OR (foo = ?)\n", "SQL OK");
+        is(@{ $sql->bind }, 2, "bind variable num ok");
+        is($sql->bind->[0], "hoge");
+        is($sql->bind->[1], "fuga");
+
+        done_testing;
+    };
+
+    subtest 'nesting' => sub {
+        my $sql = ns();
+        $sql->from(['baz']);
+        $sql->add_select('foo' => 'foo');
+        $sql->add_complex_where([ -and => [-or => { 'foo' => "hoge" }, { 'foo' => "fuga" }], { 'bar' => "baz" }]);
+        is($sql->as_sql, "SELECT foo\nFROM baz\nWHERE ((foo = ?) OR (foo = ?)) AND (bar = ?)\n", "SQL OK");
+        is(@{ $sql->bind }, 3, "bind variable num ok");
+        is($sql->bind->[0], "hoge");
+        is($sql->bind->[1], "fuga");
+        is($sql->bind->[2], "baz");
+
+        done_testing;
+    };
 
     done_testing;
 };
