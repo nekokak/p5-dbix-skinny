@@ -39,6 +39,7 @@ sub import {
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
+        last_pid => $$,
     };
 
     {
@@ -78,6 +79,8 @@ sub import {
 sub new {
     my ($class, $connection_info) = @_;
     my $attr = $class->attribute;
+
+    $attr->{last_pid} = $$;
 
     my %unstorable_attribute;
     for my $key ( qw/dbd profiler dbh connect_options on_connect_do / ) {
@@ -277,6 +280,11 @@ sub dbh {
     my $class = shift;
 
     my $dbh = $class->connect;
+    if ( $class->attribute->{last_pid} != $$ ) {
+        $class->attribute->{last_pid} = $$;
+        $dbh->{InactiveDestroy} = 1;
+        $dbh = $class->reconnect;
+    }
     unless ($dbh && $dbh->FETCH('Active') && $dbh->ping) {
         $dbh = $class->reconnect;
     }
