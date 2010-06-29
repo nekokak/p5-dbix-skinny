@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 2;
+use Test::More;
 use Test::SharedFork;
 use lib './t';
 use Mock::BasicMySQL;
@@ -22,6 +22,7 @@ Mock::BasicMySQL->setup_test_db;
         Mock::BasicMySQL->txn_rollback;
         ok +Mock::BasicMySQL->single('mock_basic_mysql',{id => 1});
         Mock::BasicMySQL->cleanup_test_db;
+        done_testing;
     }
     else {
         # child
