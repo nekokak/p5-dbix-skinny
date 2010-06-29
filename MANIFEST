@@ -19,6 +19,7 @@ inc/Test/Builder/Module.pm
 inc/Test/Exception.pm
 inc/Test/More.pm
 inc/Test/Output.pm
+inc/Test/SharedFork.pm
 lib/DBIx/Skinny.pm
 lib/DBIx/Skinny/Accessor.pm
 lib/DBIx/Skinny/DBD.pm
@@ -28,6 +29,9 @@ lib/DBIx/Skinny/DBD/Oracle.pm
 lib/DBIx/Skinny/DBD/Pg.pm
 lib/DBIx/Skinny/DBD/SQLite.pm
 lib/DBIx/Skinny/Iterator.pm
+lib/DBIx/Skinny/Manual.pm
+lib/DBIx/Skinny/Manual/EN.pod
+lib/DBIx/Skinny/Manual/EN/Intro.pod
 lib/DBIx/Skinny/Manual/JA.pod
 lib/DBIx/Skinny/Manual/JA/Intro.pod
 lib/DBIx/Skinny/Manual/JA/Resultset.pod
@@ -95,6 +99,7 @@ t/222_on_connect_do.t
 t/223_get_column.t
 t/224_replace.t
 t/225_bind_column.t
+t/226_fork.t
 t/Mixin/Foo.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
