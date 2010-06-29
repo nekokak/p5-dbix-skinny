@@ -96,8 +96,6 @@ B<all> tables, not just the C<user> table.
 
 =head3 Inflate/deflate Processing
 
-Skinnyにもinflate/deflateの処理を書く事ができます
-
 To enable inflate/deflate processing on the columns 
 C<created_at> and C<updated_at> you can do the following:
 

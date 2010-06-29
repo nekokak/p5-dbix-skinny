@@ -1,8 +1,12 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0712
-   2010-06-08
-        - MOD : added method search_rs. Return DBIx::Skinny::SQL's object.
+   2010-XX-XX
+        - MOD : added method search_rs. Return DBIx::Skinny::SQL's object. (thanks walf443)
+        - MOD : add fork safe dbh handling (thanks nihen)
+        - ADD : DBIx::Skinny::SQL's docs (thanks walf443)
+        - ADD : add_complex_where's test (thanks walf443)
+        - ADD : DBIx::Skinny::Manual::EN (thanks metaperl)
 
 0.0711
    2010-05-16

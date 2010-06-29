@@ -6,10 +6,7 @@ DBIx::Skinny::Manual::EN - DBIx::Skinny Manual (English)
 
 =head1 DESCRIPTION
 
-DBIx::Skinnyをなぜ作る事にしたのか、
-また作るにあたっての設計思想など。
-
-Please translate and read the person in the sphere in English. 
+Why I made DBIx::Skinny.
 
 =head1 MOTIVATION
 
@@ -36,5 +33,7 @@ The main objectives of L<DBIx::Skinny> are:
 
 =head1 Feedback
 
-The L<irc.perl.org/#dbix-class|irc://irc.perl.org/#dbix-class>
+  IRC: #dbix-skinny@irc.perl.org
+
+  ML: http://groups.google.com/group/dbix-skinny
 
