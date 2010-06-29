@@ -157,7 +157,7 @@ subtest 'do nested scope rollback-commit' => sub {
 
     eval { $txn->commit };
 
-    like( $@, qr/tried to commit but alreay rollbacked in nested transaction./, "error message" );
+    like( $@, qr/tried to commit but already rollbacked in nested transaction./, "error message" );
 
     $txn->rollback;
 
@@ -209,7 +209,7 @@ subtest 'do nested scope rollback-commit-rollback' => sub {
         }
 
         eval { $txn2->commit };
-        like( $@, qr/tried to commit but alreay rollbacked in nested transaction./, "error message" );
+        like( $@, qr/tried to commit but already rollbacked in nested transaction./, "error message" );
     }
     my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
         name => 'perl5.12',
@@ -251,7 +251,7 @@ subtest 'do nested scope rollback-commit-commit' => sub {
     is $row->name, 'perl5.12';
 
     eval { $txn->commit };
-    like( $@, qr/tried to commit but alreay rollbacked in nested transaction./, "error message" );
+    like( $@, qr/tried to commit but already rollbacked in nested transaction./, "error message" );
     $txn->rollback;
 
     ok not +Mock::BasicMySQL->single('mock_basic_mysql',{id => 18});

@@ -7,6 +7,7 @@ Revision history for Perl extension DBIx::Skinny
         - ADD : DBIx::Skinny::SQL's docs (thanks walf443)
         - ADD : add_complex_where's test (thanks walf443)
         - ADD : DBIx::Skinny::Manual::EN (thanks metaperl)
+        - FIXED : t/218_transaction_mysql.t's typo (thanks nihen)
 
 0.0711
    2010-05-16
