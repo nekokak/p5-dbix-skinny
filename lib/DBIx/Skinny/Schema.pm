@@ -80,13 +80,13 @@ sub install_table ($$) {
 
 sub schema (&) { shift }
 
-sub pk ($) {
-    my $column = shift;
+sub pk {
+    my @columns = shift;
 
     my $class = caller;
     $class->schema_info->{
         $class->schema_info->{_installing_table}
-    }->{pk} = $column;
+    }->{pk} = (@columns == 1 ? $columns[0] : \@columns);
 }
 
 sub columns (@) {
