@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0713
+   2010-07-06
+        - MOD : The setting method of Schema#pk is enhanced. (thanks tokuhirom)
+
 0.0712
    2010-06-29
         - MOD : added method search_rs. Return DBIx::Skinny::SQL's object. (thanks walf443)
