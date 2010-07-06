@@ -8,7 +8,7 @@ install_table 'a_multi_pk_table' => schema {
 };
 
 install_table 'c_multi_pk_table' => schema {
-    pk [ qw( id_c id_d ) ];
+    pk qw( id_c id_d );
     columns qw( id_c id_d memo );
 };
 
