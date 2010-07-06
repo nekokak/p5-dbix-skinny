@@ -81,7 +81,7 @@ sub install_table ($$) {
 sub schema (&) { shift }
 
 sub pk {
-    my @columns = shift;
+    my @columns = @_;
 
     my $class = caller;
     $class->schema_info->{
