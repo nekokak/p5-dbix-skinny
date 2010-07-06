@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0714
+   2010-07-06
+        - MOD : The setting method of Schema#pk is enhanced bug fixed. (thanks gfx)
+
 0.0713
    2010-07-06
         - MOD : The setting method of Schema#pk is enhanced. (thanks tokuhirom)
