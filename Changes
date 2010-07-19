@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0715
+   2010-07-19
+        - MOD : do method can take \%attr, @bind_params ( It's the same as DBI's "do" behavior ) (thanks tokuhirom)
 0.0714
    2010-07-06
         - MOD : The setting method of Schema#pk is enhanced bug fixed. (thanks gfx)
