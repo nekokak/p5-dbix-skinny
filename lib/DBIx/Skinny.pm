@@ -312,10 +312,10 @@ sub call_schema_trigger {
 #--------------------------------------------------------------------------------
 sub do {
     my ($class, $sql, $attr, @bind_vars) = @_;
-    $class->profiler($sql, \@bind_vars);
+    $class->profiler($sql, @bind_vars ? \@bind_vars : undef);
     eval { $class->dbh->do($sql, $attr, @bind_vars) };
     if ($@) {
-        $class->_stack_trace('', $sql, \@bind_vars, $@);
+        $class->_stack_trace('', $sql, @bind_vars ? \@bind_vars : '', $@);
     }
 }
 
