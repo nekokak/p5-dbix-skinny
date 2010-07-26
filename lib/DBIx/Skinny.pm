@@ -395,6 +395,8 @@ sub search_rs {
         }
     }
 
+    $rs->for_update(1) if $opt->{for_update};
+
     return $rs;
 }
 

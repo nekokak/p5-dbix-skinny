@@ -8,7 +8,7 @@ mk_accessors(
         select distinct select_map select_map_reverse
         from joins where bind bind_col limit offset group order
         having where_values column_mutator index_hint
-        comment
+        comment for_update
         skinny
     /
 );
@@ -104,6 +104,9 @@ sub as_sql {
     if ($comment && $comment =~ /([ 0-9a-zA-Z.:;()_#&,]+)/) {
         $sql .= "-- $1" if $1;
     }
+
+    $sql .= $self->as_for_update;
+
     return $sql;
 }
 
@@ -225,6 +228,11 @@ sub add_having {
     my($term, $bind) = $self->_mk_term($col, $val);
     push @{ $self->{having} }, "($term)";
     push @{ $self->{bind} }, @$bind;
+}
+
+sub as_for_update {
+    my $self = shift;
+    $self->for_update ? ' FOR UPDATE' : '';
 }
 
 sub _mk_term {
