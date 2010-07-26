@@ -10,4 +10,9 @@ subtest 'do raise error' => sub {
     done_testing;
 };
 
+subtest 'do with bind' => sub {
+    lives_ok(sub { Mock::Basic->do(q{SELECT * from mock_basic WHERE name = ?}, undef, "hoge") });
+    done_testing;
+};
+
 done_testing;
