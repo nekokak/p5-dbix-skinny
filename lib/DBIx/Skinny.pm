@@ -492,7 +492,7 @@ sub _mk_anon_row_class {
 sub _guess_table_name {
     my ($class, $sql) = @_;
 
-    if ($sql =~ /^.+from\s+([\w]+)\s*/i) {
+    if ($sql =~ /\sfrom\s+([\w]+)\s*/si) {
         return $1;
     }
     return;
