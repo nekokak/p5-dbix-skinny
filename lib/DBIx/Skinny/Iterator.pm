@@ -41,19 +41,23 @@ sub iterator {
         return;
     }
 
-    return $row if Scalar::Util::blessed($row);
+    my $obj;
+    if ( Scalar::Util::blessed($row) ) {
+        $obj = $row;
+    }
+    else {
+        $obj = $self->{row_class}->new(
+            {
+                row_data       => $row,
+                skinny         => $self->{skinny},
+                opt_table_info => $self->{opt_table_info},
+            }
+        );
 
-    my $obj = $self->{row_class}->new(
-        {
-            row_data       => $row,
-            skinny         => $self->{skinny},
-            opt_table_info => $self->{opt_table_info},
+        unless ($self->{_setup}) {
+            $obj->setup;
+            $self->{_setup}=1;
         }
-    );
-
-    unless ($self->{_setup}) {
-        $obj->setup;
-        $self->{_setup}=1;
     }
 
     $self->{_rows_cache}->[$position] = $obj if $self->{_use_cache};
