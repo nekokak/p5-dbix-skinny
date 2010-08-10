@@ -97,6 +97,11 @@ sub no_cache {
     $self->{_use_cache} = 0;
 }
 
+sub position {
+    my $self = shift;
+    $self->{_position};
+}
+
 1;
 
 __END__
