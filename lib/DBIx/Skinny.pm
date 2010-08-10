@@ -1176,6 +1176,8 @@ magicalhat
 
 Makamaka Hannyaharamitu
 
+nihen: Masahiro Chiba
+
 =head1 SUPPORT
 
   irc: #dbix-skinny@irc.perl.org
@@ -1188,7 +1190,7 @@ Makamaka Hannyaharamitu
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2009, Atsushi Kobayashi C<< <nekokak __at__ gmail.com> >>. All rights reserved.
+Copyright (c) 2010, Atsushi Kobayashi C<< <nekokak __at__ gmail.com> >>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
