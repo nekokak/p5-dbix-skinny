@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0716
+   2010-08-XX
+        - FIXED : _guess_table_name support multiline sql (thanks nihen)
+
 0.0715
    2010-07-26
         - MOD : do method can take \%attr, @bind_params ( It's the same as DBI's "do" behavior ) (thanks tokuhirom)
