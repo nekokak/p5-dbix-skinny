@@ -68,7 +68,7 @@ sub first {
     $self->next;
 }
 
-sub next { shift->iterator }
+sub next { $_[0]->iterator }
 
 sub all {
     my $self = shift;
@@ -92,15 +92,8 @@ sub count {
     scalar @rows;
 }
 
-sub no_cache {
-    my $self = shift;
-    $self->{_use_cache} = 0;
-}
-
-sub position {
-    my $self = shift;
-    $self->{_position};
-}
+sub no_cache { $_[0]->{_use_cache} = 0 }
+sub position { $_[0]->{_position} }
 
 1;
 
