@@ -142,6 +142,7 @@ t/Mock/Trigger.pm
 t/Mock/Trigger/Schema.pm
 t/Mock/UTF8.pm
 t/Mock/UTF8/Schema.pm
+t/regression/data2itr_objectarray.t
 t/regression/guess_table_name.t
 t/regression/loose_connect_options_after_new.t
 t/regression/new_attr.t
