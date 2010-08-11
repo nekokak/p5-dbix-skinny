@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0717
+   2010-08-11
+        - FIXED : fixed bug for data2itr pass object-array (thanks nihen)
+
 0.0716
    2010-08-10
         - FIXED : _guess_table_name support multiline sql (thanks nihen)
