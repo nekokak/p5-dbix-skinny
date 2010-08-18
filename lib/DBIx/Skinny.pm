@@ -1089,7 +1089,8 @@ execute your SQL
             id = ?
     },[ 1 ]);
 
-If you give table_name. It is assumed the hint that makes DBIx::Skinny::Row's Object.
+If $opt_table_info is specified, it set table infomation to result iterator.
+So, you can use table row class to search_by_sql result.
 
 =item B<$skinny->txn_scope>
 
