@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0718
+   2010-08-XX
+        - MOD : some documetn. see) http://d.hatena.ne.jp/tokuhirom/20100815/1281886033
+
 0.0717
    2010-08-11
         - FIXED : fixed bug for data2itr pass object-array (thanks nihen)
