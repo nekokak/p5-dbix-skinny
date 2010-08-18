@@ -145,41 +145,52 @@ DBIx::Skinny::Row - DBIx::Skinny's Row class
 
 =head1 METHODS
 
-=head2 get_column
+=over4
 
-    my $val = $row->get_column($col);
+=item B<$row->get_column($column_name)>
+
+    my $val = $row->get_column($column_name);
 
 get a column value from a row object.
 
-=head2 get_columns
+=item B<$row->get_columns>
 
     my %data = $row->get_columns;
 
 Does C<get_column>, for all column values.
 
-=head2 set
+=item B<$row->set(\%new_row_data)>
 
     $row->set({$col => $val});
 
 set columns data.
 
-=head2 get_dirty_columns
+=item B<$row->get_dirty_columns>
 
 returns those that have been changed.
 
-=head2 insert
+=item B<$row->insert>
 
 insert row data. call find_or_create method.
 
-=head2 update
+=item B<$row->update([$arg, [$table_name]])>
 
 update is executed for instance record.
 
 It works by schema in which primary key exists.
 
-=head2 delete
+    $row->update({name => 'tokuhirom'});
+    # or 
+    $row->set({name => 'tokuhirom'});
+    $row->update;
+
+=item B<$row->delete([$table_name])>
 
 delete is executed for instance record.
 
 It works by schema in which primary key exists.
+
+=over4
+
+=cut
 

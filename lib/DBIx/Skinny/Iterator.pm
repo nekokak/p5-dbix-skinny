@@ -130,3 +130,40 @@ skinny iteration class.
   while (my $row = $itr->next) { }
   $itr->reset->first;  # Can't fetch row!
 
+=head1 METHODS
+
+=over4
+
+=item B<$itr->first>
+
+get first row data.
+
+=item B<$itr->next>
+
+get next row data.
+
+=item B<$itr->all>
+
+get all row data.
+
+=item B<$itr->reset>
+
+this method reset iterator potion number.
+
+=item B<$itr->count>
+
+The number of lines that iterator has are returned. 
+
+=item B<$itr->no_cache>
+
+DBIx::Skinny::Itarator is default row data cache.
+this method specified that it doesn't cache row data. 
+
+=item B<$itr->potition>
+
+get iterator current potition number.
+
+=over4
+
+=cut
+

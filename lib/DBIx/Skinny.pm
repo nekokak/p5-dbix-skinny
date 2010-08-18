@@ -848,12 +848,13 @@ DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
 Lightweight and Little dependence ORM.
 The Row objects is generated based on arbitrarily SQL. 
 
-=head1 METHOD
+=head1 METHODS
 
-=head2 new
+DBIx::Skinny provides a number of methods to all your classes, 
 
-Arguments: $connection_info
-Return: DBIx::Skinny's instance object.
+=over4
+
+=item B<$skinny->new([\%connection_info])>
 
 create your skinny instance.
 It is possible to use it even by the class method.
@@ -880,10 +881,7 @@ or
         connect_options => $connect_options,
     });
 
-=head2 insert
-
-Arguments: $table_name, \%row_data
-Return: DBIx::Skinny::Row's instance object.
+=item B<$skinny->insert($table_name, \%row_data)>
 
 insert new record and get inserted row object.
 
@@ -902,14 +900,11 @@ or
         name => 'nekokak',
     });
 
-=head2 create
+=item B<$skinny->create($table_name, \%row_data)>
 
 insert method alias.
 
-=head2 bulk_insert
-
-Arguments: $table_name, \@row_datas
-Return: true
+=item B<$skinny->bulk_insert($table_name, \@rows_data)>
 
 Accepts either an arrayref of hashrefs.
 each hashref should be a structure suitable
@@ -934,10 +929,7 @@ example:
         },
     ]);
 
-=head2 update
-
-Arguments: $table_name, \%update_row_data, \%update_condition
-Return: updated row count
+=item B<$skinny->update($table_name, \%update_row_data, [\%update_condition])>
 
 $update_condition is optional argment.
 
@@ -955,25 +947,20 @@ or
     my $row = Your::Model->single('user',{id => 1});
     $row->update({name => 'nomaneko'});
 
-=head2 update_by_sql
+=item B<$skinny->update_by_sql($sql, [\@bind_values])>
 
-Arguments: $sql, \@bind_values
-Return: updated row count
-
-update record by specific sql.
+update record by specific sql. return update row count.
 
 example:
+
     my $update_row_count = Your::Model->update_by_sql(
         q{UPDATE user SET name = ?},
         ['nomaneko']
     );
 
-=head2 delete
+=item B<$skinny->delete($table, \%delete_condition)>
 
-Arguments: $table, \%delete_where_condition
-Return: updated row count
-
-delete record.
+delete record. return delete row count.
 
 example:
 
@@ -987,12 +974,9 @@ or
     my $row = Your::Model->single('user', {id => 1});
     $row->delete
 
-=head2 delete_by_sql
+=item B<$skinny->delete_by_sql($sql, \@bind_values)>
 
-Arguments: $sql, \@bind_values
-Return: updated row count
-
-delete record by specific sql.
+delete record by specific sql. return delete row count.
 
 example:
 
@@ -1001,12 +985,11 @@ example:
         [1]
     });
 
-=head2 find_or_create
-
-Arguments: $table, \%values_and_search_condition
-Return: DBIx::Skinny::Row's instance object.
+=item B<$skinny->find_or_create($table, \%values)>
 
 create record if not exsists record.
+
+return DBIx::Skinny::Row's instance object.
 
 example:
 
@@ -1015,14 +998,11 @@ example:
         name => 'nekokak',
     });
 
-=head2 find_or_insert
+=item B<$skinny->find_or_insert($table, \%values)>
 
 find_or_create method alias.
 
-=head2 search
-
-Arguments: $table, \%search_condition, \%search_attr
-Return: DBIx::Skinny::Iterator's instance object.
+=item B<$skinny->search($table_name, [\%search_condition, [\%search_attr]])>
 
 simple search method.
 search method get DBIx::Skinny::Iterator's instance object.
@@ -1037,24 +1017,25 @@ get rows:
 
     my @rows = Your::Model->search('user',{id => 1},{order_by => 'id'});
 
-Please refer to L<DBIx::Skinny::Manual> for the details of search method.
+See L</ATTRIBUTES> for more information for \%search_attr.
 
-=head2 single
+=item B<$skinny->search_rs($table_name, [\%search_condition, [\%search_attr]])>
 
-Arguments: $table, \%search_condition
-Return: DBIx::Skinny::Row's instance object.
+simple search method.
+search_rs method always get DBIx::Skinny::Iterator's instance object.
+
+This method does the same exact thing as search() except it will always return a iterator, even in list context.
+
+=item B<$skinny->single($table_name, \%search_condition)>
 
 get one record.
 give back one case of the beginning when it is acquired plural records by single method.
 
     my $row = Your::Model->single('user',{id =>1});
 
-=head2 resultset
+=item B<$skinny->resultset(\%options)>
 
-Arguments: \%options
-Return: DBIx::Skinny::SQL's instance object.
-
-result set case:
+resultset case:
 
     my $rs = Your::Model->resultset(
         {
@@ -1068,15 +1049,13 @@ result set case:
     $rs->order({ column => 'id', desc => 'DESC' });
     my $itr = $rs->retrieve;
 
-Please refer to L<DBIx::Skinny::Manual> for the details of resultset method.
-
-=head2 count
+=item B<$skinny->count($table_name, $target_column, [\%search_condition])>
 
 get simple count
 
-    my $cnt = Your::Model->count('user', 'id');
+    my $cnt = Your::Model->count('user' => 'id', {age => 30});
 
-=head2 search_named
+=item B<$skinny->search_named($sql, [\%bind_values, [\@sql_parts, [$table_name]]])>
 
 execute named query
 
@@ -1085,9 +1064,19 @@ execute named query
 If you give ArrayRef to value, that is expanded to "(?,?,?,?)" in SQL.
 It's useful in case use IN statement.
 
+    # SELECT * FROM user WHERE id IN (?,?,?);
+    # bind [1,2,3]
     my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids}, {id => [1, 2, 3]});
 
-=head2 search_by_sql
+If you give \@sql_parts,
+
+    # SELECT * FROM user WHERE id IN (?,?,?) AND unsubscribed_at IS NOT NULL;
+    # bind [1,2,3]
+    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids %s}, {id => [1, 2, 3]}, ['AND unsubscribed_at IS NOT NULL']);
+
+If you give table_name. It is assumed the hint that makes DBIx::Skinny::Row's Object.
+
+=item B<$skinny->search_by_sql($sql, [\@bind_vlues, [$table_name]])>
 
 execute your SQL
 
@@ -1100,7 +1089,9 @@ execute your SQL
             id = ?
     },[ 1 ]);
 
-=head2 txn_scope
+If you give table_name. It is assumed the hint that makes DBIx::Skinny::Row's Object.
+
+=item B<$skinny->txn_scope>
 
 get transaction scope object.
 
@@ -1110,7 +1101,9 @@ get transaction scope object.
         $txn->commit;
     }
 
-=head2 data2itr
+=item B<$skinny->data2itr($table_name, \@rows_data)>
+
+DBIx::Skinny::Iterator is made based on \@rows_data.
 
     my $itr = Your::Model->data2itr('user',[
         {
@@ -1130,25 +1123,53 @@ get transaction scope object.
     my $row = $itr->first;
     $row->insert; # inser data.
 
-=head2 find_or_new
+=item B<$skinny->find_or_new($table_name, \%row_data)>
+
+Find an existing record from database.
+
+If none exists, instantiate a new row object and return it.
+
+The object will not be saved into your storage until you call "insert" in DBIx::Skinny::Row on it.
 
     my $row = Your::Model->find_or_new('user',{name => 'nekokak'});
 
-=head2 do
+=item B<$skinny->do($sql, [$option, $bind_values])>
 
 execute your query.
 
-=head2 dbh
+See) L<http://search.cpan.org/dist/DBI/DBI.pm#do>
+
+=item B<$skinny->dbh>
 
 get database handle.
 
-=head2 connect
+=item B<$skinny->connect([\%connection_info])>
 
 connect database handle.
 
-=head2 reconnect
+If you give \%connection_info, create new database connection.
+
+=item B<$skinny->reconnect(\%connection_info)>
 
 re connect database handle.
+
+If you give \%connection_info, create new database connection.
+
+=over4
+
+=head1 ATTRIBUTES
+
+=item B<order_by>
+
+    { order_by => [ { id => 'desc' } ] }
+    # or
+    { order_by => { id => 'desc' } }
+    # or 
+    { order_by => 'name' }
+
+=item B<for_update>
+
+    { for_update => 1 }
 
 =head1 BUGS AND LIMITATIONS
 
