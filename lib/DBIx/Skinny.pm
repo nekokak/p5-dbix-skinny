@@ -1087,7 +1087,7 @@ It's useful in case use IN statement.
 
     my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids}, {id => [1, 2, 3]});
 
-=head2 search_by_sql
+=head2 search_by_sql($sql, [$bind], [$opt_table_info])
 
 execute your SQL
 
@@ -1099,6 +1099,9 @@ execute your SQL
         WHERE
             id = ?
     },[ 1 ]);
+
+If $opt_table_info is specified, it set table infomation to result iterator.
+So, you can use table row class to search_by_sql result.
 
 =head2 txn_scope
 
