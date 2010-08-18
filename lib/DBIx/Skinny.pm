@@ -1019,7 +1019,7 @@ example:
 
 find_or_create method alias.
 
-=head2 search
+=head2 search($table, \%search_condition, \%search_attr)
 
 Arguments: $table, \%search_condition, \%search_attr
 Return: DBIx::Skinny::Iterator's instance object.
@@ -1039,7 +1039,7 @@ get rows:
 
 Please refer to L<DBIx::Skinny::Manual> for the details of search method.
 
-=head2 single
+=head2 single($table, \%search_condition, \%search_attr)
 
 Arguments: $table, \%search_condition
 Return: DBIx::Skinny::Row's instance object.
