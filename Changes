@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0719
+   2010-08-19
+        - FIXED : document.
+        - FIXED : inc/Test/SharedFork.pm
+
 0.0718
    2010-08-18
         - MOD : some documetn. see) http://d.hatena.ne.jp/tokuhirom/20100815/1281886033

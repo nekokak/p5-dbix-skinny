@@ -11,14 +11,13 @@ requires 'IO::Handle';
 
 author_tests('xt');
 
-build_requires 'Test::More' => '0.94';
-build_requires 'Test::Exception';
-build_requires 'Test::Output';
-build_requires 'Test::SharedFork';
+test_requires 'Test::More' => '0.94';
+test_requires 'Test::Exception';
+test_requires 'Test::Output';
+test_requires 'Test::SharedFork' => 0.12;
 
 tests 't/*.t t/*/*.t';
 
-use_test_base;
 auto_include;
 auto_set_repository;
 WriteAll;
