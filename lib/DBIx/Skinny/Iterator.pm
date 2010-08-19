@@ -134,32 +134,32 @@ skinny iteration class.
 
 =over4
 
-=item B<$itr->first>
+=item $itr->first
 
 get first row data.
 
-=item B<$itr->next>
+=item $itr->next
 
 get next row data.
 
-=item B<$itr->all>
+=item $itr->all
 
 get all row data.
 
-=item B<$itr->reset>
+=item $itr->reset
 
 this method reset iterator potion number.
 
-=item B<$itr->count>
+=item $itr->count
 
 The number of lines that iterator has are returned. 
 
-=item B<$itr->no_cache>
+=item $itr->no_cache
 
 DBIx::Skinny::Itarator is default row data cache.
 this method specified that it doesn't cache row data. 
 
-=item B<$itr->potition>
+=item $itr->potition
 
 get iterator current potition number.
 

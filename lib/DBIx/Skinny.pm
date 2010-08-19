@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0718';
+our $VERSION = '0.0719';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -854,7 +854,7 @@ DBIx::Skinny provides a number of methods to all your classes,
 
 =over4
 
-=item B<$skinny->new([\%connection_info])>
+=item $skinny->new([\%connection_info])
 
 create your skinny instance.
 It is possible to use it even by the class method.
@@ -881,7 +881,7 @@ or
         connect_options => $connect_options,
     });
 
-=item B<$skinny->insert($table_name, \%row_data)>
+=item $skinny->insert($table_name, \%row_data)
 
 insert new record and get inserted row object.
 
@@ -900,11 +900,11 @@ or
         name => 'nekokak',
     });
 
-=item B<$skinny->create($table_name, \%row_data)>
+=item $skinny->create($table_name, \%row_data)
 
 insert method alias.
 
-=item B<$skinny->bulk_insert($table_name, \@rows_data)>
+=item $skinny->bulk_insert($table_name, \@rows_data)
 
 Accepts either an arrayref of hashrefs.
 each hashref should be a structure suitable
@@ -929,7 +929,7 @@ example:
         },
     ]);
 
-=item B<$skinny->update($table_name, \%update_row_data, [\%update_condition])>
+=item $skinny->update($table_name, \%update_row_data, [\%update_condition])
 
 $update_condition is optional argment.
 
@@ -947,7 +947,7 @@ or
     my $row = Your::Model->single('user',{id => 1});
     $row->update({name => 'nomaneko'});
 
-=item B<$skinny->update_by_sql($sql, [\@bind_values])>
+=item $skinny->update_by_sql($sql, [\@bind_values])
 
 update record by specific sql. return update row count.
 
@@ -958,7 +958,7 @@ example:
         ['nomaneko']
     );
 
-=item B<$skinny->delete($table, \%delete_condition)>
+=item $skinny->delete($table, \%delete_condition)
 
 delete record. return delete row count.
 
@@ -974,7 +974,7 @@ or
     my $row = Your::Model->single('user', {id => 1});
     $row->delete
 
-=item B<$skinny->delete_by_sql($sql, \@bind_values)>
+=item $skinny->delete_by_sql($sql, \@bind_values)
 
 delete record by specific sql. return delete row count.
 
@@ -985,7 +985,7 @@ example:
         [1]
     });
 
-=item B<$skinny->find_or_create($table, \%values)>
+=item $skinny->find_or_create($table, \%values)
 
 create record if not exsists record.
 
@@ -998,11 +998,11 @@ example:
         name => 'nekokak',
     });
 
-=item B<$skinny->find_or_insert($table, \%values)>
+=item $skinny->find_or_insert($table, \%values)
 
 find_or_create method alias.
 
-=item B<$skinny->search($table_name, [\%search_condition, [\%search_attr]])>
+=item $skinny->search($table_name, [\%search_condition, [\%search_attr]])
 
 simple search method.
 search method get DBIx::Skinny::Iterator's instance object.
@@ -1019,21 +1019,21 @@ get rows:
 
 See L</ATTRIBUTES> for more information for \%search_attr.
 
-=item B<$skinny->search_rs($table_name, [\%search_condition, [\%search_attr]])>
+=item $skinny->search_rs($table_name, [\%search_condition, [\%search_attr]])
 
 simple search method.
 search_rs method always get DBIx::Skinny::Iterator's instance object.
 
 This method does the same exact thing as search() except it will always return a iterator, even in list context.
 
-=item B<$skinny->single($table_name, \%search_condition)>
+=item $skinny->single($table_name, \%search_condition)
 
 get one record.
 give back one case of the beginning when it is acquired plural records by single method.
 
     my $row = Your::Model->single('user',{id =>1});
 
-=item B<$skinny->resultset(\%options)>
+=item $skinny->resultset(\%options)
 
 resultset case:
 
@@ -1049,13 +1049,13 @@ resultset case:
     $rs->order({ column => 'id', desc => 'DESC' });
     my $itr = $rs->retrieve;
 
-=item B<$skinny->count($table_name, $target_column, [\%search_condition])>
+=item $skinny->count($table_name, $target_column, [\%search_condition])
 
 get simple count
 
     my $cnt = Your::Model->count('user' => 'id', {age => 30});
 
-=item B<$skinny->search_named($sql, [\%bind_values, [\@sql_parts, [$table_name]]])>
+=item $skinny->search_named($sql, [\%bind_values, [\@sql_parts, [$table_name]]])
 
 execute named query
 
@@ -1076,7 +1076,7 @@ If you give \@sql_parts,
 
 If you give table_name. It is assumed the hint that makes DBIx::Skinny::Row's Object.
 
-=item B<$skinny->search_by_sql($sql, [\@bind_vlues, [$table_name]])>
+=item $skinny->search_by_sql($sql, [\@bind_vlues, [$table_name]])
 
 execute your SQL
 
@@ -1092,7 +1092,7 @@ execute your SQL
 If $opt_table_info is specified, it set table infomation to result iterator.
 So, you can use table row class to search_by_sql result.
 
-=item B<$skinny->txn_scope>
+=item $skinny->txn_scope
 
 get transaction scope object.
 
@@ -1102,7 +1102,7 @@ get transaction scope object.
         $txn->commit;
     }
 
-=item B<$skinny->data2itr($table_name, \@rows_data)>
+=item $skinny->data2itr($table_name, \@rows_data)
 
 DBIx::Skinny::Iterator is made based on \@rows_data.
 
@@ -1124,7 +1124,7 @@ DBIx::Skinny::Iterator is made based on \@rows_data.
     my $row = $itr->first;
     $row->insert; # inser data.
 
-=item B<$skinny->find_or_new($table_name, \%row_data)>
+=item $skinny->find_or_new($table_name, \%row_data)
 
 Find an existing record from database.
 
@@ -1134,23 +1134,23 @@ The object will not be saved into your storage until you call "insert" in DBIx::
 
     my $row = Your::Model->find_or_new('user',{name => 'nekokak'});
 
-=item B<$skinny->do($sql, [$option, $bind_values])>
+=item $skinny->do($sql, [$option, $bind_values])
 
 execute your query.
 
 See) L<http://search.cpan.org/dist/DBI/DBI.pm#do>
 
-=item B<$skinny->dbh>
+=item $skinny->dbh
 
 get database handle.
 
-=item B<$skinny->connect([\%connection_info])>
+=item $skinny->connect([\%connection_info])
 
 connect database handle.
 
 If you give \%connection_info, create new database connection.
 
-=item B<$skinny->reconnect(\%connection_info)>
+=item $skinny->reconnect(\%connection_info)
 
 re connect database handle.
 
@@ -1160,7 +1160,7 @@ If you give \%connection_info, create new database connection.
 
 =head1 ATTRIBUTES
 
-=item B<order_by>
+=item order_by
 
     { order_by => [ { id => 'desc' } ] }
     # or
@@ -1168,7 +1168,7 @@ If you give \%connection_info, create new database connection.
     # or 
     { order_by => 'name' }
 
-=item B<for_update>
+=item for_update
 
     { for_update => 1 }
 
