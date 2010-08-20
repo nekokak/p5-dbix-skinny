@@ -65,4 +65,22 @@ subtest 'delete rows using IN operator' => sub {
     done_testing;
 };
 
+subtest 'delete rows using IN operator' => sub {
+    Mock::Basic->insert('mock_basic',{
+            id   => 1,
+            name => 'perl',
+        });
+    Mock::Basic->insert('mock_basic',{
+            id   => 2,
+            name => 'perl',
+        });
+
+    is +Mock::Basic->count('mock_basic', 'id'), 2;
+
+    my $deleted_count = Mock::Basic->delete('mock_basic',{ id => { in => [1, 2] }});
+    is $deleted_count, 2;
+    is +Mock::Basic->count('mock_basic', 'id'), 0;
+    done_testing;
+};
+
 done_testing;

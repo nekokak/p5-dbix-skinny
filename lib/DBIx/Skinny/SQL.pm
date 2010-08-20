@@ -161,7 +161,7 @@ sub add_where {
     push @{ $self->{where} }, "($term)";
     push @{ $self->{bind} }, @$bind;
     push @{ $self->{bind_col} }, $tcol;
-    $self->where_values->{$tcol} = $val;
+    $self->where_values->{$tcol} = $bind;
 }
 
 sub add_complex_where {
