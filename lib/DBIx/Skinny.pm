@@ -550,7 +550,13 @@ sub bind_params {
         my($col, $val) = @{ $column };
         my $type = $schema->column_type($table, $col);
         my $attr = $type ? $dbd->bind_param_attributes($type) : undef;
-        $sth->bind_param($i++, $val, $attr);
+
+        if (ref $val) {
+            $sth->bind_param($i++, $_, $attr) for @$val;
+        }
+        else {
+            $sth->bind_param($i++, $val, $attr);
+        }
     }
 }
 
@@ -745,7 +751,7 @@ sub _execute {
 
     my ($sth, $bind);
     if ($table) {
-        $bind = [map {$_->[1]} @$args];
+        $bind = [map {ref $_->[1] ? @{$_->[1]} : $_->[1]} @$args];
         $class->profiler($stmt, $bind);
         eval {
             $sth = $class->dbh->prepare($stmt);
