@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0720
+   2010-08-20
+        - FIXED : Fixed bug in using "IN" operator in "DELETE/UPDATE" statement (thanks magicalhat)
+
 0.0719
    2010-08-19
         - FIXED : document.
