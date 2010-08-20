@@ -70,19 +70,5 @@ subtest 'update row count' => sub {
     done_testing;
 };
 
-
-subtest 'update rows using IN operator' => sub {
-
-    my $update_count = Mock::Basic->update('mock_basic',{name => 'oCaml'}, {id => [1, 2]});
-    is $update_count, 2;
-    done_testing;
-};
-
-subtest 'delete rows using IN operator' => sub {
-    my $update_count = Mock::Basic->update('mock_basic',{name => 'perl'}, {id => +{ in => [1, 2]}});
-    is $update_count, 2;
-    done_testing;
-};
-
 done_testing;
 
