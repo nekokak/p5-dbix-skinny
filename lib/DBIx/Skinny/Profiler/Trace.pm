@@ -49,3 +49,56 @@ sub _normalize { # copied from origianl DBIx::Skinny::Profiler
 }
  
 1;
+
+__END__
+=head1 NAME
+
+DBIx::Skinny::Profiler::Trace - support query profile.
+
+=head1 SYNOPSIS
+
+in your script:
+
+    use Your::Model;
+    
+    my $row = Your::Model->insert('user',
+        {
+            id   => 1,
+        }
+    );
+    $row->update({name => 'nekokak'});
+    
+    $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
+    $row->delete('user')
+    
+execute script:
+It is output to STDERR in default.
+
+    $ SKINNY_TRACE=1 perl ./sample.pl
+    INSERT INTO user (id) VALUES (?) :binds 1
+    UPDATE user set name = ? WHERE = id = ? :binds nekokak 1
+    SELECT id, name FROM user WHERE id = ? :binds 1
+    DELETE user WHERE id = ? :binds 1
+
+or
+
+The file can be specified. 
+
+    $ SKINNY_TRACE=1=./query.log perl ./sample.pl
+    $ cat ./query.log
+    INSERT INTO user (id) VALUES (?) :binds 1
+    UPDATE user set name = ? WHERE = id = ? :binds nekokak 1
+    SELECT id, name FROM user WHERE id = ? :binds 1
+    DELETE user WHERE id = ? :binds 1
+
+=head1 METHODS
+
+=over4
+
+=item $profiler->query_log()
+
+get all execute SQLs.
+
+=over4
+
+=cut

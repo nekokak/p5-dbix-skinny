@@ -39,3 +39,54 @@ sub record_query {
 
 1;
 
+__END__
+=head1 NAME
+
+DBIx::Skinny::Profiler - support query profile.
+
+=head1 SYNOPSIS
+
+in your script:
+
+    use Your::Model;
+    use Data::Dumper;
+    
+    my $row = Your::Model->insert('user',
+        {
+            id   => 1,
+        }
+    );
+    $row->update({name => 'nekokak'});
+    
+    $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
+    $row->delete('user')
+    
+    # get queries
+    warn Dumper Your::Model->profiler->query_log;
+    # The following are displayed. 
+    #
+    #  INSERT INTO user (id) VALUES (?) :binds 1
+    #  UPDATE user set name = ? WHERE = id = ? :binds nekokak 1
+    #  SELECT id, name FROM user WHERE id = ? :binds 1
+    #  DELETE user WHERE id = ? :binds 1
+
+execute script:
+
+    $ SKINNY_PROFILE=1 perl ./sample.pl
+
+=head1 METHODS
+
+=over4
+
+=item $profiler->query_log()
+
+get all execute SQLs.
+
+=item $profile->reset()
+
+Recorded query information is reset.
+
+=over4
+
+=cut
+

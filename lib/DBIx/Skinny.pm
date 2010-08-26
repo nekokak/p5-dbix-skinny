@@ -846,7 +846,7 @@ in your execute script.
     $row->update({name => 'nekokak'});
 
     $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
-    $row->delete('user')
+    $row->delete('user');
 
 =head1 DESCRIPTION
 
@@ -1177,6 +1177,22 @@ If you give \%connection_info, create new database connection.
 =item for_update
 
     { for_update => 1 }
+
+=head1 SKINNY_PROFILE
+
+for debugging sql.
+
+see L<DBIx::Skinny::Profile>
+
+        $ SKINNY_PROFILE=1 perl ./your_script.pl
+
+=head1 SKINNY_TRACE
+
+for debugging sql.
+
+see L<DBIx::Skinny::Profiler::Trace>
+
+    $ SKINNY_TRACE=1 perl ./your_script.pl
 
 =head1 BUGS AND LIMITATIONS
 
