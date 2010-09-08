@@ -68,4 +68,21 @@ subtest 'delete/update rows using LIKE operator' => sub {
     done_testing;
 };
 
+subtest 'delete/update rows XXX' => sub {
+    Mock::Basic->insert('mock_basic',{
+        id   => 1,
+        name => 'perl',
+    });
+
+    is +Mock::Basic->count('mock_basic', 'id'), 1;
+
+    my $update_count = Mock::Basic->update('mock_basic',{name => 'oCaml'}, {id => 1});
+    is $update_count, 1;
+
+    my $deleted_count = Mock::Basic->delete('mock_basic',{id => 1});
+    is $deleted_count, 1;
+    is +Mock::Basic->count('mock_basic', 'id'), 0;
+    done_testing;
+};
+
 done_testing;
