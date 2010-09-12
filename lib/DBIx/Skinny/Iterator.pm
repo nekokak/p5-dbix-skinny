@@ -132,7 +132,7 @@ skinny iteration class.
 
 =head1 METHODS
 
-=over4
+=over
 
 =item $itr->first
 
@@ -162,8 +162,6 @@ this method specified that it doesn't cache row data.
 =item $itr->potition
 
 get iterator current potition number.
-
-=over4
 
 =cut
 

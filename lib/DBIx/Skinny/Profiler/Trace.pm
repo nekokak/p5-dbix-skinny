@@ -93,12 +93,10 @@ The file can be specified.
 
 =head1 METHODS
 
-=over4
+=over
 
 =item $profiler->query_log()
 
 get all execute SQLs.
-
-=over4
 
 =cut

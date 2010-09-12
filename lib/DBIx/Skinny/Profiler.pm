@@ -76,7 +76,7 @@ execute script:
 
 =head1 METHODS
 
-=over4
+=over
 
 =item $profiler->query_log()
 
@@ -85,8 +85,6 @@ get all execute SQLs.
 =item $profile->reset()
 
 Recorded query information is reset.
-
-=over4
 
 =cut
 

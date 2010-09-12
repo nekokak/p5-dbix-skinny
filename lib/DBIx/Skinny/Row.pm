@@ -145,7 +145,7 @@ DBIx::Skinny::Row - DBIx::Skinny's Row class
 
 =head1 METHODS
 
-=over4
+=over
 
 =item $row->get_column($column_name)
 
@@ -189,8 +189,6 @@ It works by schema in which primary key exists.
 delete is executed for instance record.
 
 It works by schema in which primary key exists.
-
-=over4
 
 =cut
 
