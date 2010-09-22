@@ -144,5 +144,6 @@ t/regression/new_attr.t
 t/regression/no_schema.t
 t/regression/row_class_syntax_error.t
 t/Utils.pm
+xt/02_pod.t
 xt/perlcritic.t
 xt/perlcriticrc

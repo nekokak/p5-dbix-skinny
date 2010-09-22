@@ -1,6 +1,7 @@
 use t::Utils;
 use Mock::Basic;
 use Test::More;
+use Test::Exception;
 
 Mock::Basic->setup_test_db;
 
@@ -42,4 +43,16 @@ subtest 'find_or_insert' => sub {
     done_testing;
 };
 
+subtest 'find_or_create' => sub {
+
+    Mock::Basic->delete('mock_basic');
+    dies_ok(sub {Mock::Basic->find_or_create('mock_basic',{
+            id   => 2,
+            name => \' = "ruby"',
+        });
+    });
+    done_testing;
+};
+
 done_testing;
+

@@ -14,10 +14,9 @@ author_tests('xt');
 test_requires 'Test::More' => '0.94';
 test_requires 'Test::Exception';
 test_requires 'Test::Output';
-test_requires 'Test::SharedFork' => 0.12;
+test_requires 'Test::SharedFork' => 0.15;
 
 tests 't/*.t t/*/*.t';
 
-auto_include;
 auto_set_repository;
 WriteAll;
