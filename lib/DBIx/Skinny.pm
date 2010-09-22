@@ -551,11 +551,13 @@ sub bind_params {
         my $type = $schema->column_type($table, $col);
         my $attr = $type ? $dbd->bind_param_attributes($type) : undef;
 
-        if (ref $val) {
+        my $ref = ref $val;
+        if ($ref eq 'ARRAY') {
             $sth->bind_param($i++, $_, $attr) for @$val;
-        }
-        else {
+        } elsif (not $ref) {
             $sth->bind_param($i++, $val, $attr);
+        } else {
+            die "you can't set bind value, arrayref or scalar. you set $ref ref value.";
         }
     }
 }
@@ -751,7 +753,7 @@ sub _execute {
 
     my ($sth, $bind);
     if ($table) {
-        $bind = [map {ref $_->[1] ? @{$_->[1]} : $_->[1]} @$args];
+        $bind = [map {(ref $_->[1]) eq 'ARRAY' ? @{$_->[1]} : $_->[1]} @$args];
         $class->profiler($stmt, $bind);
         eval {
             $sth = $class->dbh->prepare($stmt);
