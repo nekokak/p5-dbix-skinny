@@ -1,9 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0721
-   2010-09-13
+   2010-09-22
         - FIXED : Fixed pod was broken.(thanks tokuhirom)
-        - FIXED : inc/Test/SharedFork.pm
+        - FIXED : Makefile.PL
 
 0.0720
    2010-08-20
