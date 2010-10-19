@@ -8,6 +8,7 @@ sub new {
 
     my $self = bless \%args, $class;
     $self->{_use_cache} = 1;
+    $self->{_mk_obj}    = 1;
 
     $self->reset;
 
@@ -44,8 +45,7 @@ sub iterator {
     my $obj;
     if ( Scalar::Util::blessed($row) ) {
         $obj = $row;
-    }
-    else {
+    } elsif ($self->{_mk_obj}) {
         $obj = $self->{row_class}->new(
             {
                 row_data       => $row,
@@ -58,6 +58,8 @@ sub iterator {
             $obj->setup;
             $self->{_setup}=1;
         }
+    } else {
+        return $row;
     }
 
     $self->{_rows_cache}->[$position] = $obj if $self->{_use_cache};
@@ -97,6 +99,7 @@ sub count {
 }
 
 sub no_cache { $_[0]->{_use_cache} = 0 }
+sub no_mk_obj { $_[0]->{_mk_obj} = 0 }
 sub position { $_[0]->{_position} }
 
 1;

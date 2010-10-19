@@ -76,5 +76,21 @@ subtest 'iterator with no cache' => sub {
     done_testing;
 };
 
+subtest 'iterator with no make object' => sub {
+    my $itr = Mock::Basic->search("mock_basic");
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+    $itr->no_mk_obj;
+
+    my $row = $itr->next;
+    is ref($row), 'HASH';
+    is_deeply $row,  {
+        id        => 1,
+        delete_fg => 0,
+        name      => 'perl',
+    };
+
+    done_testing;
+};
+
 done_testing;
 
