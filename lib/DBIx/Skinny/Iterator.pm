@@ -8,7 +8,6 @@ sub new {
 
     my $self = bless \%args, $class;
     $self->{_use_cache} = 1;
-    $self->{_suppress_objects} = 0;
 
     $self->reset;
 
@@ -45,7 +44,7 @@ sub iterator {
     my $obj;
     if ( Scalar::Util::blessed($row) ) {
         $obj = $row;
-    } elsif ($self->{_suppress_objects}) {
+    } elsif ($self->suppress_objects) {
         return $row;
     } else {
         $obj = $self->{row_class}->new(
@@ -98,8 +97,13 @@ sub count {
     scalar @rows;
 }
 
+sub suppress_objects {
+    my ($self, $mode) = @_;
+    return $self->{suppress_objects} unless defined $mode;
+    $self->{suppress_objects} = $mode;
+}
+
 sub no_cache { $_[0]->{_use_cache} = 0 }
-sub suppress_objects { $_[0]->{_suppress_objects} = 1 }
 sub position { $_[0]->{_position} }
 
 1;

@@ -39,6 +39,7 @@ sub import {
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
+        suppress_row_objects => 0,
         last_pid => $$,
     };
 
@@ -50,7 +51,7 @@ sub import {
             new
             schema profiler
             dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd do_on_connect
-            call_schema_trigger bind_params
+            call_schema_trigger bind_params suppress_row_objects
             do resultset search search_rs single search_by_sql search_named count
             data2itr find_or_new
                 _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
@@ -145,6 +146,12 @@ sub profiler {
         $attr->{profiler}->record_query($sql, $bind);
     }
     return $attr->{profiler};
+}
+
+sub suppress_row_objects {
+    my ($class, $mode) = @_;
+    return $class->attribute->{suppress_row_objects} unless defined $mode;
+    $class->attribute->{suppress_row_objects} = $mode;
 }
 
 #--------------------------------------------------------------------------------
@@ -450,7 +457,8 @@ sub _get_sth_iterator {
         skinny         => $class,
         sth            => $sth,
         row_class      => $class->_mk_row_class($sql, $opt_table_info),
-        opt_table_info => $opt_table_info
+        opt_table_info => $opt_table_info,
+        suppress_objects => $class->suppress_row_objects,
     );
 }
 
@@ -462,6 +470,7 @@ sub data2itr {
         data           => $data,
         row_class      => $class->_mk_row_class($table.$data, $table),
         opt_table_info => $table,
+        suppress_objects => $class->suppress_row_objects,
     );
 }
 

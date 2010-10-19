@@ -76,10 +76,10 @@ subtest 'iterator with no cache' => sub {
     done_testing;
 };
 
-subtest 'iterator with no make object' => sub {
+subtest 'iterator with suppress_objects on to off' => sub {
     my $itr = Mock::Basic->search("mock_basic");
     isa_ok $itr, 'DBIx::Skinny::Iterator';
-    $itr->suppress_objects;
+    $itr->suppress_objects(1);
 
     my $row = $itr->next;
     is ref($row), 'HASH';
@@ -87,6 +87,44 @@ subtest 'iterator with no make object' => sub {
         id        => 1,
         delete_fg => 0,
         name      => 'perl',
+    };
+
+    $itr->suppress_objects(0);
+    $row = $itr->next;
+    isa_ok $row, 'DBIx::Skinny::Row';
+    my $dat = $row->get_columns;
+    is_deeply $dat, {
+          id        => 2,
+          delete_fg => 0,
+          name      => 'ruby',
+    };
+
+    done_testing;
+};
+
+subtest 'iterator with suppress_row_objects on to off' => sub {
+    Mock::Basic->suppress_row_objects(1);
+    my $itr = Mock::Basic->search("mock_basic");
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+
+    my $row = $itr->next;
+    is ref($row), 'HASH';
+    is_deeply $row,  {
+        id        => 1,
+        delete_fg => 0,
+        name      => 'perl',
+    };
+
+    Mock::Basic->suppress_row_objects(0);
+    $itr = Mock::Basic->search("mock_basic");
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+    $row = $itr->next;
+    isa_ok $row, 'DBIx::Skinny::Row';
+    my $dat = $row->get_columns;
+    is_deeply $dat, {
+          id        => 1,
+          delete_fg => 0,
+          name      => 'perl',
     };
 
     done_testing;
