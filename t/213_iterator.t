@@ -130,5 +130,39 @@ subtest 'iterator with suppress_row_objects on to off' => sub {
     done_testing;
 };
 
+subtest 'iterator with suppress_row_objects on with cache' => sub {
+    Mock::Basic->suppress_row_objects(1);
+    my $itr = Mock::Basic->search("mock_basic");
+    isa_ok $itr, 'DBIx::Skinny::Iterator';
+
+    my $row = $itr->next;
+    is ref($row), 'HASH';
+    is_deeply $row,  {
+        id        => 1,
+        delete_fg => 0,
+        name      => 'perl',
+    };
+
+    $row = $itr->next;
+    is ref($row), 'HASH';
+    is_deeply $row, {
+          id        => 2,
+          delete_fg => 0,
+          name      => 'ruby',
+    };
+
+    $itr->reset;
+
+    $row = $itr->next;
+    is ref($row), 'HASH';
+    is_deeply $row,  {
+        id        => 1,
+        delete_fg => 0,
+        name      => 'perl',
+    };
+
+    done_testing;
+};
+
 done_testing;
 

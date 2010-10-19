@@ -45,7 +45,7 @@ sub iterator {
     if ( Scalar::Util::blessed($row) ) {
         $obj = $row;
     } elsif ($self->suppress_objects) {
-        return $row;
+        $obj = $row;
     } else {
         $obj = $self->{row_class}->new(
             {
@@ -125,7 +125,7 @@ skinny iteration class.
   
   my $row = $itr->first; # get first row
   
-  $itr->reset; # reset itarator potision
+  $itr->reset; # reset itarator position
   
   my @rows = $itr->all; # get all rows
   
@@ -155,7 +155,7 @@ get all row data.
 
 =item $itr->reset
 
-this method reset iterator potion number.
+this method reset iterator position number.
 
 =item $itr->count
 
@@ -166,9 +166,9 @@ The number of lines that iterator has are returned.
 DBIx::Skinny::Itarator is default row data cache.
 this method specified that it doesn't cache row data. 
 
-=item $itr->potition
+=item $itr->position
 
-get iterator current potition number.
+get iterator current position number.
 
 =cut
 
