@@ -170,5 +170,9 @@ this method specified that it doesn't cache row data.
 
 get iterator current position number.
 
+=item $itr->suppress_objects($mode)
+
+set row object creation mode.
+
 =cut
 

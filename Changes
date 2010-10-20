@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0722
+   2010-10-20
+        - ADD : suppress_row_objects mode. more faster.
+
 0.0721
    2010-09-22
         - FIXED : Fixed pod was broken.(thanks tokuhirom)

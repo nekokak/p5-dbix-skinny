@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0721';
+our $VERSION = '0.0722';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -1173,6 +1173,10 @@ re connect database handle.
 
 If you give \%connection_info, create new database connection.
 
+=item $skinny->suppress_row_objects($flag)
+
+set row object creation mode.
+
 =back
 
 =head1 ATTRIBUTES
@@ -1193,7 +1197,9 @@ If you give \%connection_info, create new database connection.
 
 =back
 
-=head1 SKINNY_PROFILE
+=head1 ENVIRONMENT VARIABLES
+
+=head2 SKINNY_PROFILE
 
 for debugging sql.
 
@@ -1201,7 +1207,7 @@ see L<DBIx::Skinny::Profile>
 
         $ SKINNY_PROFILE=1 perl ./your_script.pl
 
-=head1 SKINNY_TRACE
+=head2 SKINNY_TRACE
 
 for debugging sql.
 
