@@ -15,7 +15,7 @@ subtest 'get_column' => sub {
     is($row->get_column('name') => 'perl', 'get_column ok');
     throws_ok(sub { $row->get_column }, qr/please specify \$col for first argument/, 'no argument get_column should raise error');
 
-    throws_ok(sub { $row->get_column('bazbaz') }, qr/bazbaz no selected column./);
+    throws_ok(sub { $row->get_column('bazbaz') }, qr/bazbaz no selected column. SQL: unknown/);
 
     done_testing;
 };
@@ -26,7 +26,7 @@ subtest 'get_column' => sub {
     )->first;
     isa_ok $row, 'DBIx::Skinny::Row';
 
-    throws_ok(sub { $row->get_column('name') }, qr/name no selected column./);
+    throws_ok(sub { $row->get_column('name') }, qr/name no selected column. SQL: SELECT id FROM mock_basic LIMIT 1/);
 
     done_testing;
 };

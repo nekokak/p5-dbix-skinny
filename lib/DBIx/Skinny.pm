@@ -456,6 +456,7 @@ sub _get_sth_iterator {
     return DBIx::Skinny::Iterator->new(
         skinny         => $class,
         sth            => $sth,
+        sql            => $sql,
         row_class      => $class->_mk_row_class($sql, $opt_table_info),
         opt_table_info => $opt_table_info,
         suppress_objects => $class->suppress_row_objects,

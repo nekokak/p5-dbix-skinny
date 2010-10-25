@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0723
+   2010-10-XX
+        - MOD : more infomation for no selected column error.
+
 0.0722
    2010-10-20
         - ADD : suppress_row_objects mode. more faster.
