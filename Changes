@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0723
-   2010-10-XX
+   2010-10-25
         - MOD : more infomation for no selected column error.
         - MOD : no dependent Test::Output (thanks yibe)
 
