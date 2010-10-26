@@ -748,7 +748,15 @@ sub find_or_create {
     return $row if $row;
     $row = $class->insert($table, $args);
     my $pk = $class->schema->schema_info->{$table}->{pk};
-    $class->single($table, { $pk => $row->get_column($pk) });
+    my %args;
+    if (ref $pk) {
+        for (@$pk) {
+            $args{$_} = $row->get_column($_);
+        }
+    } else {
+        $args{$pk} = $row->get_column($pk);
+    }
+    $class->single($table, \%args);
 }
 
 sub _add_where {

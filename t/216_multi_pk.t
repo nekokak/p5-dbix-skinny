@@ -195,6 +195,23 @@ my $skinny = Mock::MultiPK->new;
 
         done_testing();
     };
+
+    subtest 'multi pk find_or_create' => sub {
+        my ( $rs, $itr, $row );
+
+        {
+            my $row = $skinny->find_or_create('c_multi_pk_table' => {id_c => 50, id_d => 90});
+            $row->update({memo => 'yay'});
+            is_deeply( $row->get_columns, { id_c => 50, id_d => 90, memo => 'yay' } );
+        }
+
+        {
+            my $row = $skinny->find_or_create('c_multi_pk_table' => {id_c => 50, id_d => 90});
+            is_deeply( $row->get_columns, { id_c => 50, id_d => 90, memo => 'yay' } );
+        }
+
+        done_testing();
+    };
 }
 
 done_testing();
