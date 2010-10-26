@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0724
+   2010-10-26
+        - FIXED : find_or_create multi pk bug (thanks tokuhirom)
+
 0.0723
    2010-10-25
         - MOD : more infomation for no selected column error.
