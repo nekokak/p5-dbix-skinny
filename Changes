@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0725
+   2010-10-XX
+        - ADD   : add handle method for DBIx::Skinny::Row.
+        - MOD   : DBIx::Skinny did inherits without doing export.
+
 0.0724
    2010-10-26
         - FIXED : find_or_create multi pk bug (thanks tokuhirom)
