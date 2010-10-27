@@ -18,6 +18,8 @@ use Storable ();
 sub import {
     my ($class, %opt) = @_;
 
+    return if $class ne 'DBIx::Skinny';
+
     my $caller = caller;
     my $args   = $opt{setup}||+{};
 
@@ -45,25 +47,8 @@ sub import {
 
     {
         no strict 'refs';
+        push @{"${caller}::ISA"}, $class;
         *{"$caller\::attribute"} = sub { ref $_[0] ? $_[0] : $_attribute };
-
-        my @functions = qw/
-            new
-            schema profiler
-            dbh dbd connect connect_info _dbd_type reconnect set_dbh setup_dbd do_on_connect
-            call_schema_trigger bind_params suppress_row_objects
-            do resultset search search_rs single search_by_sql search_named count
-            data2itr find_or_new
-                _get_sth_iterator _mk_row_class _camelize _mk_anon_row_class _guess_table_name
-            insert replace _insert_or_replace bulk_insert create update delete find_or_create find_or_insert
-            update_by_sql delete_by_sql
-                _add_where
-            _execute _close_sth _stack_trace
-            txn_scope txn_begin txn_rollback txn_commit txn_end
-        /;
-        for my $func (@functions) {
-            *{"$caller\::$func"} = \&$func;
-        }
     }
 
     eval "use $schema"; ## no critic
