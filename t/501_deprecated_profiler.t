@@ -13,9 +13,9 @@ BEGIN {
     open my $fh, '>', \$buffer or die "Could not open in-memory buffer";
     *STDERR = $fh;
 
-    use_ok "Mock::DeprecatedSetup";
+    use_ok "Mock::DeprecatedProfiler";
     close $fh;
 
-    like $buffer, qr/use DBIx::Skinny setup => { \.\.\. } has been deprecated\. Please use connect_info instead/;
+    like $buffer, qr/use DBIx::Skinny connect_info => { profiler => \.\.\. } has been deprecated\. Please use use DBIx::Skinny profiler => \.\.\. instead/;
 }
 done_testing;

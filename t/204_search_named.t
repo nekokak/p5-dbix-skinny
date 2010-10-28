@@ -38,7 +38,8 @@ subtest 'search_named' => sub {
 };
 
 subtest 'search_named' => sub {
-    Mock::Basic->attribute->{profile} = 1;
+    require DBIx::Skinny::Profiler;
+    local Mock::Basic->attribute->{profiler} = DBIx::Skinny::Profiler->new;
     Mock::Basic->profiler->reset;
     my $itr = Mock::Basic->search_named(q{SELECT * FROM mock_basic WHERE id = :id limit %d}, {id => 1},[100]);
     isa_ok $itr, 'DBIx::Skinny::Iterator';
@@ -53,7 +54,8 @@ subtest 'search_named' => sub {
 };
 
 subtest 'search_named with arrayref' => sub {
-    Mock::Basic->attribute->{profile} = 1;
+    require DBIx::Skinny::Profiler;
+    local Mock::Basic->attribute->{profiler} = DBIx::Skinny::Profiler->new;
     Mock::Basic->profiler->reset;
     my $itr = Mock::Basic->search_named(q{
         SELECT * FROM mock_basic

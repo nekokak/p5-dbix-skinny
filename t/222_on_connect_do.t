@@ -48,6 +48,8 @@ subtest 'instance level on_connect_do / coderef' => sub {
 };
 
 subtest 'instance level on_connect_do / scalar' => sub {
+    require DBIx::Skinny::Profiler;
+    local Mock::BasicOnConnectDo->attribute->{profiler} = DBIx::Skinny::Profiler->new;
     my $db = Mock::BasicOnConnectDo->new;
 
     $db->attribute->{on_connect_do} = 'select * from sqlite_master';
@@ -69,6 +71,8 @@ subtest 'instance level on_connect_do / scalar' => sub {
 };
 
 subtest 'instance level on_connect_do / array' => sub {
+    require DBIx::Skinny::Profiler;
+    local Mock::BasicOnConnectDo->attribute->{profiler} = DBIx::Skinny::Profiler->new;
     my $db = Mock::BasicOnConnectDo->new;
 
     $db->attribute->{on_connect_do} = ['select * from sqlite_master', 'select * from sqlite_master'];

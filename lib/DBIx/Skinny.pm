@@ -8,8 +8,6 @@ use DBI;
 use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
-use DBIx::Skinny::Profiler;
-use DBIx::Skinny::Profiler::Trace;
 use DBIx::Skinny::Transaction;
 use Digest::SHA1 ();
 use Carp ();
@@ -30,6 +28,19 @@ sub import {
         }
     }
 
+    my $profiler = $opt{profiler};
+    if (! $profiler ) {
+        if ( $profiler = $connect_info->{profiler} ) {
+            Carp::carp( "use DBIx::Skinny connect_info => { profiler => ... } has been deprecated. Please use use DBIx::Skinny profiler => ... instead" );
+        } elsif ($ENV{SKINNY_TRACE}) {
+            require DBIx::Skinny::Profiler::Trace;
+            $profiler = DBIx::Skinny::Profiler::Trace->new;
+        } elsif ($ENV{SKINNY_PROFILE}) {
+            require DBIx::Skinny::Profiler;
+            $profiler = DBIx::Skinny::Profiler->new;
+        }
+    }
+                
     my $schema = $opt{schema} || "$caller\::Schema";
 
     my $dbd_type = _dbd_type($connect_info);
@@ -43,7 +54,7 @@ sub import {
         dbh             => $connect_info->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
-        profiler        => ( $connect_info->{profiler} || ( $ENV{SKINNY_TRACE} ? DBIx::Skinny::Profiler::Trace->new : DBIx::Skinny::Profiler->new ) ),
+        profiler        => $profiler,
         profile         => $ENV{SKINNY_PROFILE}||$ENV{SKINNY_TRACE}||0,
         klass           => $caller,
         row_class_map   => +{},
@@ -134,7 +145,7 @@ sub schema {
 sub profiler {
     my ($class, $sql, $bind) = @_;
     my $attr = $class->attribute;
-    if ($attr->{profile} && $sql) {
+    if ($attr->{profiler} && $sql) {
         $attr->{profiler}->record_query($sql, $bind);
     }
     return $attr->{profiler};
