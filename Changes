@@ -8,6 +8,7 @@ Revision history for Perl extension DBIx::Skinny
         - MOD   : allow setting the name of the schema at use DBIx::Skinny time (thanks lestrrat)
         - MOD   : change setup to connect_info. setup now warns, and is aliased to connect_info (thanks lestrrat)
         - MOD   : change where profiler is set, also now respect SKINNY_PROFILE env var (thanks lestrrat)
+        - ADD   : add ARCHITECTURE document.(thanks lestrrat)
 
 0.0724
    2010-10-26
