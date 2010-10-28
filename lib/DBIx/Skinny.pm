@@ -827,7 +827,7 @@ DBIx::Skinny - simple DBI wrapper/ORMapper
 create your db model base class.
 
     package Your::Model;
-    use DBIx::Skinny setup => {
+    use DBIx::Skinny connect_info => {
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',

@@ -21,7 +21,7 @@ Let's work with an example project called C<Proj>. Your Skinny
 model for this project would be:
 
     package Proj::Model;
-    use DBIx::Skinny setup => +{
+    use DBIx::Skinny conect_info => +{
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',

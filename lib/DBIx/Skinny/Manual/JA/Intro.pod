@@ -26,7 +26,7 @@ Skinnyを操作するClassを定義します。
 例えばProjというプロジェクトでSkinnyを使う場合
 
     package Proj::Model;
-    use DBIx::Skinny setup => +{
+    use DBIx::Skinny connect_info => +{
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',

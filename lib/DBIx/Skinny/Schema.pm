@@ -229,7 +229,7 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
 
     package Your::Model;
     package Qudo::Driver::Skinny;
-    use DBIx::Skinny setup => +{
+    use DBIx::Skinny connect_info => +{
         dsn => 'dbi:SQLite:',
         username => '',
         password => '',
