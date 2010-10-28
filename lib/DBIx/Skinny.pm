@@ -55,7 +55,6 @@ sub import {
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
         profiler        => $profiler,
-        profile         => $ENV{SKINNY_PROFILE}||$ENV{SKINNY_TRACE}||0,
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
