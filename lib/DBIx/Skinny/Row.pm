@@ -39,6 +39,8 @@ sub _lazy_get_data {
     };
 }
 
+sub handle { $_[0]->{skinny} }
+
 sub get_column {
     my ($self, $col) = @_;
 
@@ -189,6 +191,12 @@ It works by schema in which primary key exists.
 delete is executed for instance record.
 
 It works by schema in which primary key exists.
+
+=item $row->handle
+
+get skinny object.
+
+    $row->handle->single('table', {id => 1});
 
 =cut
 

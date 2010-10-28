@@ -584,8 +584,12 @@ sub _insert_or_replace {
     my $sth = $class->_execute($sql, \@column_list, $table);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
-    my $id = defined $args->{$pk} ? $args->{$pk} :
-             (ref $pk) eq 'ARRAY' ? undef        : $dbd->last_insert_id($class->dbh, $sth, { table => $table });
+    my $id =
+        defined $pk && defined $args->{$pk} ? $args->{$pk} :
+        defined $pk && (ref $pk) eq 'ARRAY' ? undef        :
+            $dbd->last_insert_id($class->dbh, $sth, { table => $table })
+    ;
+
     $class->_close_sth($sth);
 
     if ($id) {

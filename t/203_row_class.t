@@ -42,5 +42,12 @@ subtest 'ex row class' => sub {
     done_testing;
 };
 
+subtest 'handle' => sub {
+    my $row = Mock::Basic->single('mock_basic',{id => 1});
+    isa_ok $row->handle, 'Mock::Basic';
+    can_ok $row->handle, 'single';
+    done_testing;
+};
+
 done_testing;
 
