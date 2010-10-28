@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0725
-   2010-10-XX
+   2010-10-28
         - ADD   : add handle method for DBIx::Skinny::Row.
         - MOD   : DBIx::Skinny did inherits without doing export.
         - FIXED : don't warn on pk-less tables.(thanks lestrrat)
