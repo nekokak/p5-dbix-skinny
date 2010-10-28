@@ -21,22 +21,29 @@ sub import {
     return if $class ne 'DBIx::Skinny';
 
     my $caller = caller;
-    my $args   = $opt{setup}||+{};
+    my $connect_info = $opt{connect_info};
+    if (! $connect_info ) {
+        if ( $connect_info = $opt{setup} ) {
+            Carp::carp( "use DBIx::Skinny setup => { ... } has been deprecated. Please use connect_info instead" );
+        } else {
+            $connect_info = {};
+        }
+    }
 
     my $schema = $opt{schema} || "$caller\::Schema";
 
-    my $dbd_type = _dbd_type($args);
+    my $dbd_type = _dbd_type($connect_info);
     my $_attribute = +{
-        check_schema    => defined $args->{check_schema} ? $args->{check_schema} : 1,
-        dsn             => $args->{dsn},
-        username        => $args->{username},
-        password        => $args->{password},
-        connect_options => $args->{connect_options},
-        on_connect_do   => $args->{on_connect_do},
-        dbh             => $args->{dbh}||undef,
+        check_schema    => defined $connect_info->{check_schema} ? $connect_info->{check_schema} : 1,
+        dsn             => $connect_info->{dsn},
+        username        => $connect_info->{username},
+        password        => $connect_info->{password},
+        connect_options => $connect_info->{connect_options},
+        on_connect_do   => $connect_info->{on_connect_do},
+        dbh             => $connect_info->{dbh}||undef,
         dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
         schema          => $schema,
-        profiler        => ( $args->{profiler} || ( $ENV{SKINNY_TRACE} ? DBIx::Skinny::Profiler::Trace->new : DBIx::Skinny::Profiler->new ) ),
+        profiler        => ( $connect_info->{profiler} || ( $ENV{SKINNY_TRACE} ? DBIx::Skinny::Profiler::Trace->new : DBIx::Skinny::Profiler->new ) ),
         profile         => $ENV{SKINNY_PROFILE}||$ENV{SKINNY_TRACE}||0,
         klass           => $caller,
         row_class_map   => +{},
