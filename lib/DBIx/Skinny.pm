@@ -614,6 +614,8 @@ sub _insert_or_replace {
     }
 
     my $row_class = $class->_mk_row_class($sql, $table);
+    return $args if $class->suppress_row_objects;
+
     my $obj = $row_class->new(
         {
             row_data       => $args,
@@ -760,7 +762,7 @@ sub find_or_create {
             $args{$_} = $row->get_column($_);
         }
     } else {
-        $args{$pk} = $row->get_column($pk);
+        $args{$pk} = $class->suppress_row_objects ? $row->{$pk} :$row->get_column($pk);
     }
     $class->single($table, \%args);
 }
