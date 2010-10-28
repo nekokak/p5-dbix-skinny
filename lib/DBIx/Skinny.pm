@@ -23,7 +23,7 @@ sub import {
     my $caller = caller;
     my $args   = $opt{setup}||+{};
 
-    my $schema = "$caller\::Schema";
+    my $schema = $opt{schema} || "$caller\::Schema";
 
     my $dbd_type = _dbd_type($args);
     my $_attribute = +{
