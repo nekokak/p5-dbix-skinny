@@ -1,6 +1,6 @@
 package Mock::DBH;
 use DBI;
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     dbh => DBI->connect('dbi:SQLite:', '', ''),
 };
 

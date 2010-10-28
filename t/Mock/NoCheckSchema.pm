@@ -1,5 +1,5 @@
 package Mock::NoCheckSchema;
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     check_schema => 0,
 };
 

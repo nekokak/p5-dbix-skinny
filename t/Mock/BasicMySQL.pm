@@ -1,5 +1,5 @@
 package Mock::BasicMySQL;
-use DBIx::Skinny setup => +{};
+use DBIx::Skinny connect_info => +{};
 
 my $table = 'mock_basic_mysql';
 sub setup_test_db {

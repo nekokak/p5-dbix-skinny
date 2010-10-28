@@ -1,7 +1,7 @@
 package Mock::CustomProfiler;
 use t::Utils;
 use Mock::CustomProfiler::Profiler;
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     dsn => 'dbi:SQLite:',
     username => '',
     password => '',

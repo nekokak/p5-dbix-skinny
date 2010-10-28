@@ -1,5 +1,5 @@
 package Mock::ExRow;
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     dsn => 'dbi:SQLite:',
     username => '',
     password => '',

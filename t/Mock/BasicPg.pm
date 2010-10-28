@@ -1,5 +1,5 @@
 package Mock::BasicPg;
-use DBIx::Skinny setup => +{};
+use DBIx::Skinny connect_info => +{};
 
 my $table = 'mock_basic_pg';
 sub setup_test_db {

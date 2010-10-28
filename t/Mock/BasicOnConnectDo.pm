@@ -1,6 +1,6 @@
 package Mock::BasicOnConnectDo;
 our $CONNECTION_COUNTER;
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     dsn => 'dbi:SQLite:',
     username => '',
     password => '',
