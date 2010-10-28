@@ -860,8 +860,51 @@ in your execute script.
 =head1 DESCRIPTION
 
 DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
-Lightweight and Little dependence ORM.
-The Row objects is generated based on arbitrarily SQL. 
+It aims to be lightweight, with minimal dependencies so it's easier to install. 
+
+=head1 ARCHITECTURE
+
+DBIx::Skinny classes are comprised of three distinct components:
+
+=head2 MODEL
+
+The C<model> is where you say 
+
+    package MyApp::Model;
+    use DBIx::Skinny;
+
+This is the entry point to using DBIx::Skinny. You connect, insert, update, delete, select stuff using this object.
+
+=head2 SCHEMA
+
+The C<schema> is a simple class that describes your table definitions. Note that this is different from DBIx::Class terms. DBIC's schema is equivalent to DBIx::Skinny's model + schema, where the actual schema information is scattered across the result classes.
+
+In DBIx::Skinny, you simply use DBIx::Skinny::Schema's domain specific languaage to define a set of tables
+
+    package MyApp::Model::Schema;
+    use DBIx::Skinny::Schema;
+
+    install_table $table_name => schema {
+        pk $primary_key_column;
+        columns qw(
+            column1
+            column2
+            column3
+        );
+    }
+
+    ... and other tables ...
+
+=head2 ROW
+
+Unlike DBIx::Class, you don't need to have a set of classes that represent a row type (i.e. "result" classes in DBIC terms). In DBIx::Skinny, the row objects are blessed into anonymous classes that inherit from DBIx::Skinny::Row, so you don't have to create these classes if you just want to use some simple queries.
+
+If you want to define methods to be performed by your row objects, simply create a row class like so:
+
+    package MyApp::Model::Row::CamelizedTableName;
+    use base qw(DBIx::Skinny::Row);
+
+Note that your table name will be camelized using String::CamelCase.
 
 =head1 METHODS
 
