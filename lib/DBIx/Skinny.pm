@@ -1302,6 +1302,8 @@ Makamaka Hannyaharamitu
 
 nihen: Masahiro Chiba
 
+lestrrat: Daisuke Maki
+
 =head1 SUPPORT
 
   irc: #dbix-skinny@irc.perl.org
