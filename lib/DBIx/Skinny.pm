@@ -453,9 +453,25 @@ sub find_or_new {
     my ($class, $table, $args) = @_;
     my $row = $class->single($table, $args);
     unless ($row) {
-        $row = $class->data2itr($table, [$args])->first;
+        $row = $class->hash_to_row($table, $args);
     }
     return $row;
+}
+
+sub hash_to_row {
+    my ($class, $table, $hash) = @_;
+
+    my $row_class = $class->_mk_row_class($table.$hash, $table);
+    my $row = $row_class->new(
+        {
+            sql            => undef,
+            row_data       => $hash,
+            skinny         => $class,
+            opt_table_info => $table,
+        }
+    );
+    $row->setup;
+    $row;
 }
 
 sub _get_sth_iterator {
@@ -1184,6 +1200,17 @@ get transaction scope object.
         # some process
         $txn->commit;
     }
+
+=item $skinny->hash_to_row($table_name, $row_data_hash_ref)
+
+make DBIx::Skinny::Row's class from hash_ref.
+
+    my $row = Your::Model->hash_to_row('user',
+        {
+            id   => 1,
+            name => 'lestrrat',
+        }
+    );
 
 =item $skinny->data2itr($table_name, \@rows_data)
 
