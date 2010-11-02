@@ -13,7 +13,7 @@ sub name_sep { '.' }
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 
-    my $txn; $txn = $skinny->txn_scope unless $skinny->attribute->{active_transaction} != 0;
+    my $txn; $txn = $skinny->txn_scope unless $skinny->_attributes->{active_transaction} != 0;
 
         for my $arg ( @{$args} ) {
             $skinny->_insert_or_replace(0, $table, $arg);

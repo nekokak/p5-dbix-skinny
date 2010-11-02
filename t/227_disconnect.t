@@ -26,7 +26,7 @@ subtest 'insert mock_basic data/ insert method' => sub {
 
 subtest 'disconnect' => sub {
     Mock::Basic->disconnect();
-    ok ! defined Mock::Basic->attribute->{dbh}, "dbh is undef";
+    ok ! defined Mock::Basic->_attributes->{dbh}, "dbh is undef";
     done_testing;
 };
 

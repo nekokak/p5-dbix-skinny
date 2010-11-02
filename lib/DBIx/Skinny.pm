@@ -44,7 +44,7 @@ sub import {
     my $schema = $opt{schema} || "$caller\::Schema";
 
     my $dbd_type = _dbd_type($connect_info);
-    my $_attribute = +{
+    my $_attributes = +{
         check_schema    => defined $connect_info->{check_schema} ? $connect_info->{check_schema} : 1,
         dsn             => $connect_info->{dsn},
         username        => $connect_info->{username},
@@ -65,7 +65,8 @@ sub import {
     {
         no strict 'refs';
         push @{"${caller}::ISA"}, $class;
-        *{"$caller\::attribute"} = sub { ref $_[0] ? $_[0] : $_attribute };
+        *{"$caller\::_attributes"} = sub { ref $_[0] ? $_[0] : $_attributes };
+        *{"$caller\::attribute"} = sub { Carp::carp("attribute has been deprecated."); $_[0]->_attributes };
     }
 
     eval "use $schema"; ## no critic
@@ -81,7 +82,7 @@ sub import {
 
 sub new {
     my ($class, $connection_info) = @_;
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
 
     $attr->{last_pid} = $$;
 
@@ -100,12 +101,12 @@ sub new {
 
     if ($connection_info) {
 
-        $self->attribute->{profiler} = $unstorable_attribute{profiler};
+        $self->_attributes->{profiler} = $unstorable_attribute{profiler};
 
         if ( $connection_info->{on_connect_do} ) {
-            $self->attribute->{on_connect_do} = $connection_info->{on_connect_do};
+            $self->_attributes->{on_connect_do} = $connection_info->{on_connect_do};
         } else {
-            $self->attribute->{on_connect_do} = $unstorable_attribute{on_connect_do};
+            $self->_attributes->{on_connect_do} = $unstorable_attribute{on_connect_do};
         }
 
         if ($connection_info->{dbh}) {
@@ -118,7 +119,7 @@ sub new {
 
     } else {
         for my $key ( keys %unstorable_attribute ) {
-            $self->attribute->{$key} = $unstorable_attribute{$key};
+            $self->_attributes->{$key} = $unstorable_attribute{$key};
         }
     }
 
@@ -127,7 +128,7 @@ sub new {
 
 my $schema_checked = 0;
 sub schema { 
-    my $attribute = $_[0]->attribute;
+    my $attribute = $_[0]->_attributes;
     my $schema = $attribute->{schema};
     if ( $attribute->{check_schema} && !$schema_checked ) {
         do {
@@ -143,7 +144,7 @@ sub schema {
 
 sub profiler {
     my ($class, $sql, $bind) = @_;
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
     if ($attr->{profiler} && $sql) {
         $attr->{profiler}->record_query($sql, $bind);
     }
@@ -152,8 +153,8 @@ sub profiler {
 
 sub suppress_row_objects {
     my ($class, $mode) = @_;
-    return $class->attribute->{suppress_row_objects} unless defined $mode;
-    $class->attribute->{suppress_row_objects} = $mode;
+    return $class->_attributes->{suppress_row_objects} unless defined $mode;
+    $class->_attributes->{suppress_row_objects} = $mode;
 }
 
 #--------------------------------------------------------------------------------
@@ -164,36 +165,36 @@ sub txn_scope {
 
 sub txn_begin {
     my $class = shift;
-    return if ( ++$class->attribute->{active_transaction} > 1 );
+    return if ( ++$class->_attributes->{active_transaction} > 1 );
     $class->profiler("BEGIN WORK");
     eval { $class->dbh->begin_work } or Carp::croak $@;
 }
 
 sub txn_rollback {
     my $class = shift;
-    return unless $class->attribute->{active_transaction};
+    return unless $class->_attributes->{active_transaction};
 
-    if ( $class->attribute->{active_transaction} == 1 ) {
+    if ( $class->_attributes->{active_transaction} == 1 ) {
         $class->profiler("ROLLBACK WORK");
         eval { $class->dbh->rollback } or Carp::croak $@;
         $class->txn_end;
     }
-    elsif ( $class->attribute->{active_transaction} > 1 ) {
-        $class->attribute->{active_transaction}--;
-        $class->attribute->{rollbacked_in_nested_transaction}++;
+    elsif ( $class->_attributes->{active_transaction} > 1 ) {
+        $class->_attributes->{active_transaction}--;
+        $class->_attributes->{rollbacked_in_nested_transaction}++;
     }
 
 }
 
 sub txn_commit {
     my $class = shift;
-    return unless $class->attribute->{active_transaction};
+    return unless $class->_attributes->{active_transaction};
 
-    if ( $class->attribute->{rollbacked_in_nested_transaction} ) {
+    if ( $class->_attributes->{rollbacked_in_nested_transaction} ) {
         Carp::croak "tried to commit but already rollbacked in nested transaction.";
     }
-    elsif ( $class->attribute->{active_transaction} > 1 ) {
-        $class->attribute->{active_transaction}--;
+    elsif ( $class->_attributes->{active_transaction} > 1 ) {
+        $class->_attributes->{active_transaction}--;
         return;
     }
 
@@ -203,8 +204,8 @@ sub txn_commit {
 }
 
 sub txn_end {
-    $_[0]->attribute->{active_transaction} = 0;
-    $_[0]->attribute->{rollbacked_in_nested_transaction} = 0;
+    $_[0]->_attributes->{active_transaction} = 0;
+    $_[0]->_attributes->{rollbacked_in_nested_transaction} = 0;
 }
 
 #--------------------------------------------------------------------------------
@@ -212,7 +213,7 @@ sub txn_end {
 sub connect_info {
     my ($class, $connect_info) = @_;
 
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
     $attr->{dsn} = $connect_info->{dsn};
     $attr->{username} = $connect_info->{username};
     $attr->{password} = $connect_info->{password};
@@ -226,7 +227,7 @@ sub connect {
 
     $class->connect_info(@_) if scalar @_ >= 1;
 
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
     my $do_connected;
     if ( !$attr->{dbh} ) {
         $do_connected++;
@@ -254,7 +255,7 @@ sub reconnect {
 sub do_on_connect {
     my $class = shift;
 
-    my $on_connect_do = $class->attribute->{on_connect_do};
+    my $on_connect_do = $class->_attributes->{on_connect_do};
     if (not ref($on_connect_do)) {
         $class->do($on_connect_do);
     } elsif (ref($on_connect_do) eq 'CODE') {
@@ -268,25 +269,25 @@ sub do_on_connect {
 
 sub disconnect {
     my $class = shift;
-    $class->attribute->{dbh} = undef;
+    $class->_attributes->{dbh} = undef;
 }
 
 sub set_dbh {
     my ($class, $dbh) = @_;
-    $class->attribute->{dbh} = $dbh;
+    $class->_attributes->{dbh} = $dbh;
     $class->setup_dbd({dbh => $dbh});
 }
 
 sub setup_dbd {
     my ($class, $args) = @_;
     my $dbd_type = _dbd_type($args);
-    $class->attribute->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
+    $class->_attributes->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
 }
 
 sub dbd {
-    $_[0]->attribute->{dbd} or do {
+    $_[0]->_attributes->{dbd} or do {
         require Data::Dumper;
-        Carp::croak("attribute dbd does not exist. does it connected? attribute: @{[ Data::Dumper::Dumper($_[0]->attribute) ]}");
+        Carp::croak("attribute dbd does not exist. does it connected? attribute: @{[ Data::Dumper::Dumper($_[0]->_attributes) ]}");
     };
 }
 
@@ -294,8 +295,8 @@ sub dbh {
     my $class = shift;
 
     my $dbh = $class->connect;
-    if ( $class->attribute->{last_pid} != $$ ) {
-        $class->attribute->{last_pid} = $$;
+    if ( $class->_attributes->{last_pid} != $$ ) {
+        $class->_attributes->{last_pid} = $$;
         $dbh->{InactiveDestroy} = 1;
         $dbh = $class->reconnect;
     }
@@ -488,7 +489,7 @@ sub _mk_anon_row_class {
     my $row_class = 'DBIx::Skinny::Row::C';
     $row_class .= Digest::SHA1::sha1_hex($key);
 
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
     $attr->{base_row_class} ||= do {
         my $tmp_base_row_class = join '::', $attr->{klass}, 'Row';
         eval "use $tmp_base_row_class"; ## no critic
@@ -519,7 +520,7 @@ sub _mk_row_class {
     my ($class, $key, $table) = @_;
 
     $table ||= $class->_guess_table_name($key)||'';
-    my $attr = $class->attribute;
+    my $attr = $class->_attributes;
     my $base_row_class = $attr->{row_class_map}->{$table}||'';
 
     if ( $base_row_class eq 'DBIx::Skinny::Row' ) {
@@ -663,7 +664,7 @@ sub replace {
 sub bulk_insert {
     my ($class, $table, $args) = @_;
 
-    my $code = $class->attribute->{dbd}->can('bulk_insert') or Carp::croak "dbd don't provide bulk_insert method";
+    my $code = $class->_attributes->{dbd}->can('bulk_insert') or Carp::croak "dbd don't provide bulk_insert method";
     $code->($class, $table, $args);
 }
 
