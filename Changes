@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0726
+   2010-11-02
+        - ADD   : disconnect method.(thanks lestrrat)
+        - FIXED : tweak English (thanks lestrrat)
+
 0.0725
    2010-10-28
         - ADD   : add handle method for DBIx::Skinny::Row.

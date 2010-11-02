@@ -90,6 +90,7 @@ t/223_get_column.t
 t/224_replace.t
 t/225_bind_column.t
 t/226_fork.t
+t/227_disconnect.t
 t/500_deprecated_setup.t
 t/501_deprecated_profiler.t
 t/Mixin/Foo.pm
