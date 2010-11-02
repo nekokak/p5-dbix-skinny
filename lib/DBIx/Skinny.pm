@@ -133,7 +133,7 @@ sub schema {
         do {
             no strict 'refs';
             unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
-                die "$schema is something wrong( is it really loaded? )";
+                die "Cannot use schema $schema ( is it really loaded? )";
             }
         };
         $schema_checked++;
