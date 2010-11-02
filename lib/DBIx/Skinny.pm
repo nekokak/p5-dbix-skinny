@@ -247,7 +247,7 @@ sub connect {
 
 sub reconnect {
     my $class = shift;
-    $class->attribute->{dbh} = undef;
+    $class->disconnect();
     $class->connect(@_);
 }
 
@@ -264,6 +264,11 @@ sub do_on_connect {
     } else {
         Carp::croak('Invalid on_connect_do: '.ref($on_connect_do));
     }
+}
+
+sub disconnect {
+    my $class = shift;
+    $class->attribute->{dbh} = undef;
 }
 
 sub set_dbh {
@@ -1232,6 +1237,10 @@ If you give \%connection_info, create new database connection.
 re connect database handle.
 
 If you give \%connection_info, create new database connection.
+
+=item $skinny->disconnect()
+
+Disconnects from the currently connected database.
 
 =item $skinny->suppress_row_objects($flag)
 
