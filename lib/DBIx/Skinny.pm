@@ -76,6 +76,15 @@ sub import {
         die $@ if $@ && $@ !~ /Can't locate $schema_file\.pm in \@INC/;
     }
 
+    if ($opt{auto_row_class}) {
+        my $schema_info = $schema->schema_info;
+        for my $table (keys %$schema_info) {
+            my $row_class = join '::', $caller, 'Row', _camelize($table);
+            { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+            $_attributes->{row_class_map}->{$table} = $row_class;
+        }
+    }
+
     strict->import;
     warnings->import;
 }
