@@ -176,7 +176,7 @@ sub txn_begin {
     my $class = shift;
     return if ( ++$class->_attributes->{active_transaction} > 1 );
     $class->profiler("BEGIN WORK");
-    eval { $class->dbh->begin_work } or Carp::croak $@;
+    $class->dbh->begin_work;
 }
 
 sub txn_rollback {
@@ -185,7 +185,7 @@ sub txn_rollback {
 
     if ( $class->_attributes->{active_transaction} == 1 ) {
         $class->profiler("ROLLBACK WORK");
-        eval { $class->dbh->rollback } or Carp::croak $@;
+        $class->dbh->rollback;
         $class->txn_end;
     }
     elsif ( $class->_attributes->{active_transaction} > 1 ) {
@@ -208,7 +208,7 @@ sub txn_commit {
     }
 
     $class->profiler("COMMIT WORK");
-    eval { $class->dbh->commit } or Carp::croak $@;
+    $class->dbh->commit;
     $class->txn_end;
 }
 
