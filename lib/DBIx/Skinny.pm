@@ -80,7 +80,10 @@ sub import {
         my $schema_info = $schema->schema_info;
         for my $table (keys %$schema_info) {
             my $row_class = join '::', $caller, 'Row', _camelize($table);
-            { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+
+            eval "use $row_class"; ## no critic
+            if ($@) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+
             $_attributes->{row_class_map}->{$table} = $row_class;
         }
     }

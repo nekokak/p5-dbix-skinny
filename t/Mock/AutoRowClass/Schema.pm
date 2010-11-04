@@ -12,4 +12,13 @@ install_table mock_table => schema {
     /;
 };
 
+install_table mock_foo => schema {
+    pk 'id';
+    columns qw/
+        id
+        name
+        delete_fg
+    /;
+};
+
 1;

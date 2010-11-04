@@ -9,8 +9,17 @@ connect_info => +{
 };
 
 sub setup_test_db {
-    shift->do(q{
+    my $db = shift;
+    $db->do(q{
         CREATE TABLE mock_table (
+            id   integer,
+            name text,
+            delete_fg int(1) default 0,
+            primary key ( id )
+        )
+    });
+    $db->do(q{
+        CREATE TABLE mock_foo (
             id   integer,
             name text,
             delete_fg int(1) default 0,
