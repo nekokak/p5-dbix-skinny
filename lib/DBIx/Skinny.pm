@@ -1324,6 +1324,22 @@ see L<DBIx::Skinny::Profiler::Trace>
 
     $ SKINNY_TRACE=1 perl ./your_script.pl
 
+=head2 TRIGGER
+
+    my $row = $db->insert($args);
+    # pre_insert: ($db, $args, $table_name)
+    # post_insert: ($db, $row, $table_name)
+
+    my $updated_rows_count = $db->update($args);
+    my $updated_rows_count = $row->update(); # example $args: +{ id => $row->id }
+    # pre_update: ($db, $args, $table_name)
+    # post_update: ($db, $updated_rows_count, $table_name)
+
+    my $deleted_rows_count = $db->delete($args);
+    my $deleted_rows_count = $row->delete(); # example $args: +{ id => $row->id }
+    # pre_delete: ($db, $args, $table_name)
+    # post_delete: ($db, $deleted_rows_count, $table_name)
+
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
