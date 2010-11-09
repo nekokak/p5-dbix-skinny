@@ -91,9 +91,14 @@ t/224_replace.t
 t/225_bind_column.t
 t/226_fork.t
 t/227_disconnect.t
+t/228_hash_to_row.t
+t/229_auto_row_class.t
 t/500_deprecated_setup.t
 t/501_deprecated_profiler.t
 t/Mixin/Foo.pm
+t/Mock/AutoRowClass.pm
+t/Mock/AutoRowClass/Row/MockFoo.pm
+t/Mock/AutoRowClass/Schema.pm
 t/Mock/Basic.pm
 t/Mock/Basic/Schema.pm
 t/Mock/BasicBindColumn.pm
