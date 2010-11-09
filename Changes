@@ -1,7 +1,7 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0727
-   2010-11-XX
+   2010-11-09
         - ADD   : hash_to_row class.
         - MOD   : DBIx::Skinny::attribute method rename DBIx::Skinny::_attributes. [INCOMPATIBLE CHANGE]
         - ADD   : auto create Row class mode.
