@@ -608,6 +608,29 @@ sub bind_params {
     }
 }
 
+sub _set_columns {
+    my ($class, $args, $insert) = @_;
+
+    my $schema = $class->schema;
+    my $dbd = $class->dbd;
+    my $quote = $dbd->quote;
+    my $name_sep = $dbd->name_sep;
+
+    my (@columns, @bind_columns, @quoted_columns);
+    for my $col (keys %{ $args }) {
+        my $quoted_col = _quote($col, $quote, $name_sep);
+        if (ref($args->{$col}) eq 'SCALAR') {
+            push @columns, ($insert ? ${ $args->{$col} } :"$quoted_col = " . ${ $args->{$col} });
+        } else {
+            push @columns, ($insert ? '?' : "$quoted_col = ?");
+            push @bind_columns, [$col, $schema->utf8_off($col, $args->{$col})];
+        }
+        push @quoted_columns, $quoted_col;
+    }
+
+    return (\@columns, \@bind_columns, \@quoted_columns);
+}
+
 sub _insert_or_replace {
     my ($class, $is_replace, $table, $args) = @_;
 
@@ -618,27 +641,20 @@ sub _insert_or_replace {
         $args->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
-    my (@cols, @column_list);
-    for my $col (keys %{ $args }) {
-        push @cols, $col;
-        push @column_list, [$col, $schema->utf8_off($col, $args->{$col})];
-    }
+    my ($columns, $bind_columns, $quoted_columns) = $class->_set_columns($args, 1);
 
-    my $dbd = $class->dbd;
-    my $quote = $dbd->quote;
-    my $name_sep = $dbd->name_sep;
     my $sql = $is_replace ? 'REPLACE' : 'INSERT';
     $sql .= " INTO $table\n";
-    $sql .= '(' . join(', ', map {_quote($_, $quote, $name_sep)} @cols) . ')' . "\n" .
-            'VALUES (' . join(', ', ('?') x @cols) . ')' . "\n";
+    $sql .= '(' . join(', ', @$quoted_columns) .')' . "\n" .
+            'VALUES (' . join(', ', @$columns) . ')' . "\n";
 
-    my $sth = $class->_execute($sql, \@column_list, $table);
+    my $sth = $class->_execute($sql, $bind_columns, $table);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
     my $id =
         defined $pk && defined $args->{$pk} ? $args->{$pk} :
         defined $pk && (ref $pk) eq 'ARRAY' ? undef        :
-            $dbd->last_insert_id($class->dbh, $sth, { table => $table })
+            $class->dbd->last_insert_id($class->dbh, $sth, { table => $table })
     ;
 
     $class->_close_sth($sth);
@@ -702,33 +718,22 @@ sub update {
     my $schema = $class->schema;
     $class->call_schema_trigger('pre_update', $schema, $table, $args);
 
-    # deflate
     my $values = {};
     for my $col (keys %{$args}) {
-        $values->{$col} = $schema->call_deflate($col, $args->{$col});
+       $values->{$col} = $schema->call_deflate($col, $args->{$col});
     }
 
-    my $quote = $class->dbd->quote;
-    my $name_sep = $class->dbd->name_sep;
-    my (@set, @column_list);
-    for my $col (keys %{ $args }) {
-        my $quoted_col = _quote($col, $quote, $name_sep);
-        if (ref($values->{$col}) eq 'SCALAR') {
-            push @set, "$quoted_col = " . ${ $values->{$col} };
-        } else {
-            push @set, "$quoted_col = ?";
-            push @column_list, [$col, $schema->utf8_off($col, $values->{$col})];
-        }
-    }
+    my ($columns, $bind_columns, undef) = $class->_set_columns($values, 0);
 
     my $stmt = $class->resultset;
     $class->_add_where($stmt, $where);
     my @where_values = map {[$_ => $stmt->where_values->{$_}]} @{$stmt->bind_col};
-    push @column_list, @where_values;
 
-    my $sql = "UPDATE $table SET " . join(', ', @set) . ' ' . $stmt->as_sql_where;
+    push @{$bind_columns}, @where_values;
 
-    my $sth = $class->_execute($sql, \@column_list, $table);
+    my $sql = "UPDATE $table SET " . join(', ', @$columns) . ' ' . $stmt->as_sql_where;
+    my $sth = $class->_execute($sql, $bind_columns, $table);
+
     my $rows = $sth->rows;
 
     $class->_close_sth($sth);
