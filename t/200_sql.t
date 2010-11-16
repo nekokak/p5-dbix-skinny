@@ -293,6 +293,21 @@ subtest 'add_complex_where' => sub {
     done_testing;
 };
 
+subtest join_with_using => sub {
+    my $sql = ns();
+    $sql->from([]);
+    $sql->add_join(foo => [
+        {
+            type => 'inner', table => 'baz',
+            condition => [qw/ hoge_id fuga_id /],
+        },
+    ] );
+
+    is $sql->as_sql, "FROM foo INNER JOIN baz USING (hoge_id, fuga_id)\n";
+
+    done_testing;
+};
+
 sub ns { DBIx::Skinny::SQL->new }
 
 done_testing;
