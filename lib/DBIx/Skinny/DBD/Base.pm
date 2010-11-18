@@ -13,6 +13,8 @@ sub name_sep { '.' }
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 
+    return unless @$args;
+
     my $txn; $txn = $skinny->txn_scope unless $skinny->_attributes->{active_transaction} != 0;
 
         for my $arg ( @{$args} ) {

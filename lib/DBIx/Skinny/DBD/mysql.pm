@@ -12,6 +12,8 @@ sub sql_for_unixtime { "UNIX_TIMESTAMP()" }
 sub bulk_insert {
     my ($skinny, $table, $args) = @_;
 
+    return unless @$args;
+
     my (@cols, @bind);
     for my $arg (@{$args}) {
         # deflate

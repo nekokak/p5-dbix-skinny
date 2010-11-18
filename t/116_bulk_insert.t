@@ -48,6 +48,7 @@ subtest 'bulk_insert method' => sub {
 
         done_testing()
     };
+
     subtest 'post_insert trigger should not work in bulk_insert' => sub {
         Mock::Trigger->bulk_insert('mock_trigger_pre' => [
             {
@@ -96,6 +97,14 @@ SKIP: {
                 },
             ]);
             is +Mock::BasicMySQL->count('mock_basic_mysql', 'id'), 3;
+            done_testing;
+        };
+
+        subtest 'no die (illigal division by zero?) / regression test' => sub {
+            eval {
+                Mock::Basic->bulk_insert('mock_basic',[ ]);
+            };
+            ok not $@;
             done_testing;
         };
 
