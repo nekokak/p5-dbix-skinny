@@ -1,6 +1,7 @@
 package DBIx::Skinny::Transaction;
 use strict;
 use warnings;
+use Carp ();
 
 sub new {
     my($class, $skinny) = @_;
@@ -23,6 +24,8 @@ sub commit {
 sub DESTROY {
     my($dismiss, $skinny) = @{ $_[0] };
     return if $dismiss;
+
+    Carp::carp('do rollback');
 
     {
         local $@;
