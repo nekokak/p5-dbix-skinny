@@ -1214,9 +1214,22 @@ get transaction scope object.
 
     do {
         my $txn = Your::Model->txn_scope;
-        # some process
+
+        $row->update({foo => 'bar'});
+
         $txn->commit;
     }
+
+An alternative way of transaction handling based on
+L<DBIx::Skinny::Transaction>.
+
+If an exception occurs, or the guard object otherwise leaves the scope
+before C<< $txn->commit >> is called, the transaction will be rolled
+back by an explicit L</txn_rollback> call. In essence this is akin to
+using a L</txn_begin>/L</txn_commit> pair, without having to worry
+about calling L</txn_rollback> at the right places. Note that since there
+is no defined code closure, there will be no retries and other magic upon
+database disconnection.
 
 =item $skinny->hash_to_row($table_name, $row_data_hash_ref)
 
