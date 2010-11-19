@@ -1020,6 +1020,25 @@ or
 
 insert method alias.
 
+=item $skinny->replace($table_name, \%row_data)
+
+The data that already exists is replaced. 
+
+example:
+
+    Your::Model->replace('user',{
+        id   => 1,
+        name => 'tokuhirom',
+    });
+
+or 
+
+    my $db = Your::Model->new;
+    my $row = $db->replace('user',{
+        id   => 1,
+        name => 'tokuhirom',
+    });
+
 =item $skinny->bulk_insert($table_name, \@rows_data)
 
 Accepts either an arrayref of hashrefs.
