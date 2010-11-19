@@ -1388,6 +1388,8 @@ nihen: Masahiro Chiba
 
 lestrrat: Daisuke Maki
 
+tokuhirom: Tokuhiro Matsuno
+
 =head1 SUPPORT
 
   irc: #dbix-skinny@irc.perl.org
