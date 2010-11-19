@@ -8,6 +8,7 @@ requires 'DBI';
 requires 'Digest::SHA1';
 requires 'Scalar::Util';
 requires 'IO::Handle';
+requires 'Try::Tiny';
 
 author_tests('xt');
 
