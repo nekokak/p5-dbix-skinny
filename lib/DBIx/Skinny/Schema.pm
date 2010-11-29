@@ -43,7 +43,7 @@ sub import {
 
     my @functions = qw/
         install_table
-          schema pk columns schema_info column_type
+          schema pk columns schema_info column_type row_class
         install_inflate_rule
           inflate deflate call_inflate call_deflate
           callback _do_inflate
@@ -87,6 +87,15 @@ sub pk {
     $class->schema_info->{
         $class->schema_info->{_installing_table}
     }->{pk} = (@columns == 1 ? $columns[0] : \@columns);
+}
+
+sub row_class ($) {
+    my $row_class = shift;
+    
+    my $class = caller;
+    $class->schema_info->{
+        $class->schema_info->{_installing_table}
+    }->{row_class} = $row_class;
 }
 
 sub columns (@) {
