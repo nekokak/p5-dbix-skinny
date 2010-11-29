@@ -5,6 +5,7 @@ Revision history for Perl extension DBIx::Skinny
         - MOD   : remove DBIx::Skinny::Accessor. use Class::Accessor::Lite.
         - MOD   : DEPRECATED update_by_sql/delete_by_sql methods.
         - MOD   : no create anon row class.
+        - MOD   : specific row class name for Schema.pm
 
 0.0727
    2010-11-09
