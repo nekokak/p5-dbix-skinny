@@ -712,6 +712,16 @@ sub update {
     return $rows;
 }
 
+sub update_by_sql {
+    my ($class, $sql, $bind) = @_;
+
+    my $sth = $class->_execute($sql, $bind);
+    my $rows = $sth->rows;
+    $class->_close_sth($sth);
+
+    $rows;
+}
+
 sub delete {
     my ($class, $table, $where) = @_;
 
@@ -734,6 +744,17 @@ sub delete {
     $class->call_schema_trigger('post_delete', $schema, $table, $rows);
 
     $class->_close_sth($sth);
+    $rows;
+}
+
+sub delete_by_sql {
+    my ($class, $sql, $bind) = @_;
+
+    my $sth = $class->_execute($sql, $bind);
+    my $rows = $sth->rows;
+
+    $class->_close_sth($sth);
+
     $rows;
 }
 
@@ -1031,6 +1052,17 @@ or
     my $row = Your::Model->single('user',{id => 1});
     $row->update({name => 'nomaneko'});
 
+=item $skinny->update_by_sql($sql, [\@bind_values])
+
+update record by specific sql. return update row count.
+
+example:
+
+    my $update_row_count = Your::Model->update_by_sql(
+        q{UPDATE user SET name = ?},
+        ['nomaneko']
+    );
+
 =item $skinny->delete($table, \%delete_condition)
 
 delete record. return delete row count.
@@ -1046,6 +1078,17 @@ or
     # see) DBIx::Skinny::Row's POD
     my $row = Your::Model->single('user', {id => 1});
     $row->delete
+
+=item $skinny->delete_by_sql($sql, \@bind_values)
+
+delete record by specific sql. return delete row count.
+
+example:
+
+    my $delete_row_count = Your::Model->delete_by_sql(
+        q{DELETE FROM user WHERE id = ?},
+        [1]
+    });
 
 =item $skinny->find_or_create($table, \%values)
 
