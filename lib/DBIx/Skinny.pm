@@ -214,13 +214,25 @@ sub connect_info {
     my ($class, $connect_info) = @_;
 
     my $attr = $class->_attributes;
-    $attr->{dsn} = $connect_info->{dsn};
-    $attr->{username} = $connect_info->{username};
-    $attr->{password} = $connect_info->{password};
-    $attr->{connect_options} = $connect_info->{connect_options};
 
-    $class->setup_dbd($connect_info);
+    if ($connect_info) {
+        $attr->{dsn} = $connect_info->{dsn};
+        $attr->{username} = $connect_info->{username};
+        $attr->{password} = $connect_info->{password};
+        $attr->{connect_options} = $connect_info->{connect_options};
+
+        $class->setup_dbd($connect_info);
+        return;
+    } else {
+        return +{
+            dsn             => $attr->{dsn},
+            username        => $attr->{username},
+            password        => $attr->{password},
+            connect_options => $attr->{connect_options},
+        };
+    }
 }
+
 
 sub connect {
     my $class = shift;
