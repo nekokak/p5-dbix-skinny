@@ -76,18 +76,6 @@ sub import {
         die $@ if $@ && $@ !~ /Can't locate $schema_file\.pm in \@INC/;
     }
 
-    if ($opt{auto_row_class}) {
-        my $schema_info = $schema->schema_info;
-        for my $table (keys %$schema_info) {
-            my $row_class = join '::', $caller, 'Row', _camelize($table);
-
-            eval "use $row_class"; ## no critic
-            if ($@) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
-
-            $_attributes->{row_class_map}->{$table} = $row_class;
-        }
-    }
-
     strict->import;
     warnings->import;
 }
@@ -511,30 +499,6 @@ sub data2itr {
     );
 }
 
-sub _mk_anon_row_class {
-    my ($class, $key) = @_;
-
-    my $row_class = 'DBIx::Skinny::Row::C';
-    $row_class .= Digest::SHA1::sha1_hex($key);
-
-    my $attr = $class->_attributes;
-    $attr->{base_row_class} ||= do {
-        my $tmp_base_row_class = join '::', $attr->{klass}, 'Row';
-        eval "use $tmp_base_row_class"; ## no critic
-        (my $rc = $tmp_base_row_class) =~ s|::|/|g;
-        die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
-
-        if ($@) {
-            'DBIx::Skinny::Row';
-        } else {
-            $tmp_base_row_class;
-        }
-    };
-    { no strict 'refs'; @{"$row_class\::ISA"} = ($attr->{base_row_class}); }
-
-    return $row_class;
-}
-
 sub _guess_table_name {
     my ($class, $sql) = @_;
 
@@ -551,26 +515,32 @@ sub _mk_row_class {
     my $attr = $class->_attributes;
     my $base_row_class = $attr->{row_class_map}->{$table}||'';
 
-    if ( $base_row_class eq 'DBIx::Skinny::Row' ) {
-        return $class->_mk_anon_row_class($key);
-    } elsif ($base_row_class) {
+    if ($base_row_class) {
         return $base_row_class;
     } elsif ($table) {
-        my $tmp_base_row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
-        eval "use $tmp_base_row_class"; ## no critic
-        (my $rc = $tmp_base_row_class) =~ s|::|/|g;
+        my $row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
+        eval "use $row_class"; ## no critic
+        (my $rc = $row_class) =~ s|::|/|g;
         die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
 
         if ($@) {
-            $attr->{row_class_map}->{$table} = 'DBIx::Skinny::Row';
-            return $class->_mk_anon_row_class($key);
-        } else {
-            $attr->{row_class_map}->{$table} = $tmp_base_row_class;
-            return $tmp_base_row_class;
+            $row_class = $class->_mk_common_row;
         }
+        $attr->{row_class_map}->{$table} = $row_class;
     } else {
-        return $class->_mk_anon_row_class($key);
+        $class->_make_row_class;
     }
+}
+
+sub _mk_common_row {
+    my $class = shift;
+
+    my $row_class = join '::', $class->_attributes->{klass}, 'Row';
+    eval "use $row_class"; ## no critic
+    (my $rc = $row_class) =~ s|::|/|g;
+    die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
+    if ($@) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+    $row_class;
 }
 
 sub _camelize {
