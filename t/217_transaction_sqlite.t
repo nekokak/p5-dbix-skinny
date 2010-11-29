@@ -80,6 +80,7 @@ subtest 'do scope rollback' => sub {
 subtest 'do scope guard for rollback' => sub {
  
     {
+        local $SIG{__WARN__} = sub {};
         my $txn = Mock::Basic->txn_scope;
         my $row = Mock::Basic->insert('mock_basic',{
             name => 'perl',

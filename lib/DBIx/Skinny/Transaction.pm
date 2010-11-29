@@ -2,6 +2,7 @@ package DBIx::Skinny::Transaction;
 use strict;
 use warnings;
 use Carp ();
+use Try::Tiny;
 
 sub new {
     my($class, $skinny) = @_;
@@ -27,14 +28,11 @@ sub DESTROY {
 
     Carp::carp('do rollback');
 
-    {
-        local $@;
-        eval { $skinny->txn_rollback };
-        my $rollback_exception = $@;
-        if($rollback_exception) {
-            die "Rollback failed: ${rollback_exception}";
-        }
-    }
+    try {
+        $skinny->txn_rollback;
+    } catch {
+        die "Rollback failed: $_";
+    };
 }
 
 1;
