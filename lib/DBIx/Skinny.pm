@@ -328,10 +328,12 @@ sub call_schema_trigger {
 sub do {
     my ($class, $sql, $attr, @bind_vars) = @_;
     $class->profiler($sql, @bind_vars ? \@bind_vars : undef);
-    eval { $class->dbh->do($sql, $attr, @bind_vars) };
+    my $ret;
+    eval { $ret = $class->dbh->do($sql, $attr, @bind_vars) };
     if ($@) {
         $class->_stack_trace('', $sql, @bind_vars ? \@bind_vars : '', $@);
     }
+    $ret;
 }
 
 sub count {
@@ -715,11 +717,8 @@ sub update {
 sub update_by_sql {
     my ($class, $sql, $bind) = @_;
 
-    my $sth = $class->_execute($sql, $bind);
-    my $rows = $sth->rows;
-    $class->_close_sth($sth);
-
-    $rows;
+    Carp::carp( 'update_by_sql has been deprecated. Please use $skinny->do($sql, undef, @bind)' );
+    $class->do($sql, undef, @$bind);
 }
 
 sub delete {
@@ -750,12 +749,8 @@ sub delete {
 sub delete_by_sql {
     my ($class, $sql, $bind) = @_;
 
-    my $sth = $class->_execute($sql, $bind);
-    my $rows = $sth->rows;
-
-    $class->_close_sth($sth);
-
-    $rows;
+    Carp::carp( 'delete_by_sql has been deprecated. Please use $skinny->do($sql, undef, @bind)' );
+    $class->do($sql, undef, @$bind);
 }
 
 *find_or_insert = \*find_or_create;

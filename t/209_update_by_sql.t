@@ -9,6 +9,7 @@ Mock::Basic->insert('mock_basic',{
 });
 
 subtest 'update mock_basic data' => sub {
+    local $SIG{__WARN__} = sub {};
     my $ret = Mock::Basic->update_by_sql(q{UPDATE mock_basic SET name = ?}, ['ruby']);
     ok $ret;
     is +Mock::Basic->single('mock_basic',{})->name, 'ruby';

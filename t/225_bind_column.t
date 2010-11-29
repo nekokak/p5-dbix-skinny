@@ -6,6 +6,7 @@ use Data::Dumper;
 Mock::BasicBindColumn->setup_test_db;
 
 subtest 'insert data' => sub {
+    local $SIG{__WARN__} = sub {};
     my $row = Mock::BasicBindColumn->insert('mock_basic_bind_column',{
         id   => 1,
         uid  => 1,

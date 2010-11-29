@@ -9,6 +9,7 @@ Mock::Basic->insert('mock_basic',{
 });
 
 subtest 'delete mock_basic data' => sub {
+    local $SIG{__WARN__} = sub {};
     my $ret = Mock::Basic->delete_by_sql(q{DELETE FROM mock_basic WHERE name = ?}, ['perl']);
     ok $ret;
     done_testing;
