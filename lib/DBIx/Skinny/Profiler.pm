@@ -1,18 +1,17 @@
 package DBIx::Skinny::Profiler;
 use strict;
 use warnings;
-use DBIx::Skinny::Accessor;
 
-mk_accessors(qw/ query_log /);
-
-sub init {
-    my $self = shift;
-    $self->reset;
+sub new {
+    my $class = shift;
+    bless {
+        _query_log => [],
+    }, $class;
 }
 
 sub reset {
     my $self = shift;
-    $self->query_log([]);
+    $self->{_query_log} = [];
 }
 
 sub _normalize {
@@ -34,8 +33,10 @@ sub record_query {
         $log .= ' :binds ' . join ', ', @binds;
     }
 
-    push @{ $self->query_log }, $log;
+    push @{ $self->{_query_log} }, $log;
 }
+
+sub query_log { $_[0]->{_query_log} }
 
 1;
 

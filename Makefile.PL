@@ -8,6 +8,7 @@ requires 'DBI';
 requires 'Digest::SHA1';
 requires 'Scalar::Util';
 requires 'IO::Handle';
+requires 'Class::Accessor::Lite';
 
 author_tests('xt');
 
