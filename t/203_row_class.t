@@ -42,6 +42,11 @@ subtest 'ex row class' => sub {
     done_testing;
 };
 
+subtest 'row_class specific Schema.pm' => sub {
+    is +Mock::BasicRow->_mk_row_class('key', 'mock_basic_row_foo'), 'Mock::BasicRow::FooRow';
+    done_testing;
+};
+
 subtest 'handle' => sub {
     my $row = Mock::Basic->single('mock_basic',{id => 1});
     isa_ok $row->handle, 'Mock::Basic';

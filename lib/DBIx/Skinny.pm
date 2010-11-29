@@ -520,7 +520,8 @@ sub _mk_row_class {
     if ($base_row_class) {
         return $base_row_class;
     } elsif ($table) {
-        my $row_class = join '::', $attr->{klass}, 'Row', _camelize($table);
+        my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
+                        join '::', $attr->{klass}, 'Row', _camelize($table);
         eval "use $row_class"; ## no critic
         (my $rc = $row_class) =~ s|::|/|g;
         die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
@@ -528,9 +529,9 @@ sub _mk_row_class {
         if ($@) {
             $row_class = $class->_mk_common_row;
         }
-        $attr->{row_class_map}->{$table} = $row_class;
+        return $attr->{row_class_map}->{$table} = $row_class;
     } else {
-        $class->_make_row_class;
+        return $class->_make_row_class;
     }
 }
 

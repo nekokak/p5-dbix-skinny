@@ -43,7 +43,7 @@ sub import {
 
     my @functions = qw/
         install_table
-          schema pk columns schema_info column_type
+          schema pk columns schema_info column_type row_class
         install_inflate_rule
           inflate deflate call_inflate call_deflate
           callback _do_inflate
@@ -87,6 +87,15 @@ sub pk {
     $class->schema_info->{
         $class->schema_info->{_installing_table}
     }->{pk} = (@columns == 1 ? $columns[0] : \@columns);
+}
+
+sub row_class ($) {
+    my $row_class = shift;
+
+    my $class = caller;
+    $class->schema_info->{
+        $class->schema_info->{_installing_table}
+    }->{row_class} = $row_class;
 }
 
 sub columns (@) {
@@ -228,7 +237,6 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
 =head1 SYNOPSIS
 
     package Your::Model;
-    package Qudo::Driver::Skinny;
     use DBIx::Skinny connect_info => +{
         dsn => 'dbi:SQLite:',
         username => '',
@@ -236,7 +244,7 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
     };
     1;
     
-    package Your:Model::Schema:
+    package Your::Model::Schema:
     use DBIx::Skinny::Schema;
     
     install_utf8_columns qw/name/; # for utf8 columns
@@ -253,6 +261,8 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
         trigger pre_update => callback {
             # hook
         };
+
+        row_class 'Your::Model::Row::User';
     };
 
     install_inflate_rule '^name$' => callback {
