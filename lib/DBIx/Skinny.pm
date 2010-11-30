@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0727';
+our $VERSION = '0.0728';
 
 use DBI;
 use DBIx::Skinny::Iterator;
