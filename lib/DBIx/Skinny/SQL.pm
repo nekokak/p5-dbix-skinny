@@ -183,7 +183,7 @@ sub add_where_raw {
     my $self = shift;
     my($term, $bind) = @_;
     push @{ $self->{where} }, "($term)";
-    push @{ $self->{bind} }, @$bind;
+    push @{ $self->{bind} }, @$bind if $bind;
 }
 
 sub _parse_array_terms {

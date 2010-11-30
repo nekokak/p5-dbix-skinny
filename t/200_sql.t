@@ -179,6 +179,10 @@ is($stmt->as_sql_where, "WHERE (exists(SELECT * WHERE type=?))\n");
 is(scalar @{ $stmt->bind }, 1);
 is($stmt->bind->[0], '5');
 
+$stmt = ns(); $stmt->add_where_raw('hoge is not null');
+is($stmt->as_sql_where, "WHERE (hoge is not null)\n");
+is(scalar @{ $stmt->bind }, 0);
+
 {
     # nested stmt case
     my $nested_stmt = ns();
