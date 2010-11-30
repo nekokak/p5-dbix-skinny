@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0729
+   2010-11-30
+        - FIXED : _mk_row_class bug fixed. (report thanks nihen.)
+
 0.0728
    2010-11-30
         - MOD   : remove DBIx::Skinny::Accessor. use Class::Accessor::Lite.

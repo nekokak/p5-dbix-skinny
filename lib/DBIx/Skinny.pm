@@ -2,7 +2,7 @@ package DBIx::Skinny;
 use strict;
 use warnings;
 
-our $VERSION = '0.0728';
+our $VERSION = '0.0729';
 
 use DBI;
 use DBIx::Skinny::Iterator;
@@ -522,9 +522,9 @@ sub _guess_table_name {
 }
 
 sub _mk_row_class {
-    my ($class, $key, $table) = @_;
+    my ($class, $sql, $table) = @_;
 
-    $table ||= $class->_guess_table_name($key)||'';
+    $table ||= $class->_guess_table_name($sql)||'';
     my $attr = $class->_attributes;
     my $base_row_class = $attr->{row_class_map}->{$table}||'';
 
@@ -542,7 +542,7 @@ sub _mk_row_class {
         }
         return $attr->{row_class_map}->{$table} = $row_class;
     } else {
-        return $class->_make_row_class;
+        return $class->_mk_common_row;
     }
 }
 
