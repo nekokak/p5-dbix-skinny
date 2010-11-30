@@ -5,7 +5,6 @@ all_from 'lib/DBIx/Skinny.pm';
 requires 'UNIVERSAL::require';
 requires 'Carp';
 requires 'DBI';
-requires 'Digest::SHA1';
 requires 'Scalar::Util';
 requires 'IO::Handle';
 requires 'Class::Accessor::Lite';

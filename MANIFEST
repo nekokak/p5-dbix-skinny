@@ -39,7 +39,6 @@ README
 sample/tinyurl/Sample.pm
 sample/tinyurl/Sample/Schema.pm
 sample/tinyurl/tinyurl.pl
-t/.120_connect_info.t.swp
 t/001_compile.t
 t/002_new.t
 t/003_inclusion_class_define.t

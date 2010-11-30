@@ -9,7 +9,6 @@ use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Transaction;
-use Digest::SHA1 ();
 use Carp ();
 use Storable ();
 
