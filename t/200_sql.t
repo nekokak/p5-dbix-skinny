@@ -173,6 +173,24 @@ is($stmt->bind->[0], 'foo');
 is($stmt->bind->[1], 'bar');
 is($stmt->bind->[2], 'baz');
 
+## Testing WHERE-raw
+$stmt = ns(); $stmt->add_where_raw('exists(SELECT * WHERE type=?)', [5]);
+is($stmt->as_sql_where, "WHERE (exists(SELECT * WHERE type=?))\n");
+is(scalar @{ $stmt->bind }, 1);
+is($stmt->bind->[0], '5');
+
+{
+    # nested stmt case
+    my $nested_stmt = ns();
+    $nested_stmt->add_select('*');
+    $nested_stmt->from(['foo']);
+    $nested_stmt->add_where(type => [3, 4, 5]);
+    $stmt = ns(); $stmt->add_where_raw(sprintf('exists(%s)', $nested_stmt->as_sql), $nested_stmt->bind);
+    is($stmt->as_sql_where, "WHERE (exists(SELECT *\nFROM foo\nWHERE (type IN (?,?,?))\n))\n");
+    is(scalar @{ $stmt->bind }, 3);
+    is_deeply($stmt->bind, [3, 4, 5]);
+}
+
 ## regression bug. modified parameters
 my %terms = ( foo => [-and => 'foo', 'bar', 'baz']);
 $stmt = ns();

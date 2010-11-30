@@ -179,6 +179,13 @@ sub add_complex_where {
     push @{ $self->{bind} }, @$bind;
 }
 
+sub add_where_raw {
+    my $self = shift;
+    my($term, $bind) = @_;
+    push @{ $self->{where} }, "($term)";
+    push @{ $self->{bind} }, @$bind;
+}
+
 sub _parse_array_terms {
     my $self = shift;
     my ($term_list) = @_;
