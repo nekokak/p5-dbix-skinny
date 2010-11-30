@@ -145,6 +145,7 @@ t/regression/bind_param.t
 t/regression/data2itr_objectarray.t
 t/regression/guess_table_name.t
 t/regression/loose_connect_options_after_new.t
+t/regression/mk_row_class.t
 t/regression/new_attr.t
 t/regression/no_schema.t
 t/regression/row_class_syntax_error.t
