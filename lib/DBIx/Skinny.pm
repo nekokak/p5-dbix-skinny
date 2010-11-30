@@ -68,15 +68,18 @@ sub import {
         *{"$caller\::attribute"} = sub { Carp::carp("attribute has been deprecated."); $_[0]->_attributes };
     }
 
-    eval "use $schema"; ## no critic
-    if ( $@ ) {
-        # accept schema class declaration within base class.
-        (my $schema_file = $schema) =~ s|::|/|g;
-        die $@ if $@ && $@ !~ /Can't locate $schema_file\.pm in \@INC/;
-    }
+    load_class($schema);
 
     strict->import;
     warnings->import;
+}
+
+sub load_class {
+    my $klass = shift;
+    eval "use $klass"; ## no critic
+    (my $file = $klass) =~ s|::|/|g;
+    die $@ if $@ && $@ !~ /Can't locate $file\.pm in \@INC/;
+    $@;
 }
 
 sub new {
@@ -533,11 +536,8 @@ sub _mk_row_class {
     } elsif ($table) {
         my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
                         join '::', $attr->{klass}, 'Row', _camelize($table);
-        eval "use $row_class"; ## no critic
-        (my $rc = $row_class) =~ s|::|/|g;
-        die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
 
-        if ($@) {
+        if (load_class($row_class)) {
             $row_class = $class->_mk_common_row;
         }
         return $attr->{row_class_map}->{$table} = $row_class;
@@ -550,10 +550,7 @@ sub _mk_common_row {
     my $class = shift;
 
     my $row_class = join '::', $class->_attributes->{klass}, 'Row';
-    eval "use $row_class"; ## no critic
-    (my $rc = $row_class) =~ s|::|/|g;
-    die $@ if $@ && $@ !~ /Can't locate $rc\.pm in \@INC/;
-    if ($@) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+    if (load_class($row_class)) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
     $row_class;
 }
 
