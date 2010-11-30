@@ -76,10 +76,17 @@ sub import {
 
 sub load_class {
     my $klass = shift;
+
     eval "use $klass"; ## no critic
-    (my $file = $klass) =~ s|::|/|g;
-    die $@ if $@ && $@ !~ /Can't locate $file\.pm in \@INC/;
-    $@;
+    if ($@) {
+        (my $file = $klass) =~ s|::|/|g;
+        if ($@ !~ /Can't locate $file\.pm in \@INC/) {
+            die $@;
+        }
+        return;
+    } else {
+        return $klass;
+    }
 }
 
 sub new {
@@ -537,10 +544,7 @@ sub _mk_row_class {
         my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
                         join '::', $attr->{klass}, 'Row', _camelize($table);
 
-        if (load_class($row_class)) {
-            $row_class = $class->_mk_common_row;
-        }
-        return $attr->{row_class_map}->{$table} = $row_class;
+        return $attr->{row_class_map}->{$table} = load_class($row_class) || $class->_mk_common_row;
     } else {
         return $class->_mk_common_row;
     }
@@ -550,7 +554,9 @@ sub _mk_common_row {
     my $class = shift;
 
     my $row_class = join '::', $class->_attributes->{klass}, 'Row';
-    if (load_class($row_class)) { no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row') };
+    load_class($row_class) or do {
+        no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row');
+    };
     $row_class;
 }
 
