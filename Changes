@@ -3,10 +3,11 @@ Revision history for Perl extension DBIx::Skinny
 0.0730
    2010-XX-XX
         - MOD : add load_class method.
+        - ADD : add_where_raw method for Skinny::SQL (thanks nihen)
 
 0.0729
    2010-11-30
-        - FIXED : _mk_row_class bug fixed. (report thanks nihen.)
+        - FIXED : _mk_row_class bug fixed. (report thanks nihen)
 
 0.0728
    2010-11-30
