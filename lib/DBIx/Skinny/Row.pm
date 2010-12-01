@@ -1,10 +1,11 @@
 package DBIx::Skinny::Row;
 use strict;
 use warnings;
-use Carp qw//;
+use Carp ();
 
 sub new {
     my ($class, $args) = @_;
+
     my $self = bless {%$args}, $class;
     $self->{select_columns} = [keys %{$self->{row_data}}];
     return $self;
@@ -82,31 +83,36 @@ sub set {
 
 sub get_dirty_columns {
     my $self = shift;
+
     my %rows = map {$_ => $self->get_column($_)}
                keys %{$self->{_dirty_columns}};
+
     return \%rows;
 }
 
 sub insert {
     my $self = shift;
+
     $self->{skinny}->find_or_create($self->{opt_table_info}, $self->get_columns);
 }
 
 sub update {
     my ($self, $args, $table) = @_;
+
     $table ||= $self->{opt_table_info};
     $args ||= $self->get_dirty_columns;
-    my $where = $self->_update_or_delete_cond($table);
-    my $result = $self->{skinny}->update($table, $args, $where);
+
+    my $result = $self->{skinny}->update($table, $args, $self->_update_or_delete_cond($table));
     $self->set($args);
+
     return $result;
 }
 
 sub delete {
     my ($self, $table) = @_;
+
     $table ||= $self->{opt_table_info};
-    my $where = $self->_update_or_delete_cond($table);
-    $self->{skinny}->delete($table, $where);
+    $self->{skinny}->delete($table, $self->_update_or_delete_cond($table));
 }
 
 sub _update_or_delete_cond {
