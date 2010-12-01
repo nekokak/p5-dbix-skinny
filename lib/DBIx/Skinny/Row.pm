@@ -31,6 +31,9 @@ sub _lazy_get_data {
     return sub {
         my $self = shift;
 
+        if ($self->{_untrusted_row_data}->{$col}) {
+            Carp::carp("${col}'s row data is untrusted. by your update query.");
+        }
         unless ( $self->{_get_column_cached}->{$col} ) {
           my $data = $self->get_column($col);
           $self->{_get_column_cached}->{$col} = $self->{skinny}->schema->call_inflate($col, $data);
@@ -67,9 +70,13 @@ sub set {
     my ($self, $args) = @_;
 
     for my $col (keys %$args) {
-        $self->{row_data}->{$col} = $self->{skinny}->schema->call_deflate($col, $args->{$col});
-        $self->{_get_column_cached}->{$col} = $args->{$col};
-        $self->{_dirty_columns}->{$col} = 1;
+        if (ref($args->{$col}) eq 'SCALAR') {
+            $self->{_untrusted_row_data}->{$col} = 1;
+        } else {
+            $self->{row_data}->{$col} = $self->{skinny}->schema->call_deflate($col, $args->{$col});
+            $self->{_get_column_cached}->{$col} = $args->{$col};
+            $self->{_dirty_columns}->{$col} = 1;
+        }
     }
 }
 
