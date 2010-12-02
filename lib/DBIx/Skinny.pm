@@ -42,7 +42,7 @@ sub import {
                 
     my $schema = $opt{schema} || "$caller\::Schema";
 
-    my $dbd_type = _dbd_type($connect_info);
+    my $driver_name = _guess_driver_name($connect_info);
     my $_attributes = +{
         check_schema    => defined $connect_info->{check_schema} ? $connect_info->{check_schema} : 1,
         dsn             => $connect_info->{dsn},
@@ -51,7 +51,7 @@ sub import {
         connect_options => $connect_info->{connect_options},
         on_connect_do   => $connect_info->{on_connect_do},
         dbh             => $connect_info->{dbh}||undef,
-        dbd             => $dbd_type ? DBIx::Skinny::DBD->new($dbd_type) : undef,
+        driver_name     => $driver_name,
         schema          => $schema,
         profiler        => $profiler,
         klass           => $caller,
@@ -67,6 +67,7 @@ sub import {
         *{"$caller\::_attributes"} = sub { ref $_[0] ? $_[0] : $_attributes };
         *{"$caller\::attribute"} = sub { Carp::carp("attribute has been deprecated."); $_[0]->_attributes };
     }
+    $caller->_setup_dbd;
 
     _load_class($schema);
 
@@ -230,7 +231,7 @@ sub connect_info {
         $attr->{password} = $connect_info->{password};
         $attr->{connect_options} = $connect_info->{connect_options};
 
-        $class->setup_dbd($connect_info);
+        $class->_setup_dbd($connect_info);
         return;
     } else {
         return +{
@@ -296,13 +297,23 @@ sub disconnect {
 sub set_dbh {
     my ($class, $dbh) = @_;
     $class->_attributes->{dbh} = $dbh;
-    $class->setup_dbd({dbh => $dbh});
+    $class->_setup_dbd({dbh => $dbh});
 }
 
-sub setup_dbd {
+sub _setup_dbd {
     my ($class, $args) = @_;
-    my $dbd_type = _dbd_type($args);
-    $class->_attributes->{dbd} = DBIx::Skinny::DBD->new($dbd_type);
+    my $driver_name = $args ? _guess_driver_name($args) : $class->_attributes->{driver_name};
+    $class->_attributes->{dbd} = $driver_name ? DBIx::Skinny::DBD->new($driver_name) : undef;
+}
+
+sub _guess_driver_name {
+    my $args = shift;
+    if ($args->{dbh}) {
+        return $args->{dbh}->{Driver}->{Name};
+    } elsif ($args->{dsn}) {
+        my (undef, $driver_name,) = DBI->parse_dsn($args->{dsn}) or Carp::croak "can't parse DSN: @{[ $args->{dsn} ]}";
+        return $driver_name
+    }
 }
 
 sub dbd {
@@ -327,16 +338,6 @@ sub dbh {
     $dbh;
 }
 
-sub _dbd_type {
-    my $args = shift;
-    my $dbd_type;
-    if ($args->{dbh}) {
-        $dbd_type = $args->{dbh}->{Driver}->{Name};
-    } elsif ($args->{dsn}) {
-        (undef, $dbd_type,) = DBI->parse_dsn($args->{dsn}) or Carp::croak "can't parse DSN: @{[ $args->{dsn} ]}";
-    }
-    return $dbd_type;
-}
 
 #--------------------------------------------------------------------------------
 # schema trigger call
@@ -669,7 +670,7 @@ sub _last_insert_id {
     my ($class, $table) = @_;
 
     my $dbh = $class->dbh;
-    my $driver = $dbh->{Driver}{Name};
+    my $driver = $class->_attributes->{driver_name};
     if ( $driver eq 'mysql' ) {
         return $dbh->{mysql_insertid};
     } elsif ( $driver eq 'Pg' ) {
