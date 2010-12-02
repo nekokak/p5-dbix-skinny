@@ -250,9 +250,9 @@ sub connect {
     $class->connect_info(@_) if scalar @_ >= 1;
 
     my $attr = $class->_attributes;
-    my $do_connected;
+    my $do_connected=0;
     if ( !$attr->{dbh} ) {
-        $do_connected++;
+        $do_connected=1;
     }
     $attr->{dbh} ||= DBI->connect(
         $attr->{dsn},
