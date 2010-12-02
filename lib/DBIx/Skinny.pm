@@ -147,7 +147,7 @@ sub schema {
                 die "Cannot use schema $schema ( is it really loaded? )";
             }
         };
-        $schema_checked++;
+        $schema_checked=1;
     }
     return $schema;
 }
