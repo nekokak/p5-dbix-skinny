@@ -141,8 +141,8 @@ sub schema {
     my $attribute = $_[0]->_attributes;
     my $schema = $attribute->{schema};
     if ( $attribute->{check_schema} && !$schema_checked ) {
-        do {
-            no strict 'refs';
+        {
+            no strict 'refs'; ## no critic..
             unless ( defined *{"@{[ $schema ]}::schema_info"} ) {
                 die "Cannot use schema $schema ( is it really loaded? )";
             }
@@ -376,28 +376,26 @@ sub count {
 sub resultset {
     my ($class, $args) = @_;
     $args->{skinny} = $class;
-    my $query_builder_class = $class->dbd->query_builder_class;
-    $query_builder_class->new($args);
+    $class->dbd->query_builder_class->new($args);
 }
 
 sub search {
     my ($class, $table, $where, $opt) = @_;
 
-    my $rs = $class->search_rs($table, $where, $opt);
-    $rs->retrieve;
+    $class->search_rs($table, $where, $opt)->retrieve;
 }
 
 sub search_rs {
     my ($class, $table, $where, $opt) = @_;
 
-    my $cols = $opt->{select};
-    unless ($cols) {
+    my $cols = $opt->{select} || do {
         my $column_info = $class->schema->schema_info->{$table};
         unless ( $column_info ) {
             Carp::croak("schema_info does not exist for table '$table'");
         }
-        $cols = $column_info->{columns};
-    }
+        $column_info->{columns};
+    };
+
     my $rs = $class->resultset(
         {
             select => $cols,
@@ -442,7 +440,7 @@ sub search_rs {
 sub single {
     my ($class, $table, $where, $opt) = @_;
     $opt->{limit} = 1;
-    $class->search($table, $where, $opt)->first;
+    $class->search_rs($table, $where, $opt)->retrieve->first;
 }
 
 sub search_named {
@@ -475,17 +473,15 @@ sub search_by_sql {
 
 sub find_or_new {
     my ($class, $table, $args) = @_;
-    my $row = $class->single($table, $args);
-    unless ($row) {
-        $row = $class->hash_to_row($table, $args);
-    }
-    return $row;
+    $class->single($table, $args) or do {
+        $class->hash_to_row($table, $args);
+    };
 }
 
 sub hash_to_row {
     my ($class, $table, $hash) = @_;
 
-    my $row_class = $class->_mk_row_class($table.$hash, $table);
+    my $row_class = $class->_mk_row_class($table, $table);
     my $row = $row_class->new(
         {
             sql            => undef,
@@ -517,7 +513,7 @@ sub data2itr {
     return DBIx::Skinny::Iterator->new(
         skinny         => $class,
         data           => $data,
-        row_class      => $class->_mk_row_class($table.$data, $table),
+        row_class      => $class->_mk_row_class($table, $table),
         opt_table_info => $table,
         suppress_objects => $class->suppress_row_objects,
     );
