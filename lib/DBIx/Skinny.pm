@@ -68,13 +68,13 @@ sub import {
         *{"$caller\::attribute"} = sub { Carp::carp("attribute has been deprecated."); $_[0]->_attributes };
     }
 
-    load_class($schema);
+    _load_class($schema);
 
     strict->import;
     warnings->import;
 }
 
-sub load_class {
+sub _load_class {
     my $klass = shift;
 
     eval "use $klass"; ## no critic
@@ -544,7 +544,7 @@ sub _mk_row_class {
         my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
                         join '::', $attr->{klass}, 'Row', _camelize($table);
 
-        return $attr->{row_class_map}->{$table} = load_class($row_class) || $class->_mk_common_row;
+        return $attr->{row_class_map}->{$table} = _load_class($row_class) || $class->_mk_common_row;
     } else {
         return $class->_mk_common_row;
     }
@@ -554,7 +554,7 @@ sub _mk_common_row {
     my $class = shift;
 
     my $row_class = join '::', $class->_attributes->{klass}, 'Row';
-    load_class($row_class) or do {
+    _load_class($row_class) or do {
         no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row');
     };
     $row_class;
