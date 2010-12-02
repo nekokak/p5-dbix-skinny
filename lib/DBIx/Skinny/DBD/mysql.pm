@@ -3,10 +3,6 @@ use strict;
 use warnings;
 use base 'DBIx::Skinny::DBD::Base';
 
-sub last_insert_id {
-    $_[1]->{mysql_insertid} || $_[1]->{insertid}
-}
-
 sub sql_for_unixtime { "UNIX_TIMESTAMP()" }
 
 sub bulk_insert {

@@ -3,8 +3,6 @@ use strict;
 use warnings;
 use DBIx::Skinny::SQL;
 
-sub last_insert_id { $_[1]->func('last_insert_rowid') }
-
 sub sql_for_unixtime { time() }
 
 sub quote    { '`' }

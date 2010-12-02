@@ -641,7 +641,7 @@ sub _insert_or_replace {
     my $id =
         defined $pk && defined $args->{$pk} ? $args->{$pk} :
         defined $pk && (ref $pk) eq 'ARRAY' ? undef        :
-            $class->dbd->last_insert_id($class->dbh, $sth, { table => $table })
+            $class->_last_insert_id($table)
     ;
 
     $class->_close_sth($sth);
@@ -663,6 +663,24 @@ sub _insert_or_replace {
     $obj->setup;
 
     $obj;
+}
+
+sub _last_insert_id {
+    my ($class, $table) = @_;
+
+    my $dbh = $class->dbh;
+    my $driver = $dbh->{Driver}{Name};
+    if ( $driver eq 'mysql' ) {
+        return $dbh->{mysql_insertid};
+    } elsif ( $driver eq 'Pg' ) {
+        return $dbh->last_insert_id( undef, undef, undef, undef,{ sequence => join( '_', $table, 'id', 'seq' ) } );
+    } elsif ( $driver eq 'SQLite' ) {
+        return $dbh->func('last_insert_rowid');
+    } elsif ( $driver eq 'Oracle' ) {
+        return;
+    } else {
+        Carp::croak "Don't know how to get last insert id for $driver";
+    }
 }
 
 *create = \*insert;
