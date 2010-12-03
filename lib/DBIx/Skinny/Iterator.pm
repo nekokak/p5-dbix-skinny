@@ -93,9 +93,9 @@ sub reset {
 
 sub count {
     my $self = shift;
-    my @rows = $self->reset->all;
+    my $rows = $self->reset->all;
     $self->reset;
-    scalar @rows;
+    scalar @$rows;
 }
 
 sub suppress_objects {
