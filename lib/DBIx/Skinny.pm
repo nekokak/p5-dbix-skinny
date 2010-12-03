@@ -303,6 +303,7 @@ sub set_dbh {
 sub _setup_dbd {
     my ($class, $args) = @_;
     my $driver_name = $args ? _guess_driver_name($args) : $class->_attributes->{driver_name};
+    $class->_attributes->{driver_name} = $driver_name;
     $class->_attributes->{dbd} = $driver_name ? DBIx::Skinny::DBD->new($driver_name) : undef;
 }
 
