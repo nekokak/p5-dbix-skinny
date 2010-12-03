@@ -7,7 +7,7 @@ sub new {
     my ($class, %args) = @_;
 
     my $self = bless \%args, $class;
-    $self->{_use_cache} = 1;
+    $self->{_cache} = 1;
 
     $self->reset;
 
@@ -18,7 +18,7 @@ sub iterator {
     my $self = shift;
 
     my $position = $self->{_position};
-    if ( $self->{_use_cache}
+    if ( $self->{_cache}
       && ( my $row_cache = $self->{_rows_cache}->[$position] ) ) {
         $self->{_position} = $position + 1;
         return $row_cache;
@@ -62,7 +62,7 @@ sub iterator {
         }
     }
 
-    $self->{_rows_cache}->[$position] = $obj if $self->{_use_cache};
+    $self->{_rows_cache}->[$position] = $obj if $self->{_cache};
     $self->{_position} = $position + 1;
 
     return $obj;
@@ -82,7 +82,7 @@ sub all {
     while ( my $row = $self->next ) {
         push @result, $row;
     }
-    return @result;
+    return wantarray ? @result : \@result;
 }
 
 sub reset {
@@ -104,7 +104,7 @@ sub suppress_objects {
     $self->{suppress_objects} = $mode;
 }
 
-sub no_cache { $_[0]->{_use_cache} = 0 }
+sub no_cache { $_[0]->{_cache} = 0 }
 sub position { $_[0]->{_position} }
 
 1;

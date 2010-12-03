@@ -14,6 +14,14 @@ Mock::Basic->insert('mock_basic',{
     name => 'ruby',
 });
 
+subtest 'all' => sub {
+    my $itr = Mock::Basic->search("mock_basic");
+    my $rows = $itr->all;
+    is ref $rows, 'ARRAY';
+    is $rows->[0]->id, 1;
+    done_testing;
+};
+
 subtest 'iterator with cache' => sub {
     my $itr = Mock::Basic->search("mock_basic");
     isa_ok $itr, 'DBIx::Skinny::Iterator';
