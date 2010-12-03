@@ -7,8 +7,9 @@ use autodie;
 $ENV{PERL5LIB} .= ':../../../lib';
 
 my %dist = (
-    'p5-dbix-skinny-proxy_table' => q{git://github.com/walf443/p5-dbix-skinny-proxy_table.git},
-    'p5-dbix-skinny-pager'       => q{git://github.com/walf443/p5-dbix-skinny-pager.git},
+    'p5-dbix-skinny-schema-loader' => q{git://github.com/nekoya/p5-dbix-skinny-schema-loader.git},
+    'p5-dbix-skinny-proxy_table'   => q{git://github.com/walf443/p5-dbix-skinny-proxy_table.git},
+    'p5-dbix-skinny-pager'         => q{git://github.com/walf443/p5-dbix-skinny-pager.git},
 );
 
 my $distdir = 'externals';
