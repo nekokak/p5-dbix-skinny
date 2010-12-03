@@ -11,3 +11,4 @@ old/
 *.swp
 test.*
 *~
+tools/externals
