@@ -900,15 +900,16 @@ in your execute script.
 
     use Your::Model;
     
+    my $skinny = Your::Model->new;
     # insert new record.
-    my $row = Your::Model->insert('user',
+    my $row = $skinny->insert('user',
         {
             id   => 1,
         }
     );
     $row->update({name => 'nekokak'});
 
-    $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
+    $row = $skinny->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
     $row->delete('user');
 
 =head1 DESCRIPTION
@@ -991,6 +992,13 @@ or
         username => $username,
         password => $password,
         connect_options => $connect_options,
+    });
+
+or
+
+    my $dbh = DBI->connect();
+    my $db = Your::Model->new(+{
+        dbh => $dbh,
     });
 
 =item $skinny->insert($table_name, \%row_data)
