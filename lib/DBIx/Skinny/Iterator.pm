@@ -2,6 +2,7 @@ package DBIx::Skinny::Iterator;
 use strict;
 use warnings;
 use Scalar::Util qw(blessed);
+use Carp ();
 
 sub new {
     my ($class, %args) = @_;
@@ -104,7 +105,17 @@ sub suppress_objects {
     $self->{suppress_objects} = $mode;
 }
 
-sub no_cache { $_[0]->{_cache} = 0 }
+sub no_cache {
+    Carp::carp( "no_cache method has been deprecated. Please use cache method instead" );
+    $_[0]->{_cache} = 0;
+}
+
+sub cache {
+    my ($self, $mode) = @_;
+    return $self->{_cache} unless defined $mode;
+    $self->{_cache} = $mode;
+}
+
 sub position { $_[0]->{_position} }
 
 1;
@@ -134,7 +145,7 @@ skinny iteration class.
   while (my $row = $itr->next) { }
 
   # no cache row object (save memories)
-  $itr->no_cache;
+  $itr->cache(0);
   while (my $row = $itr->next) { }
   $itr->reset->first;  # Can't fetch row!
 
@@ -162,10 +173,15 @@ this method reset iterator position number.
 
 The number of lines that iterator has are returned. 
 
-=item $itr->no_cache
+=item $itr->no_cache # has been deprecated
+
+=item $itr->cache($mode)
 
 DBIx::Skinny::Itarator is default row data cache.
-this method specified that it doesn't cache row data. 
+this method specified that it doesn't cache row data or not. 
+
+if $mode is false, it doesn't cache row data.
+$mode is true, it dose cache row data.
 
 =item $itr->position
 

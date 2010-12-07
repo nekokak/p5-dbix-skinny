@@ -52,7 +52,7 @@ subtest 'iterator with cache' => sub {
 subtest 'iterator with no cache all/count' => sub {
     my $itr = Mock::Basic->search("mock_basic");
     isa_ok $itr, 'DBIx::Skinny::Iterator';
-    $itr->no_cache;
+    $itr->cache(0);
 
     is $itr->count, 2, "rows count";
     my @rows = $itr->all;
@@ -67,7 +67,7 @@ subtest 'iterator with no cache' => sub {
     my $itr = Mock::Basic->search("mock_basic");
     isa_ok $itr, 'DBIx::Skinny::Iterator';
     is $itr->position, 0, 'initial position';
-    $itr->no_cache;
+    $itr->cache(0);
 
     my $row1 = $itr->next;
     isa_ok $row1, 'DBIx::Skinny::Row';
