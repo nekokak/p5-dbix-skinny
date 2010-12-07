@@ -320,7 +320,7 @@ sub _guess_driver_name {
 sub dbd {
     $_[0]->_attributes->{dbd} or do {
         require Data::Dumper;
-        Carp::croak("attribute dbd does not exist. does it connected? attribute: @{[ Data::Dumper::Dumper($_[0]->_attributes) ]}");
+        Carp::croak("Attribute 'dbd' is not defined. Either we failed to connect, or the connection has gone away. Current attribute dump: @{[ Data::Dumper::Dumper($_[0]->_attributes) ]}");
     };
 }
 
