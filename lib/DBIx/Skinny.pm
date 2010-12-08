@@ -1107,6 +1107,31 @@ example:
         name => 'nekokak',
     });
 
+NOTICE: find_or_create has bug.
+
+reproduction example:
+
+    my $row = Your::Model->find_or_create('user',{
+        id   => 1,
+        name => undef,
+    });
+
+In this case, it becomes an error by insert.
+
+If you want to do the same thing in this case,
+
+    my $row = Your::Model->single('user', {
+        id   => 1,
+        name => \'IS NULL',
+    })
+    unless ($row) {
+        Your::Model->insert('user', {
+            id => 1,
+        });
+    }
+
+Because the interchangeable rear side is lost, it doesn't mend. 
+
 =item $skinny->find_or_insert($table, \%values)
 
 find_or_create method alias.
