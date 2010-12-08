@@ -1,14 +1,13 @@
 use strict;
 use warnings;
 use utf8;
+use xt::Utils::postgresql;
 use Test::More;
 use lib './t';
 use Mock::BasicPg;
 
-my ($dsn, $username, $password) = @ENV{map { "SKINNY_PG_${_}" } qw/DSN USER PASS/};
-plan skip_all => 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test' unless ($dsn && $username);
-
-Mock::BasicPg->connect({dsn => $dsn, username => $username, password => $password});
+my $dbh = t::Utils->setup_dbh;
+Mock::BasicPg->set_dbh($dbh);
 Mock::BasicPg->setup_test_db;
 
 subtest 'do basic transaction' => sub {
@@ -79,6 +78,7 @@ subtest 'do scope rollback' => sub {
 subtest 'do scope guard for rollback' => sub {
  
     {
+        local $SIG{__WARN__} = sub {};
         my $txn = Mock::BasicPg->txn_scope;
         my $row = Mock::BasicPg->insert('mock_basic_pg',{
             name => 'perl',
@@ -191,6 +191,7 @@ subtest 'do nested scope commit-commit' => sub {
 subtest 'do nested scope rollback-commit-rollback' => sub {
     my $txn = Mock::BasicPg->txn_scope;
     {
+        local $SIG{__WARN__} = sub {};
         my $txn2 = Mock::BasicPg->txn_scope;
         my $row2 = Mock::BasicPg->insert('mock_basic_pg',{
             name => 'perl5.10',
@@ -227,6 +228,7 @@ subtest 'do nested scope rollback-commit-rollback' => sub {
 subtest 'do nested scope rollback-commit-commit' => sub {
     my $txn = Mock::BasicPg->txn_scope;
     {
+        local $SIG{__WARN__} = sub {};
         my $txn2 = Mock::BasicPg->txn_scope;
         my $row2 = Mock::BasicPg->insert('mock_basic_pg',{
             name => 'perl5.10',

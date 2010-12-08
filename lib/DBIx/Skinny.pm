@@ -9,6 +9,7 @@ use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Transaction;
+use DBIx::TransactionManager;
 use Carp ();
 use Storable ();
 
@@ -54,6 +55,7 @@ sub import {
         driver_name     => $driver_name,
         schema          => $schema,
         profiler        => $profiler,
+#        txn_manager     => DBIx::TransactionManager->new,
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
@@ -169,54 +171,24 @@ sub suppress_row_objects {
 
 #--------------------------------------------------------------------------------
 # for transaction
-sub txn_scope {
-    DBIx::Skinny::Transaction->new( @_ );
-}
 
-sub txn_begin {
+sub txn_manager  {
     my $class = shift;
-    return if ( ++$class->_attributes->{active_transaction} > 1 );
-    $class->profiler("BEGIN WORK");
-    $class->dbh->begin_work;
+
+    $class->_attributes->{txn_manager} ||= do {
+        my $dbh = $class->dbh;
+        unless ($dbh) {
+            Carp::croak("dbh is not found.");
+        }
+        DBIx::TransactionManager->new($dbh);
+    };
 }
 
-sub txn_rollback {
-    my $class = shift;
-    return unless $class->_attributes->{active_transaction};
-
-    if ( $class->_attributes->{active_transaction} == 1 ) {
-        $class->profiler("ROLLBACK WORK");
-        $class->dbh->rollback;
-        $class->txn_end;
-    }
-    elsif ( $class->_attributes->{active_transaction} > 1 ) {
-        $class->_attributes->{active_transaction}--;
-        $class->_attributes->{rollbacked_in_nested_transaction}++;
-    }
-
-}
-
-sub txn_commit {
-    my $class = shift;
-    return unless $class->_attributes->{active_transaction};
-
-    if ( $class->_attributes->{rollbacked_in_nested_transaction} ) {
-        Carp::croak "tried to commit but already rollbacked in nested transaction.";
-    }
-    elsif ( $class->_attributes->{active_transaction} > 1 ) {
-        $class->_attributes->{active_transaction}--;
-        return;
-    }
-
-    $class->profiler("COMMIT WORK");
-    $class->dbh->commit;
-    $class->txn_end;
-}
-
-sub txn_end {
-    $_[0]->_attributes->{active_transaction} = 0;
-    $_[0]->_attributes->{rollbacked_in_nested_transaction} = 0;
-}
+sub txn_scope    { $_[0]->txn_manager->txn_scope    }
+sub txn_begin    { $_[0]->txn_manager->txn_begin    }
+sub txn_rollback { $_[0]->txn_manager->txn_rollback }
+sub txn_commit   { $_[0]->txn_manager->txn_commit   }
+sub txn_end      { $_[0]->txn_manager->txn_end      }
 
 #--------------------------------------------------------------------------------
 # db handling
@@ -242,7 +214,6 @@ sub connect_info {
         };
     }
 }
-
 
 sub connect {
     my $class = shift;

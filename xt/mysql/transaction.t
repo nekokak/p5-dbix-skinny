@@ -1,15 +1,13 @@
 use strict;
 use warnings;
 use utf8;
+use xt::Utils::mysql;
 use Test::More;
 use lib './t';
 use Mock::BasicMySQL;
 
-
-my ($dsn, $username, $password) = @ENV{map { "SKINNY_MYSQL_${_}" } qw/DSN USER PASS/};
-plan skip_all => 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test' unless ($dsn && $username);
-
-Mock::BasicMySQL->connect({dsn => $dsn, username => $username, password => $password});
+my $dbh = t::Utils->setup_dbh;
+Mock::BasicMySQL->set_dbh($dbh);
 Mock::BasicMySQL->setup_test_db;
 
 subtest 'do basic transaction' => sub {
@@ -37,7 +35,7 @@ subtest 'do rollback' => sub {
     ok not +Mock::BasicMySQL->single('mock_basic_mysql',{id => 2});
     done_testing;
 };
- 
+
 subtest 'do commit' => sub {
     Mock::BasicMySQL->txn_begin;
     my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
@@ -80,6 +78,7 @@ subtest 'do scope rollback' => sub {
 subtest 'do scope guard for rollback' => sub {
  
     {
+        local $SIG{__WARN__} = sub {};
         my $txn = Mock::BasicMySQL->txn_scope;
         my $row = Mock::BasicMySQL->insert('mock_basic_mysql',{
             name => 'perl',
@@ -192,6 +191,7 @@ subtest 'do nested scope commit-commit' => sub {
 subtest 'do nested scope rollback-commit-rollback' => sub {
     my $txn = Mock::BasicMySQL->txn_scope;
     {
+        local $SIG{__WARN__} = sub {};
         my $txn2 = Mock::BasicMySQL->txn_scope;
         my $row2 = Mock::BasicMySQL->insert('mock_basic_mysql',{
             name => 'perl5.10',
@@ -224,10 +224,10 @@ subtest 'do nested scope rollback-commit-rollback' => sub {
     done_testing;
 };
 
-
 subtest 'do nested scope rollback-commit-commit' => sub {
     my $txn = Mock::BasicMySQL->txn_scope;
     {
+        local $SIG{__WARN__} = sub {};
         my $txn2 = Mock::BasicMySQL->txn_scope;
         my $row2 = Mock::BasicMySQL->insert('mock_basic_mysql',{
             name => 'perl5.10',
