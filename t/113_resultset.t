@@ -31,7 +31,7 @@ subtest 'resultset' => sub {
 };
 
 subtest 'no connection test' => sub {
-    throws_ok(sub { Mock::DB->resultset }, qr/attribute dbd does not exist/);
+    throws_ok(sub { Mock::DB->resultset }, qr/Attribute 'dbd' is not defined. Either we failed to connect, or the connection has gone away./);
     done_testing;
 };
 
