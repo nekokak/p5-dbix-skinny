@@ -6,6 +6,7 @@ Revision history for Perl extension DBIx::Skinny
         - ADD : add_where_raw method for Skinny::SQL (thanks nihen)
         - MOD : Iterator's no_cache method has been deprecated. use cache method instead.
         - ADD : add find_or_create's knowun bug notice message.
+        - ADD : refetch method for DBIx::Skinny::Row.
 
 0.0729
    2010-11-30

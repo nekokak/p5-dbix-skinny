@@ -13,7 +13,7 @@ requires 'DBIx::TransactionManager' => '1.01';
 
 author_tests('xt');
 
-test_requires 'Test::More' => '0.94';
+test_requires 'Test::More' => '0.96';
 test_requires 'Test::Exception';
 test_requires 'Test::SharedFork' => 0.15;
 

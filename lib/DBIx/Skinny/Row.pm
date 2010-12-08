@@ -102,7 +102,7 @@ sub update {
     $table ||= $self->{opt_table_info};
     $args ||= $self->get_dirty_columns;
 
-    my $result = $self->{skinny}->update($table, $args, $self->_update_or_delete_cond($table));
+    my $result = $self->{skinny}->update($table, $args, $self->_where_cond($table));
     $self->set($args);
 
     return $result;
@@ -112,10 +112,16 @@ sub delete {
     my ($self, $table) = @_;
 
     $table ||= $self->{opt_table_info};
-    $self->{skinny}->delete($table, $self->_update_or_delete_cond($table));
+    $self->{skinny}->delete($table, $self->_where_cond($table));
 }
 
-sub _update_or_delete_cond {
+sub refetch {
+    my ($self, $table) = @_;
+    $table ||= $self->{opt_table_info};
+    $self->{skinny}->single($table, $self->_where_cond($table));
+}
+
+sub _where_cond {
     my ($self, $table) = @_;
 
     unless ($table) {
@@ -204,6 +210,13 @@ It works by schema in which primary key exists.
 delete is executed for instance record.
 
 It works by schema in which primary key exists.
+
+=item my $refetched_row = $row->refetch($table_name);
+
+$table_name is optional.
+
+refetch record from database. get new row object.
+
 
 =item $row->handle
 
