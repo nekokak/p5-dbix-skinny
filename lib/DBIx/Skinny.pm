@@ -55,7 +55,6 @@ sub import {
         driver_name     => $driver_name,
         schema          => $schema,
         profiler        => $profiler,
-#        txn_manager     => DBIx::TransactionManager->new,
         klass           => $caller,
         row_class_map   => +{},
         active_transaction => 0,
