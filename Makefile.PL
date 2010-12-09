@@ -9,7 +9,7 @@ requires 'Scalar::Util';
 requires 'IO::Handle';
 requires 'Class::Accessor::Lite';
 requires 'Try::Tiny';
-requires 'DBIx::TransactionManager' => '1.01';
+requires 'DBIx::TransactionManager' => '1.02';
 
 author_tests('xt');
 
