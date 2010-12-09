@@ -865,7 +865,7 @@ See DBIx::Skinny::Schema for docs on defining schema class.
     };
     1;
     
-in your execute script.
+in your script.
 
     use Your::Model;
     
