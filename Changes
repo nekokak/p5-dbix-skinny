@@ -7,6 +7,7 @@ Revision history for Perl extension DBIx::Skinny
         - MOD : Iterator's no_cache method has been deprecated. use cache method instead.
         - ADD : add find_or_create's knowun bug notice message.
         - ADD : refetch method for DBIx::Skinny::Row.
+        - MOD : remove Skinny::Transaction. use DBIx::TransactionManager.
 
 0.0729
    2010-11-30

@@ -8,7 +8,6 @@ use DBI;
 use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
-use DBIx::Skinny::Transaction;
 use DBIx::TransactionManager 1.02;
 use Carp ();
 use Storable ();
