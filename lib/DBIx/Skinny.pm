@@ -11,6 +11,7 @@ use DBIx::Skinny::Row;
 use DBIx::TransactionManager 1.02;
 use Carp ();
 use Storable ();
+use Class::Load ();
 
 sub import {
     my ($class, %opt) = @_;
@@ -77,6 +78,8 @@ sub import {
 
 sub _load_class {
     my $klass = shift;
+
+    return $klass if Class::Load::is_class_loaded($klass);
 
     eval "use $klass"; ## no critic
     if ($@) {

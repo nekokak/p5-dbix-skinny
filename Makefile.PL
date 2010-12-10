@@ -10,6 +10,7 @@ requires 'IO::Handle';
 requires 'Class::Accessor::Lite';
 requires 'Try::Tiny';
 requires 'DBIx::TransactionManager' => '1.02';
+requires 'Class::Load';
 
 author_tests('xt');
 
