@@ -1,6 +1,7 @@
 package DBIx::Skinny::Profiler::Trace;
 use strict;
 use warnings;
+use base 'DBIx::Skinny::Profiler';
 use IO::Handle;
  
 sub new {
@@ -27,7 +28,7 @@ sub new {
  
 sub record_query {
     my ( $self, $sql, $bind ) = @_;
-    my $log = _normalize($sql);
+    my $log = $self->_normalize($sql);
  
     if ( ref $bind eq 'ARRAY' ) {
         my @binds;
@@ -39,14 +40,8 @@ sub record_query {
     print $fh $log, "\n";
 }
  
-sub _normalize { # copied from origianl DBIx::Skinny::Profiler
-    my $sql = shift;
-    $sql =~ s/^\s*//;
-    $sql =~ s/\s*$//;
-    $sql =~ s/[\r\n]/ /g;
-    $sql =~ s/\s+/ /g;
-    return $sql;
-}
+sub reset {}
+sub query_log {}
  
 1;
 

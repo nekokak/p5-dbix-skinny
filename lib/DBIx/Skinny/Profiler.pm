@@ -15,6 +15,7 @@ sub reset {
 }
 
 sub _normalize {
+    shift;
     my $sql = shift;
     $sql =~ s/^\s*//;
     $sql =~ s/\s*$//;
@@ -26,7 +27,7 @@ sub _normalize {
 sub record_query {
     my ($self, $sql, $bind) = @_;
 
-    my $log = _normalize($sql);
+    my $log = $self->_normalize($sql);
     if (ref $bind eq 'ARRAY') {
         my @binds;
         push @binds, defined $_ ? $_ : 'undef' for @$bind;
