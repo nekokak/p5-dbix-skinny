@@ -111,7 +111,6 @@ sub new {
         $attr->{$key} = $unstorable_attribute{$key};
     }
 
-
     if ($connection_info) {
 
         $self->_attributes->{profiler} = $unstorable_attribute{profiler};
@@ -310,7 +309,6 @@ sub dbh {
     }
     $dbh;
 }
-
 
 #--------------------------------------------------------------------------------
 # schema trigger call
