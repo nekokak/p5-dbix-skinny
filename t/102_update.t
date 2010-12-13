@@ -32,7 +32,7 @@ subtest 'row data set and update' => sub {
     my $row = Mock::Basic->single('mock_basic',{id => 1});
     is $row->name, 'perl';
 
-    $row->set({name => 'ruby'});
+    $row->set_columns({name => 'ruby'});
 
     is $row->name, 'ruby';
 

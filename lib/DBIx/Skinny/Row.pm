@@ -67,18 +67,30 @@ sub get_columns {
     return \%data;
 }
 
-sub set {
+sub set_column {
+    my ($self, $col, $val) = @_;
+
+    if (ref($val) eq 'SCALAR') {
+        $self->{_untrusted_row_data}->{$col} = 1;
+    } else {
+        $self->{row_data}->{$col} = $self->{skinny}->schema->call_deflate($col, $val);
+        $self->{_get_column_cached}->{$col} = $val;
+        $self->{_dirty_columns}->{$col} = 1;
+    }
+}
+
+sub set_columns {
     my ($self, $args) = @_;
 
     for my $col (keys %$args) {
-        if (ref($args->{$col}) eq 'SCALAR') {
-            $self->{_untrusted_row_data}->{$col} = 1;
-        } else {
-            $self->{row_data}->{$col} = $self->{skinny}->schema->call_deflate($col, $args->{$col});
-            $self->{_get_column_cached}->{$col} = $args->{$col};
-            $self->{_dirty_columns}->{$col} = 1;
-        }
+        $self->set_column($col, $args->{$col});
     }
+}
+
+sub set {
+    my $self = shift;
+    Carp::carp( "set method has been deprecated. Please use set_columns or set_column method instead" );
+    $self->set_columns(@_);
 }
 
 sub get_dirty_columns {
@@ -103,7 +115,7 @@ sub update {
     $args ||= $self->get_dirty_columns;
 
     my $result = $self->{skinny}->update($table, $args, $self->_where_cond($table));
-    $self->set($args);
+    $self->set_columns($args);
 
     return $result;
 }
@@ -180,11 +192,23 @@ get a column value from a row object.
 
 Does C<get_column>, for all column values.
 
-=item $row->set(\%new_row_data)
+=item $row->set(\%new_row_data)  # has been deprecated
 
     $row->set({$col => $val});
 
 set columns data.
+
+=item $row->set_columns(\%new_row_data)
+
+    $row->set_columns({$col => $val});
+
+set columns data.
+
+=item $row->set_column($col => $val)
+
+    $row->set_column($col => $val);
+
+set column data.
 
 =item $row->get_dirty_columns
 
