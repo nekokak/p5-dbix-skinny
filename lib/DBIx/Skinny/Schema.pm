@@ -188,6 +188,7 @@ sub call_inflate {
 sub call_deflate {
     my $class = shift;
 
+    return $_[1] unless (ref $_[1] && ref($_[1]) ne 'SCALAR');
     return $class->_do_inflate('deflate', @_);
 }
 
