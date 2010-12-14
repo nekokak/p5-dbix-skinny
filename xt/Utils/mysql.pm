@@ -12,7 +12,7 @@ my $mysql = Test::mysqld->new
 {
     no warnings "redefine";
     sub t::Utils::setup_dbh {
-        DBI->connect($mysql->dsn( dbname => "test" ));
+        DBI->connect($mysql->dsn( dbname => "test" ), '','',{ RaiseError => 1, PrintError => 0, AutoCommit => 1 });
     }
 }
 
