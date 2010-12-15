@@ -99,6 +99,7 @@ t/999_regression/new_attr.t
 t/999_regression/no_schema.t
 t/999_regression/row_class_syntax_error.t
 t/999_regression/row_update_by_scalarref.t
+t/999_regression/where_condition_in.t
 t/lib/Mixin/Foo.pm
 t/lib/Mock/Basic.pm
 t/lib/Mock/Basic/Schema.pm

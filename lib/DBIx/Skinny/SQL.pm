@@ -272,8 +272,12 @@ sub _mk_term {
             $term = join " $logic ", @terms;
         } else {
             $col = $m->($col) if $m = $self->column_mutator;
-            $term = "$col IN (".join(',', ('?') x scalar @$val).')';
-            @bind = @$val;
+            if (scalar(@$val)) {
+                $term = "$col IN (".join(',', ('?') x scalar @$val).')';
+                @bind = @$val;
+            } else {
+                $term = '1=0';
+            }
         }
     } elsif (ref($val) eq 'HASH') {
         my $c = $val->{column} || $col;
@@ -282,8 +286,16 @@ sub _mk_term {
         my($op, $v) = (%{ $val });
         $op = uc($op);
         if (($op eq 'IN' || $op eq 'NOT IN') && ref($v) eq 'ARRAY') {
-            $term = "$c $op (".join(',', ('?') x scalar @$v).')';
-            @bind = @$v;
+            if (scalar(@$v)) {
+                $term = "$c $op (".join(',', ('?') x scalar @$v).')';
+                @bind = @$v;
+            } else {
+                if ($op eq 'IN') {
+                    $term = '1=0';
+                } else {
+                    $term = '1=1';
+                }
+            }
         } else {
             $term = "$c $op ?";
             push @bind, $v;

@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0731
+   2010-12-15
+        - FIXED : where condition bug fixed. (thanks tokuhirom)
+
 0.0730
    2010-12-14
         - MOD : add load_class method.
