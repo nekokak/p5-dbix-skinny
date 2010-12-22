@@ -17,7 +17,7 @@ install_inflate_rule '^name$' => callback {
     };
     deflate {
         my $value = shift;
-        return $value->name;
+        return ref $value ? $value->name : $value.'_deflate';
     };
 };
 

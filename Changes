@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0732
+   2010-12-22
+        - FIXED : deflate bug. (thanks azumakuniyuki)
+
 0.0731
    2010-12-15
         - FIXED : where condition bug fixed. (thanks tokuhirom)
