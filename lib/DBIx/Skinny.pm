@@ -604,14 +604,13 @@ sub _insert_or_replace {
             'VALUES (' . join(', ', @$columns) . ')' . "\n";
 
     my $sth = $class->_execute($sql, $bind_columns, $table);
+    $class->_close_sth($sth);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
 
     if (not ref $pk && not defined $args->{$pk}) {
         $args->{$pk} = $class->_last_insert_id($table);
     }
-
-    $class->_close_sth($sth);
 
     my $row_class = $class->_mk_row_class($sql, $table);
     return $args if $class->suppress_row_objects;
