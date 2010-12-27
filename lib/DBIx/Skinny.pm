@@ -606,17 +606,12 @@ sub _insert_or_replace {
     my $sth = $class->_execute($sql, $bind_columns, $table);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
-    my $id =
-        defined $pk && defined $args->{$pk} ? $args->{$pk} :
-        defined $pk && (ref $pk) eq 'ARRAY' ? undef        :
-            $class->_last_insert_id($table)
-    ;
+
+    if (not ref $pk && not defined $args->{$pk}) {
+        $args->{$pk} = $class->_last_insert_id($table);
+    }
 
     $class->_close_sth($sth);
-
-    if ($id) {
-        $args->{$pk} = $id;
-    }
 
     my $row_class = $class->_mk_row_class($sql, $table);
     return $args if $class->suppress_row_objects;

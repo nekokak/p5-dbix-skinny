@@ -10,7 +10,7 @@ subtest 'prepare failed case' => sub {
     eval {
         Mock::Basic->search_by_sql(q{xxxxx});
     };
-    like $@, qr|DBD::SQLite::db prepare failed: near "xxxxx": syntax error at lib/DBIx/Skinny.pm|;
+    like $@, qr|DBD::SQLite::db prepare failed: near "xxxxx": syntax error|;
 };
 
 done_testing;
