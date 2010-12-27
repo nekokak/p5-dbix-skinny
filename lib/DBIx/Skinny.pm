@@ -975,12 +975,15 @@ or
 
 insert new record and get inserted row object.
 
+if insert to table has auto increment then return $row object with fill in key column by last_insert_id.
+
 example:
 
     my $row = Your::Model->insert('user',{
         id   => 1,
         name => 'nekokak',
     });
+    say $row->id; # show last_insert_id()
 
 or
 
