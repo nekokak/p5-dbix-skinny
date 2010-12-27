@@ -787,7 +787,7 @@ sub _execute {
         $bind = [map {(ref $_->[1]) eq 'ARRAY' ? @{$_->[1]} : $_->[1]} @$args];
         $class->profiler($stmt, $bind);
         eval {
-            $sth = $class->dbh->prepare($stmt);
+            $sth = $class->dbh->prepare($stmt) or die $class->dbh->errstr;
             $class->bind_params($table, $args, $sth);
             $sth->execute;
         };
@@ -795,7 +795,7 @@ sub _execute {
         $bind = $args;
         $class->profiler($stmt, $bind);
         eval {
-            $sth = $class->dbh->prepare($stmt);
+            $sth = $class->dbh->prepare($stmt) or die $class->dbh->errstr;
             $sth->execute(@{$args});
         };
     }
