@@ -3,6 +3,8 @@ Revision history for Perl extension DBIx::Skinny
 0.0732
    2010-12-22
         - FIXED : deflate bug. (thanks azumakuniyuki)
+        - MOD   : check prepare method. (thanks tokuhirom)
+        - MOD   : refactoring insert code. (thanks tokuhirom)
 
 0.0731
    2010-12-15
