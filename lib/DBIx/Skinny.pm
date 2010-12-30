@@ -753,17 +753,7 @@ sub find_or_create {
     my ($class, $table, $args) = @_;
     my $row = $class->single($table, $args);
     return $row if $row;
-    $row = $class->insert($table, $args);
-    my $pk = $class->schema->schema_info->{$table}->{pk};
-    my %args;
-    if (ref $pk) {
-        for (@$pk) {
-            $args{$_} = $row->get_column($_);
-        }
-    } else {
-        $args{$pk} = $class->suppress_row_objects ? $row->{$pk} :$row->get_column($pk);
-    }
-    $class->single($table, \%args);
+    $class->insert($table, $args)->refetch;
 }
 
 sub _add_where {
