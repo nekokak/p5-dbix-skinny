@@ -1,6 +1,7 @@
 package DBIx::Skinny::Schema;
 use strict;
 use warnings;
+use DBIx::Skinny::Util;
 
 BEGIN {
     if ($] <= 5.008000) {
@@ -92,6 +93,7 @@ sub pk {
 sub row_class ($) {
     my $row_class = shift;
 
+    DBIx::Skinny::Util::load_class($row_class) or die "$row_class not found or compile error.";
     my $class = caller;
     $class->schema_info->{
         $class->schema_info->{_installing_table}

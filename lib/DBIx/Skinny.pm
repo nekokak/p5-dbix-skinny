@@ -8,10 +8,10 @@ use DBI;
 use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
+use DBIx::Skinny::Util;
 use DBIx::TransactionManager 1.02;
 use Carp ();
 use Storable ();
-use Class::Load ();
 
 sub import {
     my ($class, %opt) = @_;
@@ -70,27 +70,10 @@ sub import {
     }
     $caller->_setup_dbd;
 
-    _load_class($schema);
+    DBIx::Skinny::Util::load_class($schema);
 
     strict->import;
     warnings->import;
-}
-
-sub _load_class {
-    my $klass = shift;
-
-    return $klass if Class::Load::is_class_loaded($klass);
-
-    eval "use $klass"; ## no critic
-    if ($@) {
-        (my $file = $klass) =~ s|::|/|g;
-        if ($@ !~ /Can't locate $file\.pm in \@INC/) {
-            die $@;
-        }
-        return;
-    } else {
-        return $klass;
-    }
 }
 
 sub new {
@@ -512,7 +495,7 @@ sub _mk_row_class {
         my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
                         join '::', $attr->{klass}, 'Row', _camelize($table);
 
-        return $attr->{row_class_map}->{$table} = _load_class($row_class) || $class->_mk_common_row;
+        return $attr->{row_class_map}->{$table} = DBIx::Skinny::Util::load_class($row_class) || $class->_mk_common_row;
     } else {
         return $class->_mk_common_row;
     }
@@ -522,7 +505,7 @@ sub _mk_common_row {
     my $class = shift;
 
     my $row_class = join '::', $class->_attributes->{klass}, 'Row';
-    _load_class($row_class) or do {
+    DBIx::Skinny::Util::load_class($row_class) or do {
         no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row');
     };
     $row_class;
