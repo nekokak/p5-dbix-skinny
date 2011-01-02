@@ -56,8 +56,8 @@ sub import {
         schema          => $schema,
         profiler        => $profiler,
         klass           => $caller,
-        row_class_map   => +{},
-        active_transaction => 0,
+        _common_row_class    => '',
+        active_transaction   => 0,
         suppress_row_objects => 0,
         last_pid => $$,
     };
@@ -435,7 +435,7 @@ sub find_or_new {
 sub hash_to_row {
     my ($class, $table, $hash) = @_;
 
-    my $row_class = $class->_mk_row_class($table, $table);
+    my $row_class = $class->_get_row_class($table, $table);
     my $row = $row_class->new(
         {
             sql            => undef,
@@ -455,7 +455,7 @@ sub _get_sth_iterator {
         skinny         => $class,
         sth            => $sth,
         sql            => $sql,
-        row_class      => $class->_mk_row_class($sql, $opt_table_info),
+        row_class      => $class->_get_row_class($sql, $opt_table_info),
         opt_table_info => $opt_table_info,
         suppress_objects => $class->suppress_row_objects,
     );
@@ -467,7 +467,7 @@ sub data2itr {
     return DBIx::Skinny::Iterator->new(
         skinny         => $class,
         data           => $data,
-        row_class      => $class->_mk_row_class($table, $table),
+        row_class      => $class->_get_row_class($table, $table),
         opt_table_info => $table,
         suppress_objects => $class->suppress_row_objects,
     );
@@ -482,38 +482,21 @@ sub _guess_table_name {
     return;
 }
 
-sub _mk_row_class {
+sub _get_row_class {
     my ($class, $sql, $table) = @_;
 
     $table ||= $class->_guess_table_name($sql)||'';
-    my $attr = $class->_attributes;
-    my $base_row_class = $attr->{row_class_map}->{$table}||'';
-
-    if ($base_row_class) {
-        return $base_row_class;
-    } elsif ($table) {
-        my $row_class = $class->schema->schema_info->{$table}->{row_class} ||
-                        join '::', $attr->{klass}, 'Row', _camelize($table);
-
-        return $attr->{row_class_map}->{$table} = DBIx::Skinny::Util::load_class($row_class) || $class->_mk_common_row;
+    if ($table) {
+        return $class->schema->schema_info->{$table}->{row_class};
     } else {
-        return $class->_mk_common_row;
+        return $class->_attributes->{_common_row_class} ||= do {
+            my $row_class = join '::', $class->_attributes->{klass}, 'Row';
+            DBIx::Skinny::Util::load_class($row_class) or do {
+                no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row');
+            };
+            $row_class;
+        };
     }
-}
-
-sub _mk_common_row {
-    my $class = shift;
-
-    my $row_class = join '::', $class->_attributes->{klass}, 'Row';
-    DBIx::Skinny::Util::load_class($row_class) or do {
-        no strict 'refs'; @{"$row_class\::ISA"} = ('DBIx::Skinny::Row');
-    };
-    $row_class;
-}
-
-sub _camelize {
-    my $s = shift;
-    join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
 }
 
 sub _quote {
@@ -595,7 +578,7 @@ sub _insert_or_replace {
         $args->{$pk} = $class->_last_insert_id($table);
     }
 
-    my $row_class = $class->_mk_row_class($sql, $table);
+    my $row_class = $class->_get_row_class($sql, $table);
     return $args if $class->suppress_row_objects;
 
     my $obj = $row_class->new(

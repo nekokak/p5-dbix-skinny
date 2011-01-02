@@ -26,6 +26,7 @@ subtest 'schema info' => sub {
                 pre_delete  => $info->{mock_trigger_pre}->{trigger}->{pre_delete},
                 post_delete => $info->{mock_trigger_pre}->{trigger}->{post_delete},
             },
+            row_class => 'Mock::Trigger::Row::MockTriggerPre',
         },
         mock_trigger_post => {
             pk      => 'id',
@@ -34,6 +35,7 @@ subtest 'schema info' => sub {
                 'name',
             ],
             column_types => +{},
+            row_class => 'Mock::Trigger::Row::MockTriggerPost',
         },
         mock_trigger_post_delete => {
             pk      => 'id',
@@ -42,6 +44,7 @@ subtest 'schema info' => sub {
                 'name',
             ],
             column_types => +{},
+            row_class => 'Mock::Trigger::Row::MockTriggerPostDelete',
         },
     };
     isa_ok +Mock::Trigger->dbh, 'DBI::db';

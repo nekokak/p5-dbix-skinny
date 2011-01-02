@@ -135,7 +135,7 @@ subtest 'ex row class' => sub {
 };
 
 subtest 'row_class specific Schema.pm' => sub {
-    is +Mock::BasicRow->_mk_row_class('key', 'mock_basic_row_foo'), 'Mock::BasicRow::FooRow';
+    is +Mock::BasicRow->_get_row_class('key', 'mock_basic_row_foo'), 'Mock::BasicRow::FooRow';
     done_testing;
 };
 

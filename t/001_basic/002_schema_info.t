@@ -19,6 +19,7 @@ subtest 'schema info' => sub {
                 'name',
                 'delete_fg',
             ],
+            row_class    => 'Mock::Basic::Row::MockBasic',
             column_types => +{},
         }
     };
@@ -46,6 +47,7 @@ subtest 'schema info' => sub {
                 uid  => 'bigint',
                 raw  => 'bin',
             },
+            row_class => 'Mock::BasicBindColumn::Row::MockBasicBindColumn',
         }
     };
 

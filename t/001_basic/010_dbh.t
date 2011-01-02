@@ -44,6 +44,7 @@ subtest 'schema info' => sub {
                 'name',
             ],
             column_types => +{},
+            row_class => 'Mock::DBH::Row::MockDbh',
         }
     };
 

@@ -76,6 +76,17 @@ sub install_table ($$) {
     my $class = caller;
     $class->schema_info->{_installing_table} = $table;
         $install_code->();
+
+    $class->schema_info->{$table}->{row_class} ||= do {
+        (my $k = $class) =~ s/::Schema//;
+        my $r = join '::', $k, 'Row', DBIx::Skinny::Util::camelize($table);
+        DBIx::Skinny::Util::load_class($r) or do {
+            my $isa_row = DBIx::Skinny::Util::load_class(join '::', $k, 'Row') || 'DBIx::Skinny::Row';
+            {no strict 'refs'; @{"$r\::ISA"} = ($isa_row)}
+            $r;
+        };
+    };
+
     delete $class->schema_info->{_installing_table};
 }
 
