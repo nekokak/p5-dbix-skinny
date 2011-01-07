@@ -57,7 +57,6 @@ sub import {
         profiler        => $profiler,
         klass           => $caller,
         _common_row_class    => '',
-        active_transaction   => 0,
         suppress_row_objects => 0,
         last_pid => $$,
     };
