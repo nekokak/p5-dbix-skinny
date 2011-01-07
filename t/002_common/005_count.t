@@ -21,6 +21,7 @@ subtest 'count' => sub {
 
     is +Mock::Basic->count('mock_basic' => 'id'), 2;
     is +Mock::Basic->count('mock_basic' => 'id',{name => 'perl'}), 1;
+    is +Mock::Basic->count('mock_basic'), 2;
 };
 
 subtest 'iterator count' => sub {

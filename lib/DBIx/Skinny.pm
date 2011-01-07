@@ -303,6 +303,7 @@ sub do {
 sub count {
     my ($class, $table, $column, $where) = @_;
 
+    $column ||= '*';
     my $rs = $class->resultset(
         {
             from   => [$table],
@@ -310,7 +311,9 @@ sub count {
     );
 
     $rs->add_select("COUNT($column)" =>  'cnt');
-    $class->_add_where($rs, $where);
+    if ($where) {
+        $class->_add_where($rs, $where);
+    }
 
     $rs->retrieve->first->cnt;
 }
