@@ -79,41 +79,30 @@ sub new {
     my ($class, $connection_info) = @_;
     my $attr = $class->_attributes;
 
-    $attr->{last_pid} = $$;
-
-    my %unstorable_attribute;
-    for my $key ( qw/dbd profiler dbh connect_options on_connect_do / ) {
-        $unstorable_attribute{$key} = delete $attr->{$key};
+    my $new_attr;
+    for my $key (qw/check_schema dsn username password connect_options driver_name schema profiler klass _common_row_class suppress_row_objects/) {
+        $new_attr->{$key} = $attr->{$key};
     }
 
-    my $self = bless Storable::dclone($attr), $class;
+    my $self = bless $new_attr, $class;
+    $new_attr = $self->_attributes;
+    $new_attr->{last_pid} = $$;
 
     # restore.
-    for my $key ( keys %unstorable_attribute ) {
-        $attr->{$key} = $unstorable_attribute{$key};
+    for my $key (qw/dbd profiler dbh connect_options on_connect_do/) {
+        $new_attr->{$key} = $attr->{$key};
     }
 
     if ($connection_info) {
-
-        $self->_attributes->{profiler} = $unstorable_attribute{profiler};
-
         if ( $connection_info->{on_connect_do} ) {
-            $self->_attributes->{on_connect_do} = $connection_info->{on_connect_do};
-        } else {
-            $self->_attributes->{on_connect_do} = $unstorable_attribute{on_connect_do};
+            $new_attr->{on_connect_do} = $connection_info->{on_connect_do};
         }
 
+        $self->connect_info($connection_info);
         if ($connection_info->{dbh}) {
-            $self->connect_info($connection_info);
             $self->set_dbh($connection_info->{dbh});
         } else {
-            $self->connect_info($connection_info);
             $self->reconnect;
-        }
-
-    } else {
-        for my $key ( keys %unstorable_attribute ) {
-            $self->_attributes->{$key} = $unstorable_attribute{$key};
         }
     }
 
