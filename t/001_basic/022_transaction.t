@@ -41,6 +41,19 @@ subtest 'do commit' => sub {
  
     ok +Mock::Basic->single('mock_basic',{id => 2});
 };
+
+subtest 'error occurred in transaction' => sub {
+
+    eval {
+        local $SIG{__WARN__} = sub {};
+        my $txn = Mock::Basic->txn_scope;
+        Mock::Basic->_attributes->{dbh} = undef;
+        Mock::Basic->dbh;
+    };
+    my $e = $@;
+    like $e, qr/You're in a middle of a transaction, so I'm going to die/;
+};
+
  
 done_testing;
 
