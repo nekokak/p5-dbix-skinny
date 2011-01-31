@@ -41,6 +41,16 @@ subtest 'do commit' => sub {
  
     ok +Mock::Basic->single('mock_basic',{id => 2});
 };
+
+subtest 'error occurred in transaction' => sub {
+    eval {
+        local $SIG{__WARN__} = sub {};
+        my $txn = Mock::Basic->txn_scope;
+        Mock::Basic->reconnect;
+    };
+    my $e = $@;
+    like $e, qr/Detected disconnected database during a transaction. Refusing to proceed at/;
+};
  
 done_testing;
 

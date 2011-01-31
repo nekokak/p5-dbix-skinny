@@ -155,6 +155,11 @@ sub txn_manager  {
     };
 }
 
+sub in_transaction {
+    my $class = shift;
+    $class->_attributes->{txn_manager} ? $class->_attributes->{txn_manager}->in_transaction : undef;
+}
+
 sub txn_scope    { $_[0]->txn_manager->txn_scope    }
 sub txn_begin    { $_[0]->txn_manager->txn_begin    }
 sub txn_rollback { $_[0]->txn_manager->txn_rollback }
@@ -212,6 +217,11 @@ sub connect {
 
 sub reconnect {
     my $class = shift;
+
+    if ($class->in_transaction) {
+        Carp::confess("Detected disconnected database during a transaction. Refusing to proceed at");
+    }
+
     $class->disconnect();
     $class->connect(@_);
 }
