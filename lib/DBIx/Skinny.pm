@@ -212,11 +212,6 @@ sub connect {
 
 sub reconnect {
     my $class = shift;
-
-    if ($class->txn_manager->in_transaction) {
-        Carp::confess("You're in a middle of a transaction, so I'm going to die");
-    }
-
     $class->disconnect();
     $class->connect(@_);
 }

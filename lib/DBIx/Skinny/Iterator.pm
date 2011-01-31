@@ -72,7 +72,7 @@ sub iterator {
 sub first {
     my $self = shift;
     $self->reset;
-    scalar($self->next);
+    $self->next;
 }
 
 sub next { $_[0]->iterator }
