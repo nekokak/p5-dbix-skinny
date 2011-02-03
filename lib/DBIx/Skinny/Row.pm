@@ -112,10 +112,11 @@ sub update {
     my ($self, $args, $table) = @_;
 
     $table ||= $self->{opt_table_info};
-    $args ||= $self->get_dirty_columns;
+    my $upd = $self->get_dirty_columns;
+    map {$upd->{$_} = $args->{$_}} keys %$args;
 
-    my $result = $self->{skinny}->update($table, $args, $self->_where_cond($table));
-    $self->set_columns($args);
+    my $result = $self->{skinny}->update($table, $upd, $self->_where_cond($table));
+    $self->set_columns($upd);
 
     return $result;
 }
