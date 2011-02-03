@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0733
+        - MOD : Create better diagnostics for transactions guards that were not
+                properly dismissed
+        - MOD : Depend on DBIx::TransactionManager 1.06
+
 0.0732
    2010-12-22
         - FIXED : deflate bug. (thanks azumakuniyuki)
