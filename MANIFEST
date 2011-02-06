@@ -30,6 +30,7 @@ lib/DBIx/Skinny/Row.pm
 lib/DBIx/Skinny/Schema.pm
 lib/DBIx/Skinny/SQL.pm
 lib/DBIx/Skinny/SQL/Oracle.pm
+lib/DBIx/Skinny/Util.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
@@ -62,6 +63,7 @@ t/001_basic/021_reconnect.t
 t/001_basic/022_transaction.t
 t/001_basic/023_bulk_insert.t
 t/001_basic/024_bind_column.t
+t/002_common/.024_txn_scope.t.swp
 t/002_common/000_new.t
 t/002_common/001_insert.t
 t/002_common/002_update.t
@@ -85,6 +87,7 @@ t/002_common/020_get_column.t
 t/002_common/021_quote.t
 t/002_common/022_disconnect.t
 t/002_common/023_multi_pk.t
+t/002_common/024_txn_scope.t
 t/002_common/999_delete_by_sql.t
 t/002_common/999_update_by_sql.t
 t/500_deprecated/001_deprecated_setup.t
@@ -95,10 +98,9 @@ t/999_regression/deflate_bug.t
 t/999_regression/deflate_scalarref.t
 t/999_regression/guess_table_name.t
 t/999_regression/loose_connect_options_after_new.t
-t/999_regression/mk_row_class.t
 t/999_regression/new_attr.t
 t/999_regression/no_schema.t
-t/999_regression/row_class_syntax_error.t
+t/999_regression/prepare_error_handling.t
 t/999_regression/row_update_by_scalarref.t
 t/999_regression/where_condition_in.t
 t/lib/Mixin/Foo.pm
