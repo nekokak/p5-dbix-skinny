@@ -1,6 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
 0.0733
+   2011-02-06
+        - many code refactoring.
+        - ADD : Skinny::Util
+        - ADD : set row class at install_table.
         - MOD : Create better diagnostics for transactions guards that were not
                 properly dismissed
         - MOD : Depend on DBIx::TransactionManager 1.06
