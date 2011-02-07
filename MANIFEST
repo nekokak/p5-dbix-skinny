@@ -63,7 +63,6 @@ t/001_basic/021_reconnect.t
 t/001_basic/022_transaction.t
 t/001_basic/023_bulk_insert.t
 t/001_basic/024_bind_column.t
-t/002_common/.024_txn_scope.t.swp
 t/002_common/000_new.t
 t/002_common/001_insert.t
 t/002_common/002_update.t
