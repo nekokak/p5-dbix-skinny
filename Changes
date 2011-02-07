@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0735
+   2011-02-07
+        - FIXED : check if $pk is defined before doing anything with it.(thanks lestrrat)
+        - FIXED : double check that we hae the row_class properly initialized.(thanks lestrrat)
+
 0.0734
    2011-02-07
         - FIXED : Behavior when definition doesn't table exist.(thanks nihen)
