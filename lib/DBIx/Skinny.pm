@@ -578,7 +578,7 @@ sub _insert_or_replace {
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
 
-    if (not ref $pk && not defined $args->{$pk}) {
+    if (not(ref $pk) && not(defined $args->{$pk})) {
         $args->{$pk} = $class->_last_insert_id($table);
     }
 
