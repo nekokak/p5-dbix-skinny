@@ -13,22 +13,25 @@ Mock::Basic->connect_info(+{
 });
 Mock::Basic->setup_test_db;
 
-subtest 'basic' => sub {
+subtest 'txn_scope before fork' => sub {
+    my $txn = Mock::Basic->txn_scope;
+    $txn->commit;
 
     if (fork) {
         wait;
-        my $row = Mock::Basic->single('mock_basic',{name => 'perl'});
-        is $row->id, 1;
+        my $row = Mock::Basic->single('mock_basic',{name => 'ruby'});
+        is $row->id, 2;
         done_testing;
     } else {
+        Mock::Basic->txn_manager_reset;
         my $txn = Mock::Basic->txn_scope;
 
             my $row = Mock::Basic->insert('mock_basic',{
-                id   => 1,
-                name => 'perl',
+                id   => 2,
+                name => 'ruby',
             });
             isa_ok $row, 'DBIx::Skinny::Row';
-            is $row->name, 'perl';
+            is $row->name, 'ruby';
 
         $txn->commit;
     }

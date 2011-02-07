@@ -155,6 +155,11 @@ sub txn_manager  {
     };
 }
 
+sub txn_manager_reset {
+    my $class = shift;
+    $class->_attributes->{txn_manager} = undef;
+}
+
 sub in_transaction {
     my $class = shift;
     $class->_attributes->{txn_manager} ? $class->_attributes->{txn_manager}->in_transaction : undef;
