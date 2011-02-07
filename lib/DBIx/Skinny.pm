@@ -146,6 +146,8 @@ sub suppress_row_objects {
 sub txn_manager  {
     my $class = shift;
 
+    $class->_verify_pid;
+
     $class->_attributes->{txn_manager} ||= do {
         my $dbh = $class->dbh;
         unless ($dbh) {
@@ -153,11 +155,6 @@ sub txn_manager  {
         }
         DBIx::TransactionManager->new($dbh);
     };
-}
-
-sub txn_manager_reset {
-    my $class = shift;
-    $class->_attributes->{txn_manager} = undef;
 }
 
 sub in_transaction {
@@ -284,19 +281,27 @@ sub dbd {
     };
 }
 
+sub _verify_pid {
+    my $class = shift;
+
+    my $attr = $class->_attributes;
+    if ( $attr->{last_pid} != $$ and my $dbh = $attr->{dbh}) {
+        $attr->{last_pid} = $$;
+        $dbh->{InactiveDestroy} = 1;
+        $class->disconnect;
+    }
+}
+
 sub dbh {
     my $class = shift;
 
+    $class->_verify_pid;
+
     my $dbh = $class->connect;
-    if ( $class->_attributes->{last_pid} != $$ ) {
-        $class->_attributes->{last_pid} = $$;
-        $dbh->{InactiveDestroy} = 1;
-        $dbh = $class->reconnect;
+    unless ($dbh->FETCH('Active') && $dbh->ping) {
+        $class->reconnect;
     }
-    unless ($dbh && $dbh->FETCH('Active') && $dbh->ping) {
-        $dbh = $class->reconnect;
-    }
-    $dbh;
+    $class->_attributes->{dbh};
 }
 
 #--------------------------------------------------------------------------------

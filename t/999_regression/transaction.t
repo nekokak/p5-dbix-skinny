@@ -13,8 +13,6 @@ Mock::Basic->connect_info(+{
 });
 Mock::Basic->setup_test_db;
 
-subtest 'basic' => sub {
-
     if (fork) {
         wait;
         my $row = Mock::Basic->single('mock_basic',{name => 'perl'});
@@ -32,9 +30,6 @@ subtest 'basic' => sub {
 
         $txn->commit;
     }
-};
 
 unlink $db;
-
-done_testing;
 

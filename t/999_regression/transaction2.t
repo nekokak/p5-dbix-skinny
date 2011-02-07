@@ -13,7 +13,6 @@ Mock::Basic->connect_info(+{
 });
 Mock::Basic->setup_test_db;
 
-subtest 'txn_scope before fork' => sub {
     my $txn = Mock::Basic->txn_scope;
     $txn->commit;
 
@@ -23,7 +22,6 @@ subtest 'txn_scope before fork' => sub {
         is $row->id, 2;
         done_testing;
     } else {
-        Mock::Basic->txn_manager_reset;
         my $txn = Mock::Basic->txn_scope;
 
             my $row = Mock::Basic->insert('mock_basic',{
@@ -35,9 +33,6 @@ subtest 'txn_scope before fork' => sub {
 
         $txn->commit;
     }
-};
 
 unlink $db;
-
-done_testing;
 
