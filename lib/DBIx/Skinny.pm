@@ -582,8 +582,12 @@ sub _insert_or_replace {
         $args->{$pk} = $class->_last_insert_id($table);
     }
 
-    my $row_class = $class->_get_row_class($sql, $table);
     return $args if $class->suppress_row_objects;
+
+    my $row_class = $class->_get_row_class($sql, $table);
+    if (! $row_class) {
+        Carp::croak( "Could not find row definition for table '$table' (did you make sure to install_table()?)" );
+    }
 
     my $obj = $row_class->new(
         {
