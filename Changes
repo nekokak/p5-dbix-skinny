@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0734
+   2011-02-07
+        - FIXED : Behavior when definition doesn't table exist.(thanks nihen)
+        - FIXED : Priority of operator's bug. (thanks tokuhirom)
+
 0.0733
    2011-02-06
         - many code refactoring.
