@@ -114,6 +114,7 @@ Mock::ExRow->insert('mock_ex_row',{
 
 subtest 'no your row class' => sub {
     my $row = Mock::Basic->single('mock_basic',{id => 1});
+    isa_ok $row, 'Mock::Basic::Row::MockBasic';
     isa_ok $row, 'DBIx::Skinny::Row';
     done_testing;
 };
