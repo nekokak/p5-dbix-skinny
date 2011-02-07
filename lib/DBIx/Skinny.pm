@@ -490,7 +490,7 @@ sub _get_row_class {
     my ($class, $sql, $table) = @_;
 
     $table ||= $class->_guess_table_name($sql)||'';
-    if ($table) {
+    if ($table && $class->schema->schema_info->{$table}) {
         return $class->schema->schema_info->{$table}->{row_class};
     } else {
         return $class->_attributes->{_common_row_class} ||= do {
