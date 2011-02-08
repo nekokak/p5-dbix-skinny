@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0736
+   2011-02-XX
+        - FIXED : fixed search_named document.(thanks Joshua)
+
 0.0735
    2011-02-07
         - FIXED : check if $pk is defined before doing anything with it.(thanks lestrrat)
