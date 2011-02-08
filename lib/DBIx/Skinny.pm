@@ -1171,13 +1171,13 @@ It's useful in case use IN statement.
 
     # SELECT * FROM user WHERE id IN (?,?,?);
     # bind [1,2,3]
-    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids}, {id => [1, 2, 3]});
+    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids}, {ids => [1, 2, 3]});
 
 If you give \@sql_parts,
 
     # SELECT * FROM user WHERE id IN (?,?,?) AND unsubscribed_at IS NOT NULL;
     # bind [1,2,3]
-    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids %s}, {id => [1, 2, 3]}, ['AND unsubscribed_at IS NOT NULL']);
+    my $itr = Your::Model->search_named(q{SELECT * FROM user WHERE id IN :ids %s}, {ids => [1, 2, 3]}, ['AND unsubscribed_at IS NOT NULL']);
 
 If you give table_name. It is assumed the hint that makes DBIx::Skinny::Row's Object.
 
