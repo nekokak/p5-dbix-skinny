@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0737
+   2011-02-09
+        - FIXED: *FATAL* transaction BUG fixed.
+
 0.0736
    2011-02-09
         - FIXED : fixed search_named document.(thanks Joshua)
