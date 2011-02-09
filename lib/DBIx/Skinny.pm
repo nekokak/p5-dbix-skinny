@@ -292,6 +292,7 @@ sub _verify_pid {
         $attr->{last_pid} = $$;
         $dbh->{InactiveDestroy} = 1;
         $class->in_transaction_check;
+        $attr->{txn_manager} = undef;
         $class->disconnect;
     }
 }
