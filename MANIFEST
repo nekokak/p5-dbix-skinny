@@ -95,12 +95,17 @@ t/999_regression/bind_param.t
 t/999_regression/data2itr_objectarray.t
 t/999_regression/deflate_bug.t
 t/999_regression/deflate_scalarref.t
+t/999_regression/get_row_class.t
 t/999_regression/guess_table_name.t
 t/999_regression/loose_connect_options_after_new.t
 t/999_regression/new_attr.t
 t/999_regression/no_schema.t
 t/999_regression/prepare_error_handling.t
 t/999_regression/row_update_by_scalarref.t
+t/999_regression/transaction/basic.t
+t/999_regression/transaction/call_txn_scope_after_fork.t
+t/999_regression/transaction/call_txn_scope_and_fork.t
+t/999_regression/transaction/call_txn_scope_before_fork.t
 t/999_regression/where_condition_in.t
 t/lib/Mixin/Foo.pm
 t/lib/Mock/Basic.pm
