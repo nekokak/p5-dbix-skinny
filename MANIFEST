@@ -134,7 +134,7 @@ xt/mysql/fork.t
 xt/mysql/transaction.t
 xt/perlcritic.t
 xt/perlcriticrc
-xt/postgresql/common.t
-xt/postgresql/transaction.t
+xt/postgresql/common.t.back
+xt/postgresql/transaction.t.back
 xt/Utils/mysql.pm
 xt/Utils/postgresql.pm

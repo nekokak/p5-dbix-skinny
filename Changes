@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0738
+   2011-02-09
+        - FIXED : avoid an unexpected deatbh by (hackish-ly) setting InactiveDestroy on the child DB handle(thanks nihen, lestrrat)
+
 0.0737
    2011-02-09
         - FIXED: CRITICAL transaction bug fixed. All users using version 0.0733 to 0.0736 are recommended to upgrade to this version.
