@@ -117,6 +117,7 @@ sub update {
 
     my $result = $self->{skinny}->update($table, $upd, $self->_where_cond($table));
     $self->set_columns($upd);
+    $self->{_dirty_columns} = {};
 
     return $result;
 }
