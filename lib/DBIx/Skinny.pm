@@ -297,6 +297,13 @@ sub _verify_pid {
     }
 }
 
+sub DESTROY {
+    my $self = shift;
+    eval {
+        $self->_verify_pid;
+    };
+}
+
 sub dbh {
     my $class = shift;
 
