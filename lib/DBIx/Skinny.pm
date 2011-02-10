@@ -9,7 +9,7 @@ use DBIx::Skinny::Iterator;
 use DBIx::Skinny::DBD;
 use DBIx::Skinny::Row;
 use DBIx::Skinny::Util;
-use DBIx::TransactionManager 1.02;
+use DBIx::TransactionManager 1.07;
 use Carp ();
 use Storable ();
 
