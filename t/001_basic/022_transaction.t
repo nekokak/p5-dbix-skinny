@@ -49,7 +49,7 @@ subtest 'error occurred in transaction' => sub {
         Mock::Basic->reconnect;
     };
     my $e = $@;
-    like $e, qr/Detected disconnected database during a transaction. Refusing to proceed at/;
+    like $e, qr{Detected transaction during a reconnect operation \(last known transaction at t/001_basic/022_transaction\.t line 48, pid $$\)};
 };
  
 done_testing;
