@@ -49,9 +49,20 @@ subtest 'error occurred in transaction' => sub {
         Mock::Basic->reconnect;
     };
     my $e = $@;
-    like $e, qr{Detected transaction during a reconnect operation \(last known transaction at t/001_basic/022_transaction\.t line 48, pid $$\)};
+    my $file = __FILE__;
+    like $e, qr{Detected transaction during a reconnect operation \(last known transaction at $file line 48, pid $$\)};
 };
  
+subtest 'error occurred in transaction / nested' => sub {
+    eval {
+        local $SIG{__WARN__} = sub {};
+        my $txn = Mock::Basic->txn_scope;
+            my $txn2 = Mock::Basic->txn_scope;
+        Mock::Basic->reconnect;
+    };
+    my $e = $@;
+    my $file = __FILE__;
+    like $e, qr{Detected transaction during a reconnect operation \(last known transaction at $file line 59, pid $$\)};
+};
 done_testing;
-
 
