@@ -15,12 +15,10 @@ subtest "fork, don't do anything, then see if the parent works" => sub {
     my $pid = fork();
     if (! $pid) {
         undef $db;
-        sleep 2;
+        sleep 1;
         exit 0;
     } else {
-        warn "wait";
         wait;
-
     }
 
     my $row = $db->insert('mock_basic',{

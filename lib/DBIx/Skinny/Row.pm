@@ -96,7 +96,7 @@ sub set {
 sub get_dirty_columns {
     my $self = shift;
 
-    my %rows = map {$_ => $self->get_column($_)}
+    my %rows = map {$_ => $self->{_get_column_cached}->{$_}}
                keys %{$self->{_dirty_columns}};
 
     return \%rows;
@@ -117,6 +117,7 @@ sub update {
 
     my $result = $self->{skinny}->update($table, $upd, $self->_where_cond($table));
     $self->set_columns($upd);
+    $self->{_dirty_columns} = {};
 
     return $result;
 }

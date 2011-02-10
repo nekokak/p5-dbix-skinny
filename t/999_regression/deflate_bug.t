@@ -20,4 +20,20 @@ subtest 'scalar data bug case' => sub {
     is $row->name->name, 'azumakuniyuki_deflate';
 };
 
+subtest 'update row twice case' => sub {
+    my $row = Mock::Inflate->single('mock_inflate',{id => 1});
+    my $name = $row->name;
+    $name->name('perl');
+    $row->update({ name => $name });
+    isa_ok $row->name, 'Mock::Inflate::Name';
+    is $row->name->name, 'perl';
+
+    # twice update!
+    $row->update({id => 1});
+
+    # if name is row_data then incorrect
+    isa_ok $row->name, 'Mock::Inflate::Name';
+    is $row->name->name, 'perl';
+};
+
 done_testing;
