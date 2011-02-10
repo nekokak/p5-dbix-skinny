@@ -28,7 +28,7 @@ Mock::Basic->setup_test_db;
         eval {
             my $txn = Mock::Basic->txn_scope;
         };
-        like $@, qr/Detected disconnected database during a transaction. Refusing to proceed at/;
+        like $@, qr/Detected transaction while processing forked child \(last known transaction at/;
     }
 
     $txn->commit;
