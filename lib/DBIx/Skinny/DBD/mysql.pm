@@ -11,19 +11,17 @@ sub bulk_insert {
     return unless @$args;
 
     my (@cols, @bind);
+
+    # setting cols
+    my ($first_arg,) = @{$args};
+    for my $col (keys %{$first_arg}) {
+        push @cols, $col;
+    }
+    
     for my $arg (@{$args}) {
         # deflate
-        for my $col (keys %{$arg}) {
+        for my $col (@cols) {
             $arg->{$col} = $skinny->schema->call_deflate($col, $arg->{$col});
-        }
-
-        if (scalar(@cols)==0) {
-            for my $col (keys %{$arg}) {
-                push @cols, $col;
-            }
-        }
-
-        for my $col (keys %{$arg}) {
             push @bind, $skinny->schema->utf8_off($col, $arg->{$col});
         }
     }
