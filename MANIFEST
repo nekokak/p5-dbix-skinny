@@ -96,6 +96,7 @@ t/999_regression/data2itr_objectarray.t
 t/999_regression/deflate_bug.t
 t/999_regression/deflate_scalarref.t
 t/999_regression/duplicate_update.t
+t/999_regression/empty_update.t
 t/999_regression/get_row_class.t
 t/999_regression/guess_table_name.t
 t/999_regression/loose_connect_options_after_new.t

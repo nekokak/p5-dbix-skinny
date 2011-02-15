@@ -5,6 +5,7 @@ Revision history for Perl extension DBIx::Skinny
         - FIXED : update inflated row twice bug.(thanks nihen)
         - FIXED : avoid duplicate update field.(thanks nihen)
         - MOD   : Change transaction error messages to contain line number of the currently effective transaction.(thanks lestrrat)
+        - FIXED : work to empty update.(thanks nihen)
 
 0.0738
    2011-02-09

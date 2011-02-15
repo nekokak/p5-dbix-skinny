@@ -115,6 +115,8 @@ sub update {
     my $upd = $self->get_dirty_columns;
     map {$upd->{$_} = $args->{$_}} keys %$args;
 
+    return 0 unless %$upd;
+
     my $result = $self->{skinny}->update($table, $upd, $self->_where_cond($table));
     $self->set_columns($upd);
     $self->{_dirty_columns} = {};
