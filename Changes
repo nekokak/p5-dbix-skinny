@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0740
+   2011-02-15
+        - FIXED : mysql bulk_insert bug.(thanks kan_fushidara)
+        - FIXED : not localizing $@ at DESTROY.(thanks lestrrat)
+
 0.0739
    2011-02-10
         - FIXED : update inflated row twice bug.(thanks nihen)
