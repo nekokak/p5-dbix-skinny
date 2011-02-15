@@ -24,4 +24,13 @@ subtest 'insert mock_basic data/ create method' => sub {
     is $row->name, 'ruby';
 };
 
+subtest "DESTROY doesn't clobber" => sub {
+    my $db = Mock::Basic->new({ dbh => $dbh });
+    {
+        local $@ = "Bogus";
+        undef $db;
+        is $@, "Bogus";
+    }
+};
+
 done_testing;
