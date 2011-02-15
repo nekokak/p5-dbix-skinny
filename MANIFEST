@@ -131,6 +131,7 @@ t/lib/Mock/Trigger.pm
 t/lib/Mock/Trigger/Schema.pm
 t/Utils.pm
 xt/02_pod.t
+xt/mysql/bulk_insert.t
 xt/mysql/common.t
 xt/mysql/fork.t
 xt/mysql/transaction.t
