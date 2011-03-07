@@ -254,6 +254,7 @@ sub do_on_connect {
 sub disconnect {
     my $class = shift;
     $class->_attributes->{dbh} = undef;
+    $class->_attributes->{txn_manager} = undef;
 }
 
 sub set_dbh {
