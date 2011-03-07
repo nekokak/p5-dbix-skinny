@@ -275,7 +275,15 @@ subtest 'do txn, disconnect, connect, and then txn' => sub {
     ok !$@, "regular disconnect - should be clean" . ( $@ ? ", but got $@" : '');
 
     ok ! $model->_attributes->{dbh}, "dbh should be undefined";
-    ok ! $model->_attributes->{txn_manager}, "txn manager should be undefined";
+    if (! ok ! $model->_attributes->{txn_manager}, "txn manager should be undefined" ) {
+        # What, txn_manager still exists?!
+        # Emulate this: long time passes... txn_manager and its dbh is
+        # still dangling... and mysql server disconnects
+        my $tm = $model->_attributes->{txn_manager};
+        if (my $dbh = $tm->{dbh}) {
+            $dbh->disconnect;
+        }
+    }
 
     eval {
         $model->connect();
