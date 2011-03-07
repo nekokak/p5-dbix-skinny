@@ -253,8 +253,11 @@ sub do_on_connect {
 
 sub disconnect {
     my $class = shift;
-    $class->_attributes->{dbh} = undef;
-    $class->_attributes->{txn_manager} = undef;
+    delete $class->_attributes->{txn_manager};
+    if (my $dbh = delete $class->_attributes->{dbh}) {
+        local $@;
+        eval { $dbh->disconnect };
+    }
 }
 
 sub set_dbh {
