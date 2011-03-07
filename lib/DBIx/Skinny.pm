@@ -255,8 +255,7 @@ sub disconnect {
     my $class = shift;
     delete $class->_attributes->{txn_manager};
     if (my $dbh = delete $class->_attributes->{dbh}) {
-        local $@;
-        eval { $dbh->disconnect };
+        $dbh->disconnect;
     }
 }
 
