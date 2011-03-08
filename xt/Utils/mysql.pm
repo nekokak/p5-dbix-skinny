@@ -15,6 +15,17 @@ my $mysql = Test::mysqld->new({
     sub t::Utils::setup_dbh {
         DBI->connect($mysql->dsn( dbname => "test" ), '','',{ RaiseError => 1, PrintError => 0, AutoCommit => 1 });
     }
+
+    sub t::Utils::connect_info {
+        return {
+            dsn => $mysql->dsn( dbname => "test" ),
+            connect_options => {
+                RaiseError => 1,
+                PrintError => 0,
+                AutoCommit => 1,
+            }
+        }
+    }
 }
 
 1;
