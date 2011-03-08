@@ -10,7 +10,6 @@ subtest "fork, don't do anything, then see if the parent works" => sub {
     my $db  = Mock::Basic->new( { dbh => $dbh } );
     $db->setup_test_db;
 
-
     my $pid = fork();
     if (! $pid) {
         undef $db;

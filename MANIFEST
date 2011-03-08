@@ -93,6 +93,7 @@ t/500_deprecated/001_deprecated_setup.t
 t/500_deprecated/002_deprecated_profiler.t
 t/999_regression/bind_param.t
 t/999_regression/data2itr_objectarray.t
+t/999_regression/dbh_and_txn_manager.t
 t/999_regression/deflate_bug.t
 t/999_regression/deflate_scalarref.t
 t/999_regression/duplicate_update.t
