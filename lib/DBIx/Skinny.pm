@@ -146,15 +146,8 @@ sub suppress_row_objects {
 sub txn_manager  {
     my $class = shift;
 
-    $class->_verify_pid;
-
-    $class->_attributes->{txn_manager} ||= do {
-        my $dbh = $class->dbh;
-        unless ($dbh) {
-            Carp::croak("dbh is not found.");
-        }
-        DBIx::TransactionManager->new($dbh);
-    };
+    my $dbh = $class->dbh;
+    $class->_attributes->{txn_manager} ||= DBIx::TransactionManager->new($dbh);
 }
 
 sub in_transaction_check {
