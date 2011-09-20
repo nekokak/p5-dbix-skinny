@@ -106,6 +106,7 @@ t/999_regression/no_schema.t
 t/999_regression/prepare_error_handling.t
 t/999_regression/row_update_by_scalarref.t
 t/999_regression/transaction/call_txn_scope_after_fork.t
+t/999_regression/transaction/call_txn_scope_after_missing_connect.t
 t/999_regression/transaction/call_txn_scope_and_fork.t
 t/999_regression/transaction/call_txn_scope_before_fork.t
 t/999_regression/transaction/call_txn_scope_before_fork_and_rollback.t
@@ -138,6 +139,7 @@ xt/mysql/fork.t
 xt/mysql/transaction.t
 xt/perlcritic.t
 xt/perlcriticrc
+xt/postgresql/bind_param_attributes.t
 xt/postgresql/common.t.back
 xt/postgresql/transaction.t.back
 xt/Utils/mysql.pm
