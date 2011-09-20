@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny
 
+0.0742
+        - FIXED: txn_scope bug fixed. (thanks nihen)
+        - FIXED: modified _guess_tale_name to accept quoted name. (thansk makamaka)
+        - FIXED: added bind_param_attributes to Pg for bytea. (thanks makamaka)
+
 0.0741
         - FIXED : There was a critical bug when disconnect() (or reconnect())
           was used while transaction operations were performed. Also, this
