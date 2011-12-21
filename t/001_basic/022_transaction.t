@@ -17,7 +17,7 @@ subtest 'do basic transaction' => sub {
 
     is +Mock::Basic->single('mock_basic',{id => 1})->name, 'perl';
 };
- 
+
 subtest 'do rollback' => sub {
     Mock::Basic->txn_begin;
     my $row = Mock::Basic->insert('mock_basic',{
@@ -26,10 +26,10 @@ subtest 'do rollback' => sub {
     is $row->id, 2;
     is $row->name, 'perl';
     Mock::Basic->txn_rollback;
-    
+
     ok not +Mock::Basic->single('mock_basic',{id => 2});
 };
- 
+
 subtest 'do commit' => sub {
     Mock::Basic->txn_begin;
     my $row = Mock::Basic->insert('mock_basic',{
@@ -38,7 +38,7 @@ subtest 'do commit' => sub {
     is $row->id, 2;
     is $row->name, 'perl';
     Mock::Basic->txn_commit;
- 
+
     ok +Mock::Basic->single('mock_basic',{id => 2});
 };
 
@@ -52,7 +52,7 @@ subtest 'error occurred in transaction' => sub {
     my $file = __FILE__;
     like $e, qr{Detected transaction during a reconnect operation \(last known transaction at $file line 48, pid $$\)};
 };
- 
+
 subtest 'error occurred in transaction / nested' => sub {
     eval {
         local $SIG{__WARN__} = sub {};

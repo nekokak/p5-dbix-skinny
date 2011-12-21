@@ -20,7 +20,7 @@ subtest 'resultset' => sub {
     $rs->add_where(id => 1);
 
     my $itr = $rs->retrieve;
-    
+
     isa_ok $itr, 'DBIx::Skinny::Iterator';
 
     my $row = $itr->first;

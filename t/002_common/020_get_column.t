@@ -22,7 +22,7 @@ subtest 'get_column' => sub {
     like $@, qr/please specify \$col for first argument/;
 
     eval {
-        $row->get_column('bazbaz'); 
+        $row->get_column('bazbaz');
     };
     ok $@;
     like $@, qr/bazbaz no selected column. SQL: unknown/;

@@ -17,7 +17,7 @@ sub bulk_insert {
     for my $col (keys %{$first_arg}) {
         push @cols, $col;
     }
-    
+
     for my $arg (@{$args}) {
         # deflate
         for my $col (@cols) {

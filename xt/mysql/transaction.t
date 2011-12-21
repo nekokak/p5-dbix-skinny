@@ -15,11 +15,11 @@ subtest 'do basic transaction' => sub {
     is $row->id, 1;
     is $row->name, 'perl';
     Mock::Basic->txn_commit;
-    
+
     is +Mock::Basic->single('mock_basic',{id => 1})->name, 'perl';
     done_testing;
 };
- 
+
 subtest 'do rollback' => sub {
     Mock::Basic->txn_begin;
     my $row = Mock::Basic->insert('mock_basic',{
@@ -28,7 +28,7 @@ subtest 'do rollback' => sub {
     is $row->id, 2;
     is $row->name, 'perl';
     Mock::Basic->txn_rollback;
-    
+
     ok not +Mock::Basic->single('mock_basic',{id => 2});
     done_testing;
 };
@@ -41,11 +41,11 @@ subtest 'do commit' => sub {
     is $row->id, 3;
     is $row->name, 'perl';
     Mock::Basic->txn_commit;
- 
+
     ok +Mock::Basic->single('mock_basic',{id => 3});
     done_testing;
 };
- 
+
 subtest 'do scope commit' => sub {
     my $txn = Mock::Basic->txn_scope;
     my $row = Mock::Basic->insert('mock_basic',{
@@ -54,11 +54,11 @@ subtest 'do scope commit' => sub {
     is $row->id, 4;
     is $row->name, 'perl';
     $txn->commit;
- 
+
     ok +Mock::Basic->single('mock_basic',{id => 4});
     done_testing;
 };
- 
+
 subtest 'do scope rollback' => sub {
     my $txn = Mock::Basic->txn_scope;
     my $row = Mock::Basic->insert('mock_basic',{
@@ -67,13 +67,13 @@ subtest 'do scope rollback' => sub {
     is $row->id, 5;
     is $row->name, 'perl';
     $txn->rollback;
- 
+
     ok not +Mock::Basic->single('mock_basic',{id => 5});
     done_testing;
 };
- 
+
 subtest 'do scope guard for rollback' => sub {
- 
+
     {
         local $SIG{__WARN__} = sub {};
         my $txn = Mock::Basic->txn_scope;
@@ -83,7 +83,7 @@ subtest 'do scope guard for rollback' => sub {
         is $row->id, 6;
         is $row->name, 'perl';
     }
- 
+
     ok not +Mock::Basic->single('mock_basic',{id => 6});
     done_testing;
 };

@@ -229,7 +229,7 @@ update is executed for instance record.
 It works by schema in which primary key exists.
 
     $row->update({name => 'tokuhirom'});
-    # or 
+    # or
     $row->set({name => 'tokuhirom'});
     $row->update;
 

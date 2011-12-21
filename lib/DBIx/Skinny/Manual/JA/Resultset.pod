@@ -1,6 +1,6 @@
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 DBIx::Skinny::Manual::JA::Resultset - DBIx::Skinnyのresultsetの使い方
 
@@ -8,7 +8,7 @@ DBIx::Skinny::Manual::JA::Resultset - DBIx::Skinnyのresultsetの使い方
 
 動的にSQLを組み立てるresultsetメソッドの各種使い方マニュアルです。
 
-Please translate and read the person in the sphere in English. 
+Please translate and read the person in the sphere in English.
 
 =head1 resultsetの細かい使い方
 
@@ -59,7 +59,7 @@ resultsetでSQLを組み立てている時に途中でSQLを確認したくな�
 where句を指定するにはadd_whereメソッドを使用します。
 
     user.name = ?
-    
+
     # bind = nekokak
 
 なwhere句を指定するにはこのように指定します。

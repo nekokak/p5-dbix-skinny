@@ -5,7 +5,7 @@ use Mock::Basic;
 
 subtest 'use transaction, disconnect, reconnect and use transaction again' => sub {
     my %connect_info = (
-        dsn => 'dbi:SQLite::memory:', 
+        dsn => 'dbi:SQLite::memory:',
         connect_options => {RaiseError => 1, AutoCommit => 1},
     );
     my $model = Mock::Basic->new(\%connect_info);

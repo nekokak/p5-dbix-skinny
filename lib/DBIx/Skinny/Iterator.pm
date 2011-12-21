@@ -132,15 +132,15 @@ skinny iteration class.
 =head1 SYNOPSIS
 
   my $itr = Your::Model->search('user',{});
-  
+
   $itr->count; # show row counts
-  
+
   my $row = $itr->first; # get first row
-  
+
   $itr->reset; # reset itarator position
-  
+
   my @rows = $itr->all; # get all rows
-  
+
   # do iteration
   while (my $row = $itr->next) { }
 
@@ -171,14 +171,14 @@ this method reset iterator position number.
 
 =item $itr->count
 
-The number of lines that iterator has are returned. 
+The number of lines that iterator has are returned.
 
 =item $itr->no_cache # has been deprecated
 
 =item $itr->cache($mode)
 
 DBIx::Skinny::Itarator is default row data cache.
-this method specified that it doesn't cache row data or not. 
+this method specified that it doesn't cache row data or not.
 
 if $mode is false, it doesn't cache row data.
 $mode is true, it dose cache row data.

@@ -4,7 +4,7 @@ use Test::More;
 my $content;
 BEGIN {
     $ENV{SKINNY_TRACE} = 1;
-    open my $fh, '>', \$content; 
+    open my $fh, '>', \$content;
     *STDERR = $fh;
 }
 

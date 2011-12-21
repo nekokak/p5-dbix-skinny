@@ -1,6 +1,6 @@
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 DBIx::Skinny::Manual::EN::Intro - Intro to DBIx::Skinny
 
@@ -17,7 +17,7 @@ Be aware that APIs may change - this is alpha software!
 
 =head1 Base Class Defintions
 
-Let's work with an example project called C<Proj>. Your Skinny 
+Let's work with an example project called C<Proj>. Your Skinny
 model for this project would be:
 
     package Proj::Model;
@@ -40,7 +40,7 @@ If you want to directly use DSN files then you can create your model like this:
 
 =head2 ->connect_info
 
-    Proj::Model->connect_info(....); 
+    Proj::Model->connect_info(....);
 
 =head2 ->connect
 
@@ -48,7 +48,7 @@ If you want to directly use DSN files then you can create your model like this:
 
 =head2 Proj::Model->new($connection_info)
 
-    my $model = Proj::Model->new($connection_info); 
+    my $model = Proj::Model->new($connection_info);
 
 =head2 ->set_dbh
 
@@ -63,7 +63,7 @@ manual setup.
 
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -81,7 +81,7 @@ Automatic processing of columns is achieved via C<install_utf8_columns>:
 
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
-    
+
     install_utf8_columns qw/name/;
     install_table 'user' => schema {
         pk 'id';
@@ -96,7 +96,7 @@ B<all> tables, not just the C<user> table.
 
 =head3 Inflate/deflate Processing
 
-To enable inflate/deflate processing on the columns 
+To enable inflate/deflate processing on the columns
 C<created_at> and C<updated_at> you can do the following:
 
     package Proj::Model::Schema;
@@ -105,7 +105,7 @@ C<created_at> and C<updated_at> you can do the following:
     use DateTime::Format::Strptime;
     use DateTime::Format::MySQL;
     use DateTime::TimeZone;
-    
+
     my $timezone = DateTime::TimeZone->new(name => 'Asia/Tokyo');
     install_inflate_rule '^.+_at$' => callback {
         inflate {
@@ -121,7 +121,7 @@ C<created_at> and C<updated_at> you can do the following:
             return DateTime::Format::MySQL->format_datetime($value);
         };
     };
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -139,7 +139,7 @@ Skinny supports insert/update/delete triggers:
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
     use DateTime;
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -343,7 +343,7 @@ Used when you want a single row:
         { }
     );
 
-See L<DBIx::Class::Manual::EN::Resultset> for more information on 
+See L<DBIx::Class::Manual::EN::Resultset> for more information on
 the C<$where> clause.
 
 =head3 search_named ( $sql, $placeholder_bindings, $sprintf_bindings )
@@ -380,21 +380,21 @@ Please see L<DBIx::Skinny::Manual::EN::Resultset>
 Transactions are easy in Skinny:
 
     my $txn = Proj::Model->txn_scope;
-    
+
     my $row = Proj::Model->single('user', {id => 1});
     $row->set({name => 'nekokak'});
     $row->update;
-    
+
     $txn->commit;
 
 Here's another way:
 
     Proj::Model->txn_begin;
-    
+
     my $row = Proj::Model->single('user', {id => 1});
     $row->set({name => 'nekokak'});
     $row->update;
-    
+
     Proj::Model->txn_commit;
     Proj::Model->txn_end;
 
