@@ -40,7 +40,7 @@ sub import {
             $profiler = DBIx::Skinny::Profiler->new;
         }
     }
-                
+
     my $schema = $opt{schema} || "$caller\::Schema";
 
     my $driver_name = _guess_driver_name($connect_info);
@@ -110,7 +110,7 @@ sub new {
 }
 
 my $schema_checked = 0;
-sub schema { 
+sub schema {
     my $attribute = $_[0]->_attributes;
     my $schema = $attribute->{schema};
     if ( $attribute->{check_schema} && !$schema_checked ) {
@@ -830,13 +830,13 @@ create your db model base class.
         password => '',
     };
     1;
-    
+
 create your db schema class.
 See DBIx::Skinny::Schema for docs on defining schema class.
 
     package Your::Model::Schema;
     use DBIx::Skinny::Schema;
-    
+
     install_table user => schema {
         pk 'id';
         columns qw/
@@ -845,11 +845,11 @@ See DBIx::Skinny::Schema for docs on defining schema class.
         /;
     };
     1;
-    
+
 in your script.
 
     use Your::Model;
-    
+
     my $skinny = Your::Model->new;
     # insert new record.
     my $row = $skinny->insert('user',
@@ -865,7 +865,7 @@ in your script.
 =head1 DESCRIPTION
 
 DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
-It aims to be lightweight, with minimal dependencies so it's easier to install. 
+It aims to be lightweight, with minimal dependencies so it's easier to install.
 
 =head1 ARCHITECTURE
 
@@ -873,7 +873,7 @@ DBIx::Skinny classes are comprised of three distinct components:
 
 =head2 MODEL
 
-The C<model> is where you say 
+The C<model> is where you say
 
     package MyApp::Model;
     use DBIx::Skinny;
@@ -913,7 +913,7 @@ Note that your table name will be camelized using String::CamelCase.
 
 =head1 METHODS
 
-DBIx::Skinny provides a number of methods to all your classes, 
+DBIx::Skinny provides a number of methods to all your classes,
 
 =over
 
@@ -979,7 +979,7 @@ insert method alias.
 
 =item $skinny->replace($table_name, \%row_data)
 
-The data that already exists is replaced. 
+The data that already exists is replaced.
 
 example:
 
@@ -988,7 +988,7 @@ example:
         name => 'tokuhirom',
     });
 
-or 
+or
 
     my $db = Your::Model->new;
     my $row = $db->replace('user',{
@@ -1033,7 +1033,7 @@ example:
         name => 'nomaneko',
     },{ id => 1 });
 
-or 
+or
 
     # see) DBIx::Skinny::Row's POD
     my $row = Your::Model->single('user',{id => 1});
@@ -1113,7 +1113,7 @@ If you want to do the same thing in this case,
         });
     }
 
-Because the interchangeable rear side is lost, it doesn't mend. 
+Because the interchangeable rear side is lost, it doesn't mend.
 
 =item $skinny->find_or_insert($table, \%values)
 
@@ -1316,7 +1316,7 @@ set row object creation mode.
     { order_by => [ { id => 'desc' } ] }
     # or
     { order_by => { id => 'desc' } }
-    # or 
+    # or
     { order_by => 'name' }
 
 =item for_update
@@ -1399,7 +1399,7 @@ tokuhirom: Tokuhiro Matsuno
 
 =head1 REPOSITORY
 
-  git clone git://github.com/nekokak/p5-dbix-skinny.git  
+  git clone git://github.com/nekokak/p5-dbix-skinny.git
 
 =head1 LICENCE AND COPYRIGHT
 

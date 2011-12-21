@@ -1,6 +1,6 @@
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 DBIx::Skinny::Manual::EN - DBIx::Skinny Manual (English)
 
@@ -24,7 +24,7 @@ The main objectives of L<DBIx::Skinny> are:
 
 =head3 Inflate when dealing with utf8 issues
 
-=head3 Handle common OR operations 
+=head3 Handle common OR operations
 
 =head3 Intuitive select statements
 

@@ -83,7 +83,7 @@ sub as_sql {
             $sql .= $table unless $initial_table_written++;
             for my $join (@{ $j->{joins} }) {
                 $sql .= ' ' . uc($join->{type}) . ' JOIN ' . $join->{table};
-                
+
                 if (ref $join->{condition}) {
                     $sql .= ' USING ('. join(', ', @{ $join->{condition} }) . ')';
                 }
@@ -162,7 +162,7 @@ sub add_where {
     my $self = shift;
     ## xxx Need to support old range and transform behaviors.
     my($col, $val) = @_;
-    # XXX; DATE_FORMAT(member.created_at,'%Y-%m') 
+    # XXX; DATE_FORMAT(member.created_at,'%Y-%m')
 #    Carp::croak("Invalid/unsafe column name $col") unless $col =~ /^[\w\.]+$/;
     my($term, $bind, $tcol) = $self->_mk_term($col, $val);
     push @{ $self->{where} }, "($term)";
@@ -317,7 +317,7 @@ sub _add_index_hint {
     my $hint = $self->index_hint->{$tbl_name};
     return $tbl_name unless $hint && ref($hint) eq 'HASH';
     if ($hint->{list} && @{ $hint->{list} }) {
-        return $tbl_name . ' ' . uc($hint->{type} || 'USE') . ' INDEX (' . 
+        return $tbl_name . ' ' . uc($hint->{type} || 'USE') . ' INDEX (' .
                 join (',', @{ $hint->{list} }) .
                 ')';
     }

@@ -72,7 +72,7 @@ subtest 'insert data' => sub {
             id => 5,
         }
     );
- 
+
     ok not +Mock::BasicBindColumn->search_by_sql('select * from mock_basic_bind_column where id = ?',[5])->first;
 
     ok +Mock::BasicBindColumn->insert('mock_basic_bind_column',{

@@ -1,6 +1,6 @@
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 DBIx::Skinny::Manual::JA - DBIx::Skinnyの設計思想など
 
@@ -9,7 +9,7 @@ DBIx::Skinny::Manual::JA - DBIx::Skinnyの設計思想など
 DBIx::Skinnyをなぜ作る事にしたのか、
 また作るにあたっての設計思想など。
 
-Please translate and read the person in the sphere in English. 
+Please translate and read the person in the sphere in English.
 
 =head1 なぜDBIx::Skinnyを書いたのか
 

@@ -52,20 +52,20 @@ in your script:
 
     use Your::Model;
     use Data::Dumper;
-    
+
     my $row = Your::Model->insert('user',
         {
             id   => 1,
         }
     );
     $row->update({name => 'nekokak'});
-    
+
     $row = Your::Model->search_by_sql(q{SELECT id, name FROM user WHERE id = ?}, [ 1 ]);
     $row->delete('user')
-    
+
     # get queries
     warn Dumper Your::Model->profiler->query_log;
-    # The following are displayed. 
+    # The following are displayed.
     #
     #  INSERT INTO user (id) VALUES (?) :binds 1
     #  UPDATE user set name = ? WHERE = id = ? :binds nekokak 1

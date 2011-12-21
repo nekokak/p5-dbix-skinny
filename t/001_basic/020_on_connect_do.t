@@ -103,7 +103,7 @@ subtest 'instance level on_connect_do / array' => sub {
     $db->_attributes->{on_connect_do} = ['select * from sqlite_master', 'select * from sqlite_master'];
     $db->_attributes->{profile} = 1;
 
-    $db->connect; 
+    $db->connect;
     is_deeply $db->profiler->query_log, [
         q{select * from sqlite_master},
         q{select * from sqlite_master},

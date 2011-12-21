@@ -19,7 +19,7 @@ subtest 'db1.db ok' => sub {
             name => 'perl',
         }
     );
-    
+
     my $itr = Mock::Basic->search('mock_basic',{id => 1});
     isa_ok $itr, 'DBIx::Skinny::Iterator';
 

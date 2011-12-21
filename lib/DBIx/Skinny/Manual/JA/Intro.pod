@@ -1,6 +1,6 @@
 =encoding utf8
 
-=head1 NAME 
+=head1 NAME
 
 DBIx::Skinny::Manual::JA::Intro - DBIx::Skinnyの日本語ドキュメント
 
@@ -8,7 +8,7 @@ DBIx::Skinny::Manual::JA::Intro - DBIx::Skinnyの日本語ドキュメント
 
 Skinnyの総合的な使い方を網羅するマニュアルです。
 
-Please translate and read the person in the sphere in English. 
+Please translate and read the person in the sphere in English.
 
 =head1 注意
 
@@ -79,7 +79,7 @@ Skinnyでは他のORマッパーと同じように各tableに対応するschema�
 
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -113,7 +113,7 @@ Skinnyでは他のORマッパーと異なり、テーブル毎にClassを作る�
 
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
-    
+
     install_utf8_columns qw/name/;
     install_table 'user' => schema {
         pk 'id';
@@ -149,7 +149,7 @@ userテーブルの例の場合でcreated_at/updated_atなカラムをDateTime�
     use DateTime::Format::Strptime;
     use DateTime::Format::MySQL;
     use DateTime::TimeZone;
-    
+
     my $timezone = DateTime::TimeZone->new(name => 'Asia/Tokyo');
     install_inflate_rule '^.+_at$' => callback {
         inflate {
@@ -165,7 +165,7 @@ userテーブルの例の場合でcreated_at/updated_atなカラムをDateTime�
             return DateTime::Format::MySQL->format_datetime($value);
         };
     };
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -190,7 +190,7 @@ Skinnyにもinsert/update/deleteなどを行った場合にtriggerによるHook�
     package Proj::Model::Schema;
     use DBIx::Skinny::Schema;
     use DateTime;
-    
+
     install_table 'user' => schema {
         pk 'id';
         columns qw/
@@ -500,11 +500,11 @@ Skinnyではトランザクションの仕組みを簡単にサポートして�
 トランザクションを有効にした処理を書きたい場合は以下のようにします。
 
     my $txn = Porj::Model->txn_scope;
-    
+
     my $row = Proj::Model->single('user', {id => 1});
     $row->set({name => 'nekokak'});
     $row->update;
-    
+
     $txn->commit;
 
 Skinnyのトランザクションサポートはtxn_scopeメソッドで取得したオブジェクトが有効な間、
@@ -516,11 +516,11 @@ $txn->commitが実行されずに$txnオブジェクトが亡くなってしま�
 txn_scopeメソッドを使わずに
 
     Proj::Model->txn_begin;
-    
+
     my $row = Proj::Model->single('user', {id => 1});
     $row->set({name => 'nekokak'});
     $row->update;
-    
+
     Proj::Model->txn_commit;
     Proj::Model->txn_end;
 
@@ -540,7 +540,7 @@ Proj::Modelにメソッドを追加できるようになります。
     use DBIx::Skinny;
     use DBIx::Skinny::Mixin modules => ['+Mixin::Foo'];
     1;
-    
+
     package Mixin::Foo;
     sub register_method {
         +{

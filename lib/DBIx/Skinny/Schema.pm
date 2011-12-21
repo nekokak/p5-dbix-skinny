@@ -82,7 +82,7 @@ sub columns (@) {
             push @_columns, $item->{name};
             $_column_types{$item->{name}} = $item->{type};
         } else {
-            die "columns must be 'SCALAR' or 'HASHREF'";    
+            die "columns must be 'SCALAR' or 'HASHREF'";
         }
     }
 
@@ -135,7 +135,7 @@ sub install_inflate_rule ($$) {
 }
 
 sub inflate (&) {
-    my $code = shift;    
+    my $code = shift;
 
     my $class = caller;
     $class->inflate_rules->{
@@ -217,12 +217,12 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
         password => '',
     };
     1;
-    
+
     package Your::Model::Schema:
     use DBIx::Skinny::Schema;
-    
+
     install_utf8_columns qw/name/; # for utf8 columns
-    
+
     # set user table schema settings
     install_table user => schema {
         pk 'id';
@@ -249,7 +249,7 @@ DBIx::Skinny::Schema - Schema DSL for DBIx::Skinny
             # deflate hook
         };
     };
-    
+
     1;
 
 
