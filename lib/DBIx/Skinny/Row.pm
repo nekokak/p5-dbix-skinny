@@ -190,11 +190,11 @@ DBIx::Skinny::Row - DBIx::Skinny's Row class
 
 get a column value from a row object.
 
-=item $row->get_columns
+=item $row->get_columns() : HashRef
 
     my $data = $row->get_columns;
 
-Does C<get_column>, for all column values.
+Does C<get_column>, for all column values in HashRef.
 
 =item $row->set(\%new_row_data)  # has been deprecated
 
