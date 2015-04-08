@@ -13,6 +13,8 @@ requires 'Try::Tiny';
 requires 'DBIx::TransactionManager' => '1.07';
 requires 'Class::Load';
 requires 'Pod::Markdown::Github';
+requires 'FindBin';
+
 
 author_tests('xt');
 
