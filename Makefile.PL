@@ -11,6 +11,7 @@ requires 'Class::Accessor::Lite';
 requires 'Try::Tiny';
 requires 'DBIx::TransactionManager' => '1.07';
 requires 'Class::Load';
+requires 'Pod::Markdown::Github';
 
 author_tests('xt');
 
@@ -21,5 +22,4 @@ test_requires 'Test::postgresql' if $Module::Install::AUTHOR;
 
 tests 't/*.t t/*/*.t t/*/*/*.t';
 
-auto_set_repository;
 WriteAll;
