@@ -534,7 +534,7 @@ DBIx::Skinny provides a number of methods to all your classes,
 
     execute your query.
 
-    See) [http://search.cpan.org/dist/DBI/DBI.pm#do](http://search.cpan.org/dist/DBI/DBI.pm#do)
+    See) [DBI#do](https://metacpan.org/pod/DBI#do)
 
 - $skinny->dbh
 

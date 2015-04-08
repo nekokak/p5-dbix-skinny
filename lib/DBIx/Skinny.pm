@@ -1279,7 +1279,7 @@ The object will not be saved into your storage until you call "insert" in DBIx::
 
 execute your query.
 
-See) L<http://search.cpan.org/dist/DBI/DBI.pm#do>
+See) L<DBI#do>
 
 =item $skinny->dbh
 
