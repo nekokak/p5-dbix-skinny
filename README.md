@@ -1,6 +1,6 @@
 # NAME
 
-DBIx::Skinny - simple DBI wrapper/ORMapper
+[DBIx::Skinny](https://metacpan.org/pod/DBIx::Skinny) - simple DBI wrapper/ORMapper
 
 # SYNOPSIS
 
@@ -18,7 +18,7 @@ use DBIx::Skinny connect_info => {
 ```
 
 create your db schema class.
-See DBIx::Skinny::Schema for docs on defining schema class.
+See [DBIx::Skinny::Schema](https://metacpan.org/pod/DBIx::Skinny::Schema) for docs on defining schema class.
 
 ```perl
 package Your::Model::Schema;
@@ -55,7 +55,7 @@ $row->delete('user');
 
 # DESCRIPTION
 
-DBIx::Skinny is simple DBI wrapper and simple O/R Mapper.
+[DBIx::Skinny](https://metacpan.org/pod/DBIx::Skinny) is simple [DBI](https://metacpan.org/pod/DBI) wrapper and simple O/R Mapper.
 It aims to be lightweight, with minimal dependencies so it's easier to install. 
 
 # ARCHITECTURE
@@ -75,9 +75,9 @@ This is the entry point to using DBIx::Skinny. You connect, insert, update, dele
 
 ## SCHEMA
 
-The `schema` is a simple class that describes your table definitions. Note that this is different from DBIx::Class terms. DBIC's schema is equivalent to DBIx::Skinny's model + schema, where the actual schema information is scattered across the result classes.
+The `schema` is a simple class that describes your table definitions. Note that this is different from [DBIx::Class](https://metacpan.org/pod/DBIx::Class) terms. DBIC's schema is equivalent to DBIx::Skinny's model + schema, where the actual schema information is scattered across the result classes.
 
-In DBIx::Skinny, you simply use DBIx::Skinny::Schema's domain specific languaage to define a set of tables
+In DBIx::Skinny, you simply use [DBIx::Skinny::Schema](https://metacpan.org/pod/DBIx::Skinny::Schema)'s domain specific language to define a set of tables
 
 ```perl
 package MyApp::Model::Schema;
@@ -97,7 +97,7 @@ install_table $table_name => schema {
 
 ## ROW
 
-Unlike DBIx::Class, you don't need to have a set of classes that represent a row type (i.e. "result" classes in DBIC terms). In DBIx::Skinny, the row objects are blessed into anonymous classes that inherit from DBIx::Skinny::Row, so you don't have to create these classes if you just want to use some simple queries.
+Unlike DBIx::Class, you don't need to have a set of classes that represent a row type (i.e. "result" classes in DBIC terms). In DBIx::Skinny, the row objects are blessed into anonymous classes that inherit from [DBIx::Skinny::Row](https://metacpan.org/pod/DBIx::Skinny::Row), so you don't have to create these classes if you just want to use some simple queries.
 
 If you want to define methods to be performed by your row objects, simply create a row class like so:
 
@@ -249,7 +249,7 @@ DBIx::Skinny provides a number of methods to all your classes,
     or 
 
     ```perl
-    # see) DBIx::Skinny::Row's POD
+    # see) L<DBIx::Skinny::Row>'s POD
     my $row = Your::Model->single('user',{id => 1});
     $row->update({name => 'nomaneko'});
     ```
