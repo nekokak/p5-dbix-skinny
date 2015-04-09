@@ -23,6 +23,7 @@ Mock::Basic->setup_test_db;
         is $dbh, +Mock::Basic->dbh;
         is $txn_manager, +Mock::Basic->txn_manager;
 
+        unlink $db;
         done_testing;
     } else {
         eval {
@@ -32,6 +33,3 @@ Mock::Basic->setup_test_db;
     }
 
     $txn->commit;
-
-unlink $db;
-
