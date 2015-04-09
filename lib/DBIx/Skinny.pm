@@ -564,7 +564,7 @@ sub _set_columns {
     my $name_sep = $dbd->name_sep;
 
     my (@columns, @bind_columns, @quoted_columns);
-    for my $col (keys %{ $args }) {
+    for my $col (sort keys %{ $args }) {
         my $quoted_col = _quote($col, $quote, $name_sep);
         if (ref($args->{$col}) eq 'SCALAR') {
             push @columns, ($insert ? ${ $args->{$col} } :"$quoted_col = " . ${ $args->{$col} });
