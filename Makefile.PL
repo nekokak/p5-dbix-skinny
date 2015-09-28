@@ -18,6 +18,7 @@ test_requires 'Test::More' => '0.96';
 test_requires 'Test::SharedFork' => 0.15;
 test_requires 'Test::mysqld'     if $Module::Install::AUTHOR;
 test_requires 'Test::postgresql' if $Module::Install::AUTHOR;
+test_requires 'DBD::SQLite' => '1.48';
 
 tests 't/*.t t/*/*.t t/*/*/*.t';
 
