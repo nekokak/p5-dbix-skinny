@@ -200,6 +200,7 @@ sub connect {
     my $attr = $class->_attributes;
     my $do_connected=0;
     if ( !$attr->{dbh} ) {
+        $attr->{last_pid} = $$;
         $do_connected=1;
     }
     $attr->{dbh} ||= DBI->connect(
