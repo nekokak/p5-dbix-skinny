@@ -14,7 +14,8 @@ subtest 'quote sql by sqlite' => sub {
         id   => 1,
         name => 'perl',
     });
-    is +Mock::Basic->profiler->query_log->[0] , 'INSERT INTO mock_basic (`name`, `id`) VALUES (?, ?) :binds perl, 1';
+    ok +Mock::Basic->profiler->query_log->[0] =~ m/INSERT INTO mock_basic \(`(\w+)`, `(\w+)`\) VALUES \(\?, \?\) :binds (\w+), (\w+)/;
+    is_deeply {$1 => $3, $2 => $4}, {id => 1, name => 'perl'};
     $row->update({name => 'ruby'});
     is +Mock::Basic->profiler->query_log->[1], 'UPDATE mock_basic SET `name` = ? WHERE (id = ?) :binds ruby, 1';
 };
