@@ -29,6 +29,7 @@ Mock::Basic->setup_test_db;
             my $txn = Mock::Basic->txn_scope;
         };
         like $@, qr/Detected transaction while processing forked child \(last known transaction at/;
+        exit;
     }
 
     $txn->commit;

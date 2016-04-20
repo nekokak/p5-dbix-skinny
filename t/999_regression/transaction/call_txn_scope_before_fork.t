@@ -41,6 +41,7 @@ Mock::Basic->setup_test_db;
             is $row->name, 'ruby';
 
         $txn->commit;
+        exit;
     }
 
 unlink $db;
