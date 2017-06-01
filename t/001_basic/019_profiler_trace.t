@@ -20,7 +20,7 @@ Mock::Basic->insert('mock_basic',{
     id   => 1,
     name => 'perl',
 });
-is $content, qq{CREATE TABLE mock_basic ( id integer, name text, delete_fg int(1) default 0, primary key ( id ) )\nINSERT INTO mock_basic (`name`, `id`) VALUES (?, ?) :binds perl, 1\n};
+is $content, qq{CREATE TABLE mock_basic ( id integer, name text, delete_fg int(1) default 0, primary key ( id ) )\nINSERT INTO mock_basic (`id`, `name`) VALUES (?, ?) :binds 1, perl\n};
 
 done_testing;
 

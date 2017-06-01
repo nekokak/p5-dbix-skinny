@@ -12,13 +12,13 @@ subtest 'insert mode' => sub {
     is_deeply $cols, +['?','?'];
     is_deeply $column_list, [
         [
+            'id',
+            1,
+        ],
+        [
             'name',
             'nekokak',
         ],
-        [
-            'id',
-            1,
-        ]
     ];
     done_testing;
 };
@@ -27,8 +27,8 @@ subtest 'insert mode / scalarref' => sub {
     my ($cols, $column_list) = Mock::Basic->_set_columns(+{id => 1, name => \'NOW ()'}, 1);
 
     is_deeply $cols, +[
-        'NOW ()',
         '?',
+        'NOW ()',
     ];
     is_deeply $column_list, [
         [
@@ -43,18 +43,18 @@ subtest 'update mode' => sub {
     my ($cols, $column_list) = Mock::Basic->_set_columns(+{id => 1, name => 'nekokak'}, 0);
 
     is_deeply $cols, +[
-        '`name` = ?',
         '`id` = ?',
+        '`name` = ?',
     ];
     is_deeply $column_list, [
+        [
+            'id',
+            1,
+        ],
         [
             'name',
             'nekokak',
         ],
-        [
-            'id',
-            1,
-        ]
     ];
     done_testing;
 };
@@ -63,8 +63,8 @@ subtest 'update mode / scalarref' => sub {
     my ($cols, $column_list) = Mock::Basic->_set_columns(+{id => 1, name => \'NOW()'}, 0);
 
     is_deeply $cols, +[
-        '`name` = NOW()',
         '`id` = ?',
+        '`name` = NOW()',
     ];
     is_deeply $column_list, [
         [
