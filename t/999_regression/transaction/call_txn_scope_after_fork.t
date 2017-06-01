@@ -21,6 +21,7 @@ Mock::Basic->setup_test_db;
         is $dbh, +Mock::Basic->dbh;
 
         done_testing;
+        unlink $db;
     } else {
         my $txn = Mock::Basic->txn_scope;
 
@@ -37,5 +38,4 @@ Mock::Basic->setup_test_db;
         $txn->commit;
     }
 
-unlink $db;
 
