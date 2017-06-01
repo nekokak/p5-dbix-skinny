@@ -596,12 +596,15 @@ sub _insert_or_replace {
             'VALUES (' . join(', ', @$columns) . ')' . "\n";
 
     my $sth = $class->_execute($sql, $bind_columns, $table);
+    my $_last_insert_id;
+    $_last_insert_id = $sth->{mysql_insertid} if defined $sth->{mysql_insertid};
+
     $class->_close_sth($sth);
 
     my $pk = $class->schema->schema_info->{$table}->{pk};
 
     if (defined $pk && not(ref $pk) && not(defined $args->{$pk})) {
-        $args->{$pk} = $class->_last_insert_id($table);
+        $args->{$pk} = $_last_insert_id || $class->_last_insert_id($table);
     }
 
     return $args if $class->suppress_row_objects;
@@ -626,7 +629,7 @@ sub _insert_or_replace {
 sub _last_insert_id {
     my ($class, $table) = @_;
 
-    my $dbh = $class->dbh;
+    my $dbh = $class->_attributes->{dbh};
     my $driver = $class->_attributes->{driver_name};
     if ( $driver eq 'mysql' ) {
         return $dbh->{mysql_insertid};
