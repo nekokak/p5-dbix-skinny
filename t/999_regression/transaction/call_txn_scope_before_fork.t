@@ -26,6 +26,7 @@ Mock::Basic->setup_test_db;
         is $txn_manager, +Mock::Basic->txn_manager;
 
         done_testing;
+        unlink $db;
     } else {
         my $txn = Mock::Basic->txn_scope;
 
@@ -43,5 +44,4 @@ Mock::Basic->setup_test_db;
         $txn->commit;
     }
 
-unlink $db;
 
